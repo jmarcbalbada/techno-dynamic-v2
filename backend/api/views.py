@@ -36,6 +36,7 @@ def updateLesson(request, lesson_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['DELETE'])
 def deleteLesson(request, lesson_id):
     lesson = checkLessonIfExist(lesson_id)
     lesson.delete()
