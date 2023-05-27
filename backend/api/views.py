@@ -39,7 +39,7 @@ def updateLesson(request, lesson_id):
 def deleteLesson(request, lesson_id):
     lesson = checkLessonIfExist(lesson_id)
     lesson.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response("Lesson deleted successfully", status=status.HTTP_204_NO_CONTENT)
 
 def checkLessonIfExist(lesson_id):
     try:
