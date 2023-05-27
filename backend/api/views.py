@@ -43,4 +43,4 @@ class LessonDetailView(APIView):
     def delete(request, lesson_id):
         lesson = get_object_or_404(Lesson, pk=lesson_id)
         lesson.delete()
-        return Response("Lesson deleted successfully", status=status.HTTP_204_NO_CONTENT)
+        return Response(f"Lesson {lesson_id} deleted successfully", status=status.HTTP_204_NO_CONTENT)
