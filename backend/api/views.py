@@ -36,6 +36,11 @@ def updateLesson(request, lesson_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+def deleteLesson(request, lesson_id):
+    lesson = checkLessonIfExist(lesson_id)
+    lesson.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
 def checkLessonIfExist(lesson_id):
     try:
         lesson = Lesson.objects.get(pk=lesson_id)
