@@ -5,7 +5,7 @@ from .serializers import LessonSerializer
 
 # Create your views here.
 
-def lesson_view(request):
+def viewLesson(request):
     lessons = Lesson.objects.all()
     serializer = LessonSerializer(lessons, many=True)
     return JsonResponse({"lessons:": serializer.data}, safe=False)

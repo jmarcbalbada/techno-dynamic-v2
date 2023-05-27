@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import lesson_view
+from .views import viewLesson
 
 urlpatterns = [
-    path('lesson/', lesson_view),
+    path('lesson/', viewLesson),
 ]
