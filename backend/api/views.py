@@ -14,13 +14,8 @@ def getLessons(request):
     return JsonResponse({"lessons:": serializer.data}, safe=False)
 
 @api_view(['GET'])
-def getLessonById(request, id):
-
-    try:
-        lesson = Lesson.objects.get(pk=id)
-    except Lesson.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+def getLessonById(request, lesson_id):
+    lesson = checkLessonIfExist(lesson_id)
     serializer = LessonSerializer(lesson)
     return Response(serializer.data)
 
@@ -32,3 +27,9 @@ def createLesson(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+def checkLessonIfExist(lesson_id):
+    try:
+        lesson = Lesson.objects.get(pk=lesson_id)
+    except Lesson.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    return lesson
