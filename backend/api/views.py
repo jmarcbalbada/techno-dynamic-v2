@@ -10,13 +10,13 @@ from django.shortcuts import get_object_or_404
 
 class LessonsView(APIView):
     @staticmethod
-    def get(self, request):
+    def get(request):
         lessons = Lesson.objects.all()
         serializer = LessonSerializer(lessons, many=True)
         return JsonResponse({"lessons:": serializer.data}, safe=False)
 
     @staticmethod
-    def post(self, request):
+    def post(request):
         serializer = LessonSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -25,13 +25,13 @@ class LessonsView(APIView):
 
 class LessonDetailView(APIView):
     @staticmethod
-    def get(self, request, lesson_id):
+    def get(request, lesson_id):
         lesson = get_object_or_404(Lesson, pk=lesson_id)
         serializer = LessonSerializer(lesson)
         return Response(serializer.data)
 
     @staticmethod
-    def put(self, request, lesson_id):
+    def put(request, lesson_id):
         lesson = get_object_or_404(Lesson, pk=lesson_id)
         serializer = LessonSerializer(lesson, data=request.data)
         if serializer.is_valid():
@@ -40,7 +40,7 @@ class LessonDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @staticmethod
-    def delete(self, request, lesson_id):
+    def delete(request, lesson_id):
         lesson = get_object_or_404(Lesson, pk=lesson_id)
         lesson.delete()
         return Response("Lesson deleted successfully", status=status.HTTP_204_NO_CONTENT)
