@@ -45,5 +45,5 @@ def checkLessonIfExist(lesson_id):
     try:
         lesson = Lesson.objects.get(pk=lesson_id)
     except Lesson.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response("Lesson not found", status=status.HTTP_404_NOT_FOUND)
     return lesson
