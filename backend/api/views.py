@@ -8,4 +8,4 @@ from .serializers import LessonSerializer
 def lesson_view(request):
     lessons = Lesson.objects.all()
     serializer = LessonSerializer(lessons, many=True)
-    return JsonResponse(serializer.data, safe=False)
+    return JsonResponse({"lessons:": serializer.data}, safe=False)
