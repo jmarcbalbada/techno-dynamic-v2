@@ -1,5 +1,8 @@
 import React from 'react'
 import Container from '@mui/material/Container'
+import { LessonCards } from './LessonCards'
+import { CreateLessonCard } from './CreateLessonCard'
+import { Grid } from '@mui/material'
 import TechnoLogo from '../../assets/TechnoLogo.png'
 import Lion from '../../assets/LionLogo.png'
 import './Dashboard.css'
@@ -25,8 +28,7 @@ export const Dashboard = () => {
       </div>
 
       <hr className='dashboard-hr' />
-
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" className='mb-2rem'>
         <div className='dashboard-overview'>
           <p>This course is designed to introduce students to the principles and practices of Technopreneurship, which involves the process of identifying and pursuing opportunities to create innovative products or services using technology. The course will cover topics such as idea generation, market research, funding, team building, and product development, among others. Students will also have the opportunity to develop and present their own business plans.</p>
           <strong>Course Objectives</strong>
@@ -42,6 +44,33 @@ export const Dashboard = () => {
             </li>
           </ol>
         </div>
+      </Container>
+
+      
+      <Container maxWidth="xl" className='mb-2rem'>
+        <Grid container spacing={3}>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <CreateLessonCard />
+          </Grid>
+        </Grid>
       </Container>
     </div>
   )
