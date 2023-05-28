@@ -1,0 +1,10 @@
+.MuiCardActions-root {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.lesson-card-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
