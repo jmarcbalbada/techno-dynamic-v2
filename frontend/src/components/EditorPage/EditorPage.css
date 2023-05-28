@@ -1,0 +1,35 @@
+.lesson-editor-label {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.lesson-editor-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem
+}
+
+.lesson-editor-content {
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lesson-editor-buttons {
+    padding-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    width: 70%;
+}
+
+.lesson-editor-page-number {
+    padding-top: 1rem;
+    font-size: 15px;
+    font-weight: 250;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
