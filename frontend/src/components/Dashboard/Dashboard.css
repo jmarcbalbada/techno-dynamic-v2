@@ -1,0 +1,74 @@
+.dashboard-container {
+}
+
+.temp-nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin: 1rem 1rem 0 1rem;
+}
+
+.temp-nav a {
+    text-decoration: none;
+    color: #000;
+}
+
+.vertical-line {
+    border-left: 1px solid #000;
+}
+
+.dashboard-hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.2rem;
+}
+
+.dashboard-hero-lion {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dashboard-hero-lion img {
+    width: 30%;
+    height: 30%;
+    object-fit: contain;
+}
+
+.dashboard-hero-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.dashboard-hero-text img {
+    width: 50%;
+    height: 50%;
+    object-fit: contain;
+}
+
+.instructional {
+    width: 50%;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.dashboard-hr {
+    border-top: 5px solid #3F3F3F;
+    margin-bottom: 1.2rem;
+}
+
+.dashboard-overview {
+    padding: 0.8rem 4rem;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-overview p{
+    text-align: justify;
+}
+
+.mb-2rem {
+    margin-bottom: 2rem;
+}
