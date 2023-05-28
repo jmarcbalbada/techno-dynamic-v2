@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
-    'corsheaders',
     'rest_framework'
 ]
 
@@ -50,7 +49,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheader.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'backend_django.urls'
@@ -103,10 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Whitelist for react port
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000'
-)
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
