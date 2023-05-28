@@ -49,27 +49,27 @@ export const Dashboard = () => {
       
       <Container maxWidth="xl" className='mb-2rem'>
         <Grid container spacing={3}>
-          <Grid item sm={12} md={6} lg={4}>
-            <LessonCards />
-          </Grid>
-          <Grid item sm={12} md={6} lg={4}>
-            <LessonCards />
-          </Grid>
-          <Grid item sm={12} md={6} lg={4}>
-            <LessonCards />
-          </Grid>
-          <Grid item sm={12} md={6} lg={4}>
-            <LessonCards />
-          </Grid>
-          <Grid item sm={12} md={6} lg={4}>
-            <LessonCards />
-          </Grid>
-          <Grid item sm={12} md={6} lg={4}>
-            <LessonCards />
-          </Grid>
-          <Grid item sm={12} md={6} lg={4}>
+          <Grid item sm={12} md={12} lg={12}>
             <CreateLessonCard />
           </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>
+          <Grid item sm={12} md={6} lg={4}>
+            <LessonCards />
+          </Grid>          
         </Grid>
       </Container>
     </div>
