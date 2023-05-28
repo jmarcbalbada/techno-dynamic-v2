@@ -1,7 +1,10 @@
 import React from 'react'
+import Container from '@mui/material/Container'
 
 export const NotFound = () => {
   return (
-    <div>NotFound</div>
+    <Container>
+        Not Found
+    </Container>
   )
 }
