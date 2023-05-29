@@ -6,7 +6,9 @@ import './CreateLessonCard.css'
 export const CreateLessonCard = () => {
   return (
     <Box width='100%'>
-        <Card>
+        <Card sx={{
+            backgroundColor: '#F5F5F5',
+        }}>
             <div className='create-lesson-button'>
                 <Button startIcon={<AddCircleOutlineIcon />} sx={{
                     color: '#3F3F3F',
