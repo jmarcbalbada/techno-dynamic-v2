@@ -9,17 +9,14 @@ import { getLessons } from '../../apis/Lessons';
 import './Dashboard.css';
 
 export const Dashboard = () => {
-
 	const [lessons, setLessons] = useState([]);
-	
 
 	useEffect(() => {
 		getLessons().then((res) => {
 			setLessons(res);
-			console.log('lessons', lessons)
+			console.log('lessons', lessons);
 		});
 	}, [lessons.subtitle]);
-
 
 	return (
 		<div className="dashboard-container">
@@ -78,7 +75,6 @@ export const Dashboard = () => {
 							</Grid>
 						);
 					})}
-					
 				</Grid>
 			</Container>
 		</div>
