@@ -11,7 +11,6 @@ export const ContentSlide = ( { slideNum }) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%',
         }}>
 
         <div className="lesson-editor-content">
