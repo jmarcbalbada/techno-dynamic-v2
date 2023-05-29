@@ -12,7 +12,7 @@ export const LessonCards = ( { lesson, idx } ) => {
     const handleOpenLesson = () => {
         getLesson(lesson.id).then((res) => {
             console.log('res', res)
-            navigate(`/lessons/${lesson.id}`)
+            navigate(`/lessons/${lesson.id}/pages/1`)
         })
     }
 
