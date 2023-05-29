@@ -1,20 +1,41 @@
-import React from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Container } from '@mui/material'
 import { BottomControls } from './BottomControls'
+import { useParams } from 'react-router-dom'
+import { getLesson } from '../../apis/Lessons'
 import './LessonPage.css'
 
 export const LessonPage = () => {
+
+  const [lesson, setLesson] = useState({})
+  const { id: idOfLesson } = useParams()
+
+
+  useEffect(() => {
+    (async () => {
+      const lessonData = await getLesson(idOfLesson)
+      console.log('lessonData', lessonData)
+      setLesson(lessonData)
+      console.log('lesson', lesson)
+    })()
+  }, [idOfLesson])
+
+
   return (
     <div>
       <Container maxWidth='md' className='mb-6rem'>
         <div className='lesson-page-container'>
           <div className='lesson-page-title'>
-            <h1>Lesson 1</h1>
+            <h1>Lesson {idOfLesson}</h1>
             <div className="vertical-line"></div>
-            <h2>asd</h2>
+            <h2>{lesson.subtitle}</h2>
           </div>
           <div className='lesson-page-content'>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores autem temporibus alias, fuga, voluptate, repudiandae error praesentium in eveniet repellendus maiores eos perspiciatis aspernatur veritatis nobis delectus. Quis, sapiente inventore. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Soluta, corrupti perspiciatis quidem veritatis reprehenderit amet, harum rem optio nesciunt ducimus modi obcaecati facilis reiciendis. Eos velit dolorum ipsa sequi nesciunt!</p>
+            {lesson.contents?.map((content, idx) => {
+              return (
+                <p>{content.contents}</p>
+              )
+            })}
           </div>
         </div>
       </Container>
