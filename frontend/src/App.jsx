@@ -14,9 +14,7 @@ const App = () => {
         <Route path='/' element={<Dashboard />}>
         </Route>
 
-        <Route path='lessons' element={<LessonPage />}>
-          <Route path=':id' element={<LessonPage />}>
-          </Route>
+        <Route path='lessons/:lessonid/pages/:pageid' element={<LessonPage />}>  
         </Route>
 
         <Route path='editor' element={<EditorPage />}>
