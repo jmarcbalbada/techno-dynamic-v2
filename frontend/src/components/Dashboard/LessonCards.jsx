@@ -6,7 +6,9 @@ import './LessonCards.css'
 export const LessonCards = () => {
   return (
     <Box width='100%'>
-        <Card>
+        <Card sx={{
+            backgroundColor: '#F5F5F5',
+        }}>
             <CardActionArea>
                 <CardMedia
                     component='img'
