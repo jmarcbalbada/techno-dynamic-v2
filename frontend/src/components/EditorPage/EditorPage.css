@@ -33,3 +33,11 @@
     justify-content: flex-start;
     width: 100%;
 }
+
+.editor-bottom-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+}
