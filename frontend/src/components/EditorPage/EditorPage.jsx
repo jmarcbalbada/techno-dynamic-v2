@@ -28,7 +28,6 @@ export const EditorPage = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '100%',
                 }}>
                 <div className="lesson-editor-label">LESSON EDITOR</div>
 
@@ -72,9 +71,14 @@ export const EditorPage = () => {
                 )
             })}
 
-            <Button id='addButtonClicker' onClick={handleAddNewSlide}>
-                ADD NEW SLIDE
-            </Button>
+            <div className='editor-bottom-controls'>
+                <Button id='addButtonClicker' onClick={handleAddNewSlide}>
+                    ADD NEW SLIDE
+                </Button>
+                <Button variant="contained" id='saveButton'>
+                    SAVE
+                </Button>
+            </div>
 
         </Container>
     );
