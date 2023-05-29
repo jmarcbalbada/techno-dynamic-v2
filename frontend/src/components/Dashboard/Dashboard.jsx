@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Container from '@mui/material/Container';
 import { LessonCards } from './LessonCards';
 import { CreateLessonCard } from './CreateLessonCard';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import TechnoLogo from '../../assets/TechnoLogo.png';
 import Lion from '../../assets/LionLogo.png';
+import { getLessons } from '../../apis/Lessons';
 import './Dashboard.css';
 
 export const Dashboard = () => {
+
+	const [lessons, setLessons] = useState([]);
+
+	useEffect(() => {
+		getLessons().then((res) => {
+			setLessons(res);
+			console.log('lessons', lessons)
+		});
+	}, [lessons.subtitle]);
+
+
 	return (
 		<div className="dashboard-container">
 			<div className="temp-nav">
@@ -57,24 +69,15 @@ export const Dashboard = () => {
 					<Grid item xs={12} sm={12} md={12} lg={12}>
 						<CreateLessonCard />
 					</Grid>
-					<Grid item sm={12} md={6} lg={4}>
-						<LessonCards />
-					</Grid>
-					<Grid item sm={12} md={6} lg={4}>
-						<LessonCards />
-					</Grid>
-					<Grid item sm={12} md={6} lg={4}>
-						<LessonCards />
-					</Grid>
-					<Grid item sm={12} md={6} lg={4}>
-						<LessonCards />
-					</Grid>
-					<Grid item sm={12} md={6} lg={4}>
-						<LessonCards />
-					</Grid>
-					<Grid item sm={12} md={6} lg={4}>
-						<LessonCards />
-					</Grid>
+
+					{lessons?.map((lesson, index) => {
+						return (
+							<Grid key={lesson.id} item sm={12} md={6} lg={4}>
+								<LessonCards lesson={lesson} idx={index}/>
+							</Grid>
+						);
+					})}
+					
 				</Grid>
 			</Container>
 		</div>
