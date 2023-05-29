@@ -12,7 +12,7 @@ export const Dashboard = () => {
 		<div className="dashboard-container">
 			<div className="temp-nav">
 				<a href="/">My Name</a>
-				<div className="vertical-line"></div>
+				<div className="temp-nav-vertical-line"></div>
 				<a href="/">Logout</a>
 			</div>
 			<div className="dashboard-hero">
