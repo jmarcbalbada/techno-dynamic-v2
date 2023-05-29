@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Container } from '@mui/material'
 import { BottomControls } from './BottomControls'
 import { useParams } from 'react-router-dom'
@@ -10,10 +10,14 @@ export const LessonPage = () => {
   const [lesson, setLesson] = useState({})
   const { id: idOfLesson } = useParams()
 
+
   useEffect(() => {
-    getLesson(idOfLesson).then((res) => {
-      setLesson(res)
-    })
+    (async () => {
+      const lessonData = await getLesson(idOfLesson)
+      console.log('lessonData', lessonData)
+      setLesson(lessonData)
+      console.log('lesson', lesson)
+    })()
   }, [idOfLesson])
 
 
@@ -24,7 +28,7 @@ export const LessonPage = () => {
           <div className='lesson-page-title'>
             <h1>Lesson {idOfLesson}</h1>
             <div className="vertical-line"></div>
-            <h2>asd</h2>
+            <h2>{lesson.subtitle}</h2>
           </div>
           <div className='lesson-page-content'>
             {lesson.contents?.map((content, idx) => {

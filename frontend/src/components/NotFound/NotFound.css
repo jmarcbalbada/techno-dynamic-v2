@@ -12,7 +12,7 @@
 
 #ZERO {
     color: red;
-    animation: pulse 5s infinite;
+    animation: pulse 5s infinite ease-in-out;
 }
 
 /* animate zero pulsing color */

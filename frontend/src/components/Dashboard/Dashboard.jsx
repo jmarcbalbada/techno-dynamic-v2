@@ -11,6 +11,7 @@ import './Dashboard.css';
 export const Dashboard = () => {
 
 	const [lessons, setLessons] = useState([]);
+	
 
 	useEffect(() => {
 		getLessons().then((res) => {
@@ -73,7 +74,7 @@ export const Dashboard = () => {
 					{lessons?.map((lesson, index) => {
 						return (
 							<Grid key={lesson.id} item sm={12} md={6} lg={4}>
-								<LessonCards lesson={lesson} idx={index}/>
+								<LessonCards lesson={lesson} idx={index} />
 							</Grid>
 						);
 					})}
