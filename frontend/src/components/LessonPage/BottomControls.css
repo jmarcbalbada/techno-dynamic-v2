@@ -16,3 +16,8 @@
     height: 100%;
     width: 40%;
 }
+
+.bottom-nav-buttons:last-child {
+    background-color: #FFDE00;
+    color: #3F3F3F;
+}
