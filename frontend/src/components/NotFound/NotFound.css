@@ -1,0 +1,32 @@
+.FOUR-left{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    font-size: 35rem;
+    gap: 20rem;
+}
+
+#ZERO {
+    color: red;
+    animation: pulse 5s infinite ease-in-out;
+}
+
+/* animate zero pulsing color */
+@keyframes pulse {
+    0% {
+        color: red;
+        transform: rotate(0deg);
+    }
+    50% {
+        color: #ff7f00;
+        transform: rotate(180deg);
+    }
+    100% {
+        color: red;
+        transform: rotate(360deg);
+    }
+}
