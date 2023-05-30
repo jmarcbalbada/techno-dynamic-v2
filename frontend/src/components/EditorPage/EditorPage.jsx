@@ -1,5 +1,6 @@
 import { Container, Paper, TextField, Button } from '@mui/material';
 import { React, useEffect, useState, useRef } from 'react';
+import  {postLesson, postContent}  from '../../apis/Lessons';
 import './EditorPage.css';
 import { ContentSlide } from './ContentSlide';
 
@@ -7,13 +8,47 @@ export const EditorPage = () => {
 
     const [slides, setSlides] = useState([]);
     const [slideCount, setSlideCount] = useState(1);
+    const [content, setContent] = useState('');
+    const [contentList, setContentList] = useState([]);
+    const [title , setTitle] = useState('');
+    const [lesson, setLesson] = useState({});
+    
     const ref = useRef(null);
 
     const handleAddNewSlide = () => {
         setSlideCount(prev => prev + 1);
         setSlides(prev => [...prev, <ContentSlide />]);
         ref.current?.scrollIntoView({behavior: 'smooth'});
+    } 
+
+    const titleOnChangeHandler = (e) => {
+        setTitle(e.target.value);
     }
+
+    const contentOnChangeHandler = (e) => {
+        setContent(e.target.value);
+        console.log(content);
+    }
+
+    const listContentOnChangeHandler = (e) => {
+        setContentList(e.target.value);
+        console.log(contentList);
+    }
+
+    const saveLessonHandler = async () => {
+        const Lesson = await postLesson(title);
+        await setLesson(Lesson);
+        console.log(lesson);
+
+        // const Content = await postContent(lesson.id, content);
+        // console.log(Content);
+    }
+
+    useEffect(()=>{
+        ( async () => {await postContent(lesson.id, content);  
+    })();
+    },[lesson]);
+
 
     return (
         <Container
@@ -36,6 +71,8 @@ export const EditorPage = () => {
                 </div>
 
                 <TextField
+                    onChange = {titleOnChangeHandler}
+                    value = {title}
                     size="small"
                     placeholder="Enter Title Here"
                     sx={{
@@ -48,6 +85,8 @@ export const EditorPage = () => {
                 </div>
 
                 <TextField
+                    onChange = {contentOnChangeHandler}
+                    value = {content}
                     size="large"
                     placeholder="Write Something..."
                     multiline
@@ -67,7 +106,7 @@ export const EditorPage = () => {
 
             {slides?.map((slide, index) => {
                 return (
-                    <ContentSlide ref={ref} key={index} slideNum={index+2}/>
+                    <ContentSlide onChange = {listContentOnChangeHandler} ref={ref} key={index} slideNum={index+2}/>
                 )
             })}
 
@@ -75,7 +114,7 @@ export const EditorPage = () => {
                 <Button id='addButtonClicker' onClick={handleAddNewSlide}>
                     ADD NEW SLIDE
                 </Button>
-                <Button variant="contained" id='saveButton'>
+                <Button onClick = {saveLessonHandler} variant="contained" id='saveButton'>
                     SAVE
                 </Button>
             </div>
