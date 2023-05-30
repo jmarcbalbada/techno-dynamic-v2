@@ -2,7 +2,7 @@ import React from 'react'
 import { Paper, TextField, Button } from '@mui/material'
 import './EditorPage.css'
 
-export const ContentSlide = ( { slideNum }) => {
+export const ContentSlide = ( { slideNum, contentSlideHandler, slideContent }) => {
   return (
     <Paper elevation={16} sx={{
         padding: '2rem',
@@ -18,6 +18,8 @@ export const ContentSlide = ( { slideNum }) => {
         </div>
 
         <TextField
+            onChange={(e) => contentSlideHandler(e, slideNum - 1)}
+            value={slideContent}
             size="large"
             placeholder="Write Something..."
             multiline

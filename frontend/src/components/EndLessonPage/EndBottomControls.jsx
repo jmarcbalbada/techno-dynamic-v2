@@ -16,18 +16,11 @@ export const EndBottomControls = () => {
     }
 
     return (
-		<div className="bottom-nav">
-			<Button
-				size="large"
-				className="bottom-nav-buttons"
-				startIcon={<ArrowBackIcon />}
-			>
-				Back
-			</Button>
+		<div className="end-bottom-nav">
 			<Button
 				onClick={handleBackToDashboard}
 				size="large"
-				className="bottom-nav-buttons"
+				className="end-bottom-nav-buttons"
 				endIcon={<DoneIcon />}
 			>
 				Finish
