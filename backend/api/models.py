@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Lesson(models.Model):
-    title = models.CharField(max_length=50, default="", unique=True, null=False)
+    title = models.CharField(max_length=50, default="", null=False)
     subtitle = models.CharField(max_length=50, default="", null=False)
     url = models.URLField(max_length=255, null=True, blank=True)
 

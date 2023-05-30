@@ -1,4 +1,4 @@
-.bottom-nav {
+.end-bottom-nav {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -12,12 +12,12 @@
     background-color: white;
 }
 
-.bottom-nav-buttons {
+.end-bottom-nav-buttons {
     height: 100%;
-    width: 40%;
+    width: 100%;
 }
 
-.bottom-nav-buttons:last-child {
+.end-bottom-nav-buttons:last-child {
     background-color: #FFDE00;
     color: #3F3F3F;
 }
