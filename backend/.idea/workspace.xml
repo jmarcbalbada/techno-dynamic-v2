@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="Remove Code Smell">
-      <change beforePath="$PROJECT_DIR$/.idea/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0002_alter_lesson_id.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0003_lesson_url.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0004_remove_lesson_content_lesson_file_alter_lesson_url_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0004_remove_lesson_content_lesson_subtitle_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0005_alter_lesson_title.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0005_remove_lesson_file_lesson_subtitle_and_more.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
