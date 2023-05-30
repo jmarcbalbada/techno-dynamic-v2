@@ -1,23 +1,47 @@
-import { Button } from '@mui/material'
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Container, CardMedia } from '@mui/material'
+import { EndBottomControls } from './EndBottomControls';
+import './EndLessonPage.css'
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { getLesson } from '../../apis/Lessons';
 
 export const EndLessonPage = () => {
 
-    // function to navigate to dashboard using useNavigate
-    const navigate = useNavigate();
+	const {lessonid} = useParams();
+	const [lesson, setLesson] = useState({});
 
-    const handleBackToDashboard = () => {
-        navigate(`/`)
-    }
-
+	useEffect(() => {
+		(async () => {
+			const lessonData = await getLesson(lessonid);
+			console.log('lessonData', lessonData);
+			setLesson(lessonData.lesson);
+		})();
+	}, []);
 
   return (
-    <div>
-        EndLessonPage
-        <Button onClick={handleBackToDashboard}>
-            FINISH
-        </Button>
-    </div>
-  )
-}
+    <>
+				<div>
+					<Container maxWidth="md" className="mb-6rem">
+						<div className="end-lesson-page-container">
+							<div className="end-lesson-page-title">
+								<h1>Lesson {lessonid}</h1>
+								<div className="vertical-line"></div>
+								<h2>{lesson.subtitle}</h2>
+							</div>
+              <CardMedia
+                    component='img'
+                    height='160'
+                    image='https://source.unsplash.com/random/featured/?celebration'
+                />
+							<div className="end-lesson-page-message">
+                <h3>Good Job!</h3>
+                <p>You've finished the Lesson!</p>
+							</div>
+						</div>
+					</Container>
+				</div>
+
+      <EndBottomControls/>
+    </>
+  );
+};
