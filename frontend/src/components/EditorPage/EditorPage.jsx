@@ -36,20 +36,26 @@ export const EditorPage = () => {
   const textChangeHandler = (index, text) => {
     const _contents = structuredClone(contents);
     _contents[index].content = text;
+    console.log('_contents', _contents)
     setContents(_contents);
   }
 
   const urlChangeHandler = (index, url) => {
     const _contents = structuredClone(contents);
     _contents[index].url = url;
+    console.log('_contents', _contents)
     setContents(_contents);
   }
 
   const saveLessonHandler = async () => {
     const lesson = await postLesson(title, subtitle);
     const lessonId = lesson.id;
+    console.log('lessonId', lessonId)
+    console.log('contentsS', contents)
     contents.forEach(async (content, index) => {
-      await postContent(lessonId, index, content.text, content.url);
+      console.log(content.url)
+      console.log(content.text)
+      await postContent(lessonId, index, content.content, content.url);
     });
     navigate(`/`);
   }
@@ -71,6 +77,7 @@ export const EditorPage = () => {
               <TextField 
                 onChange={(e) => {titleChangeHandler(e)}}
                 required
+                autoComplete="off"
                 size="small"
                 sx={{
                   width: "70%",
@@ -81,6 +88,7 @@ export const EditorPage = () => {
               <TextField 
                 onChange={(e) => {subtitleChangeHandler(e)}}
                 required
+                autoComplete="off"
                 size="small"
                 sx={{
                   width: "70%",

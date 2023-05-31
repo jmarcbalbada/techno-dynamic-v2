@@ -28,6 +28,7 @@ export const postLesson = async (title, sub) => {
 	return await axios.post(`${baseUrl}api/lessons/`, {
 		title: title,
 		subtitle: sub,
+		coverImage: null,
 	})
 		.then(response => {
 			return response.data;
@@ -39,7 +40,7 @@ export const postLesson = async (title, sub) => {
 };
 
 export const postContent = async (lessonId, index, content, url) => {
-	return await axios.post(`${baseUrl}api/lessons/${lessonId}/contents/`, {
+	return await axios.post(`${baseUrl}api/lessons/${lessonId}/pages/`, {
 		contents: content,
 		url: url,
 		files: null,
@@ -48,7 +49,7 @@ export const postContent = async (lessonId, index, content, url) => {
 			return response.data;
 		})
 		.catch(error => {
-			console.error(error);
+			console.error(error.response.data);
 			return error;
 		});
 };

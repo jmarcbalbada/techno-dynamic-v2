@@ -14,6 +14,7 @@ export const Dashboard = () => {
 	useEffect(() => {
 		(async () => {
 			const response = await getLessons();
+			console.log(response);
 			setLessons(response);
 		})();
 	}, []);
