@@ -30,5 +30,9 @@
 }
 
 .lesson-card-preview {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
     font-weight: 300;
 }

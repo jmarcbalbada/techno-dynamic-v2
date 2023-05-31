@@ -15,6 +15,7 @@ import './LessonCards.css';
 
 export const LessonCards = ({ lesson, idx }) => {
 	const navigate = useNavigate();
+	let urlCount = 0;
 
 	const handleOpenLesson = () => {
 		getLesson(lesson.id).then((res) => {
@@ -52,7 +53,17 @@ export const LessonCards = ({ lesson, idx }) => {
 						<hr className="lesson-card-hr" />
 
 						<p className="lesson-card-preview">
-							{lesson.pages.length} {lesson.pages.length === 1 ? 'Content' : "Contents"}
+						<span>{lesson.pages.length} {lesson.pages.length === 1 ? 'Content' : "Contents"}</span>
+							
+							{lesson.pages.forEach(element => {
+								if(element.url !== null) {
+									urlCount++;
+								}
+							})}
+
+							<span>
+							{urlCount} {urlCount === 1 ? 'URL' : "URLs"}
+							</span>
 						</p>
 					</CardContent>
 				</CardActionArea>

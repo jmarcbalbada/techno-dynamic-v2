@@ -7,16 +7,15 @@ import './LessonPage.css';
 
 export const LessonPage = () => {
 	const [lesson, setLesson] = useState({
-		lesson: {
-			id: null,
-			title: null,
-			subtitle: null,
-			url: null,
-		},
-		contents: [
+		id: null,
+		title: null,
+		subtitle: null,
+		coverImage: null,
+		pages: [
 			{
 				id: null,
 				contents: null,
+				url: null,
 				files: null,
 			},
 		],
@@ -35,7 +34,7 @@ export const LessonPage = () => {
 
 	const fetchLesson = async () => {
 		const lessonData = await getLesson(lessonid);
-		setLesson(window.structuredClone(lessonData));
+		setLesson(structuredClone(lessonData));
 	};
 
 	useEffect(() => {
@@ -51,12 +50,23 @@ export const LessonPage = () => {
 							<div className="lesson-page-title">
 								<h1>Lesson {lessonid}</h1>
 								<div className="vertical-line"></div>
-								<h2>{lesson.lesson.subtitle}</h2>
+								<h2>{lesson.title}</h2>
 							</div>
 						)}
 
 						<div className="lesson-page-content">
-							<p>{lesson.contents[pageCounter - 1].contents}</p>
+							<p>{lesson.pages[pageCounter - 1].contents}</p>
+						</div>
+						<div className='lesson-page-urls'>
+							<hr />
+							<div className='lesson-page-url-label'>
+								Url:
+							</div>
+							{lesson.pages[pageCounter - 1].url && (
+								<a href={lesson.pages[pageCounter - 1].url} className='lesson-page-url-link' target='_blank'>
+									{lesson.pages[pageCounter - 1].url}
+								</a>
+							)}
 						</div>
 					</div>
 				</Container>
@@ -65,9 +75,9 @@ export const LessonPage = () => {
 			<BottomControls
 				incrementPageCounter={incrementPageCounter}
 				decrementPageCounter={decrementPageCounter}
-				lessonId={lesson.lesson.id}
+				lessonId={lesson.id}
 				pageCounter={pageCounter}
-				numberOfPages={lesson.contents.length}
+				numberOfPages={lesson.pages.length}
 			/>
 		</>
 	);
