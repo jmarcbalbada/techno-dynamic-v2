@@ -13,9 +13,14 @@ export const EditorPage = () => {
   const navigate = useNavigate();
   const [contents, setContents] = useState([{}]);
   const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
 
   const titleChangeHandler = (e) => {
     setTitle(e.target.value);
+  }
+
+  const subtitleChangeHandler = (e) => {
+    setSubtitle(e.target.value);
   }
 
   const addPageHandler = () => {
@@ -30,79 +35,98 @@ export const EditorPage = () => {
 
   const textChangeHandler = (index, text) => {
     const _contents = structuredClone(contents);
-    _contents[index].text = text;
+    _contents[index].content = text;
+    setContents(_contents);
+  }
+
+  const urlChangeHandler = (index, url) => {
+    const _contents = structuredClone(contents);
+    _contents[index].url = url;
     setContents(_contents);
   }
 
   const saveLessonHandler = async () => {
-    const lesson = await postLesson(title);
+    const lesson = await postLesson(title, subtitle);
     const lessonId = lesson.id;
     contents.forEach(async (content, index) => {
-      await postContent(lessonId, index, content.text);
+      await postContent(lessonId, index, content.text, content.url);
     });
     navigate(`/`);
   }
 
   return (
-    <div className="editor-page-container">
-      <Container maxWidth="md" className="mt-2rem">
-        <Paper elevation={16} className="editor-title-paper" sx={{
-          backgroundColor: "#f5f5f5",
-          borderRadius: "10px",
-        }}>
-          <div className="editor-page-lesson-label">
-            Lesson Editor
-          </div>
-          <div className="editor-page-title-input">
-            <span>Title:</span>
-            <TextField 
-              onChange={(e) => {titleChangeHandler(e)}}
-              required
-              size="small"
-              margin="dense"
+    <>
+      <div className="editor-page-backgroundColor"></div>
+      <div className="editor-page-container">
+        <Container maxWidth="md" className="mt-2rem">
+          <Paper elevation={16} className="editor-title-paper" sx={{
+            backgroundColor: "#f5f5f5",
+            borderRadius: "10px",
+          }}>
+            <div className="editor-page-lesson-label">
+              Lesson Editor
+            </div>
+            <div className="editor-page-title-input">
+              <span>Title:</span>
+              <TextField 
+                onChange={(e) => {titleChangeHandler(e)}}
+                required
+                size="small"
+                sx={{
+                  width: "70%",
+                  marginBottom: "1rem",
+                }}>
+              </TextField>
+              <span>Short Description:</span>
+              <TextField 
+                onChange={(e) => {subtitleChangeHandler(e)}}
+                required
+                size="small"
+                sx={{
+                  width: "70%",
+                }}>
+              </TextField>
+            </div>
+          </Paper>
+
+          {contents?.map((content, index) => {
+            return (
+              <ContentSlide
+                key={index}
+                content={content}
+                index={index}
+                onTextChange={textChangeHandler}
+                onUrlChange={urlChangeHandler}
+                deleteContent={deletePageHandler}/>
+            )
+          })}
+
+          <div className="editor-page-bottom-controls">
+            <Button
+              onClick={() => {addPageHandler()}}
+              variant="contained"
+              fullWidth
+              startIcon={<AddCircleOutlineIcon />}
               sx={{
-                width: "70%",
+                padding: "0.5rem",
+                marginBottom: "1rem",
               }}>
-            </TextField>
+              Add Page
+            </Button>
+            <Button
+              onClick={saveLessonHandler}
+              variant="contained"
+              fullWidth
+              startIcon={<CheckIcon />}
+              sx={{
+                padding: "0.5rem",
+                backgroundColor: "#3F3F3F",
+              }}>
+              Save
+            </Button>
           </div>
-        </Paper>
-
-        {contents?.map((content, index) => {
-          return (
-            <ContentSlide
-              key={index}
-              content={content}
-              index={index}
-              onTextChange={textChangeHandler}
-              deleteContent={deletePageHandler}/>
-          )
-        })}
-
-        <div className="editor-page-bottom-controls">
-          <Button
-            onClick={() => {addPageHandler()}}
-            variant="outlined"
-            fullWidth
-            startIcon={<AddCircleOutlineIcon />}
-            sx={{
-              padding: "0.5rem",
-              marginBottom: "1rem",
-            }}>
-            Add Page
-          </Button>
-          <Button
-            onClick={saveLessonHandler}
-            variant="contained"
-            fullWidth
-            startIcon={<CheckIcon />}
-            sx={{
-              padding: "0.5rem",
-              backgroundColor: "#3F3F3F",
-            }}>
-            Save
-          </Button>
-        </div>
-      </Container>
-    </div>
+        </Container>
+      </div>
+    </>
   )
 };
