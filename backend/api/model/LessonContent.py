@@ -2,7 +2,7 @@ from django.db import models
 from api.model.Lessons import Lessons
 
 
-class LessonContents(models.Model):
+class LessonContent(models.Model):
     lessonId = models.ForeignKey(Lessons, on_delete=models.CASCADE)
     contents = models.TextField(default="", null=False)
     url = models.URLField(max_length=255, null=True, blank=True)

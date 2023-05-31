@@ -1,7 +1,7 @@
 from .Lessons import *
-from .LessonContents import *
+from .LessonContent import *
 
 __all__ = [
     'Lessons',
-    'LessonContents'
+    'LessonContent'
 ]
