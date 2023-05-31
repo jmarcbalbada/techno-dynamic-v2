@@ -1,15 +1,19 @@
 from django.db import models
-from api.model.Lessons import Lessons
+from api.model.Lesson import Lesson
 
 
 class LessonContent(models.Model):
-    lessonId = models.ForeignKey(Lessons, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     contents = models.TextField(default="", null=False)
     url = models.URLField(max_length=255, null=True, blank=True)
     files = models.FileField(upload_to='media/', null=True, blank=True)
 
-    def get_lessonid(self):
-        return self.lessonId
+    def __str__(self):
+        return self.contents
+
+    def get_lesson_id(self):
+        return self.lesson
+
     def get_contents(self):
         return self.contents
 
@@ -27,6 +31,7 @@ class LessonContent(models.Model):
 
     def get_file(self):
         return self.files
+
     def set_file(self, files):
         self.files = files
 

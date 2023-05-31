@@ -1,9 +1,32 @@
 from django.urls import path
-from .views import LessonsView, LessonDetailView, LessonContentsView, LessonContentsDetailView
+from .controllers.LessonController import LessonController
+from .controllers.LessonContentController import LessonContentsController
+
+lesson_actions = {
+    'get': 'getAllLessons',
+    'post': 'createLesson',
+}
+
+lesson_detail_actions = {
+    'get': 'getLessonById',
+    'put': 'updateLesson',
+    'delete': 'deleteLesson',
+}
+
+lesson_contents_actions = {
+    'get': 'getAllLessonContents',
+    'post': 'createLessonContents',
+}
+
+lesson_contents_detail_actions = {
+    'get': 'getLessonContentsById',
+    'put': 'updateLessonContents',
+    'delete': 'deleteLessonContents',
+}
 
 urlpatterns = [
-    path('lessons/', LessonsView.as_view()),
-    path('lessons/<int:lesson_id>', LessonDetailView.as_view()),
-    path('lessons/<int:lesson_id>/contents/', LessonContentsView.as_view()),
-    path('lessons/<int:lesson_id>/contents/<int:lesson_contents_id>', LessonContentsDetailView.as_view())
+     path('lessons/', LessonController.as_view(lesson_actions)),
+     path('lessons/<int:lesson_id>', LessonController.as_view(lesson_detail_actions)),
+     path('lessons/<int:lesson_id>/contents/', LessonContentsController.as_view(lesson_contents_actions)),
+     path('lessons/<int:lesson_id>/contents/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions))
 ]
