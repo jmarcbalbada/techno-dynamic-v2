@@ -25,29 +25,30 @@ export const getLesson = async (id) => {
 };
 
 export const postLesson = async (sub) => {
-	try {
-		const response = await axios.post(`${baseUrl}api/lessons/`, {
-			title: 'sample',
-			subtitle: sub,
-			url: null,
+	return await axios.post(`${baseUrl}api/lessons/`, {
+		title: 'sample',
+		subtitle: sub,
+		url: null,
+	})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error(error);
+			return error;
 		});
-		return response.data;
-	} catch (error) {
-		console.error(error.response.data);
-	}
 };
 
-export const postContent = async (lessonId, content) => {
-	try {
-		const response = await axios.post(
-			`${baseUrl}api/lessons/${lessonId}/contents/`,
-			{
-				contents: content,
-				files: null,
-			}
-		);
-		return response.data;
-	} catch (error) {
-		console.error(error.response.data);
-	}
+export const postContent = async (lessonId, index, content) => {
+	return await axios.post(`${baseUrl}api/lessons/${lessonId}/contents/`, {
+		contents: content,
+		files: null,
+	})
+		.then(response => {
+			return response.data;
+		})
+		.catch(error => {
+			console.error(error);
+			return error;
+		});
 };

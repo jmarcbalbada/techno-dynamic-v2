@@ -1,43 +1,43 @@
-.lesson-editor-label {
-    font-size: 1.5rem;
-    font-weight: 600;
+.editor-page-container {
+
 }
 
-.lesson-editor-title {
+.mt-2rem {
+    margin-top: 2rem;
+}
+
+.editor-title-paper {
+    padding: 2rem;
+}
+
+.editor-page-lesson-label {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem
-}
-
-.lesson-editor-content {
-    padding-top: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.lesson-editor-buttons {
-    padding-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    width: 70%;
-}
-
-.lesson-editor-page-number {
-    padding-top: 1rem;
-    font-size: 15px;
-    font-weight: 250;
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-}
-
-.editor-bottom-controls {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2rem;;
     margin-bottom: 2rem;
-    gap: 1.5rem;
+}
+
+.editor-page-title-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    background-color: #EDEDED;
+}
+
+.editor-page-bottom-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }
