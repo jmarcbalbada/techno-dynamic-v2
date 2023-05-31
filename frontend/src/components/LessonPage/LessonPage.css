@@ -42,6 +42,7 @@
     color: inherit;
     text-decoration: underline;
     font-style: italic;
+    overflow: hidden;
 }
 
 .mb-6rem {
