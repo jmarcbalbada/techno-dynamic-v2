@@ -58,14 +58,16 @@ export const LessonPage = () => {
 							<p>{lesson.pages[pageCounter - 1].contents}</p>
 						</div>
 						<div className='lesson-page-urls'>
-							<hr />
-							<div className='lesson-page-url-label'>
-								Url:
-							</div>
 							{lesson.pages[pageCounter - 1].url && (
-								<a href={lesson.pages[pageCounter - 1].url} className='lesson-page-url-link' target='_blank'>
-									{lesson.pages[pageCounter - 1].url}
-								</a>
+								<>
+									<hr />
+									<div className='lesson-page-url-label'>
+										Url:
+									</div>
+									<a href={lesson.pages[pageCounter - 1].url} className='lesson-page-url-link' target='_blank'>
+										{lesson.pages[pageCounter - 1].url}
+									</a>
+								</>
 							)}
 						</div>
 					</div>
