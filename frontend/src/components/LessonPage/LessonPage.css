@@ -28,6 +28,22 @@
     font-weight: 400;
 }
 
+.lesson-page-content {
+    font-size: 1.3rem;
+}
+
+.lesson-page-url-label {
+    font-size: 1rem;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.lesson-page-url-link {
+    color: inherit;
+    text-decoration: underline;
+    font-style: italic;
+}
+
 .mb-6rem {
     margin-bottom: 6rem;
 }
