@@ -1,57 +1,65 @@
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework import status
 
-from api.models import LessonContents
-from api.serializers import LessonContentsSerializer
+from api.model.LessonContent import LessonContent
+from api.serializer.LessonContentSerializer import LessonContentSerializer
 
+class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin):
+    queryset = LessonContent.objects.all()
+    serializer_class = LessonContentSerializer
 
-class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixin):
-    queryset = LessonContents.objects.all()
-    serializer_class = LessonContentsSerializer
+    def getAllLessonContents(self, request, lesson_id):
+        instance = self.get_queryset().filter(lesson_id=lesson_id)
+        serializer = self.get_serializer(instance, many=True)
 
-    @action(methods=['GET'], detail=False)
-    def getAllLessonContents(self, request):
-        instance = self.get_queryset()
-        data = []
-        for lesson_content in instance:
-            data.append(LessonContentsSerializer(lesson_content).data)
-        return Response(data)
+        return Response(serializer.data)
 
-    @action(methods=['GET'], detail=True)
-    def getLessonContentsById(self, request, id):
-        instance = self.get_queryset().filter(id=id).first()
+    def getLessonContentsById(self, request, lesson_contents_id, lesson_id):
+        instance = self.get_queryset().filter(lesson_id=lesson_id, id=lesson_contents_id).first()
+
         if instance is None:
             return Response({"error": "Lesson contents not found"}, status=status.HTTP_404_NOT_FOUND)
-        return Response(LessonContentsSerializer(instance).data)
 
-    @action(methods=['POST'], detail=False)
-    def createLessonContents(self, request):
-        data = request.data
-        new_lesson_contents = LessonContents()
-        new_lesson_contents.lessonId_id = data['lessonId']
-        new_lesson_contents.set_contents(data['contents'])
-        new_lesson_contents.set_file(request.FILES.get('files'))
-        new_lesson_contents.save()
-        return Response(LessonContentsSerializer(new_lesson_contents).data)
+        serializer = self.get_serializer(instance)
 
-    @action(methods=['PUT'], detail=True)
-    def updateLessonContents(self, request, id):
+        return Response(serializer.data)
+
+    def createLessonContents(self, request, lesson_id):
         data = request.data
-        instance = self.get_queryset().filter(id=id).first()
+
+        new_lesson_content = LessonContent()
+        new_lesson_content.set_lesson_id(lesson_id)
+        new_lesson_content.set_contents(data['contents'])
+        new_lesson_content.set_url(data['url'])
+        new_lesson_content.set_file(request.FILES.get('files'))
+        new_lesson_content.save()
+        serializer = LessonContentSerializer(new_lesson_content)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def updateLessonContents(self, request, lesson_contents_id, lesson_id):
+        data = request.data
+
+        instance = self.get_queryset().filter(id=lesson_contents_id, lesson_id=lesson_id).first()
+
         if instance is None:
             return Response({"error": "Lesson contents not found"}, status=status.HTTP_404_NOT_FOUND)
-        instance.set_contents(data['contents'])
-        instance.set_file(request.FILES.get('files'))
+
+        instance.contents = data['contents']
+        instance.files = request.FILES.get('files')
         instance.save()
-        return Response(LessonContentsSerializer(instance).data)
+        serializer = LessonContentSerializer(instance)
 
-    @action(methods=['DELETE'], detail=True)
-    def deleteLessonContents(self, request, id):
-        instance = self.get_queryset().filter(id=id).first()
+        return Response(serializer.data)
+
+    def deleteLessonContents(self, request, lesson_contents_id, lesson_id):
+        instance = self.get_queryset().filter(id=lesson_contents_id, lesson_id=lesson_id).first()
+
         if instance is None:
             return Response({"error": "Lesson contents not found"}, status=status.HTTP_404_NOT_FOUND)
+
         instance.delete()
+
         return Response({"success": "Lesson contents deleted"})
