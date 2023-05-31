@@ -6,8 +6,22 @@ import { getLesson } from '../../apis/Lessons';
 import './LessonPage.css';
 
 export const LessonPage = () => {
-	const [lesson, setLesson] = useState({});
-	const [page, setPage] = useState([]);
+	const [lesson, setLesson] = useState({
+		lesson: {
+			id: null,
+			title: null,
+			subtitle: null,
+			url: null,
+		},
+		contents: [
+			{
+				id: null,
+				contents: null,
+				files: null,
+			},
+		],
+	});
+
 	const [pageCounter, setPageCounter] = useState(1);
 	const { lessonid, pageid } = useParams();
 
@@ -19,53 +33,41 @@ export const LessonPage = () => {
 		setPageCounter((prev) => prev - 1);
 	};
 
+	const fetchLesson = async () => {
+		const lessonData = await getLesson(lessonid);
+		setLesson(window.structuredClone(lessonData));
+	};
+
 	useEffect(() => {
-		(async () => {
-			const lessonData = await getLesson(lessonid);
-			console.log('lessonData', lessonData);
-			setLesson(lessonData.lesson);
-			setPage(lessonData.contents);
-			console.log(page);
-		})();
-	}, [pageid]);
+		fetchLesson();
+	}, [lessonid]);
 
 	return (
 		<>
-			{pageCounter === 1 && (
-				<div>
-					<Container maxWidth="md" className="mb-6rem">
-						<div className="lesson-page-container">
+			<div>
+				<Container maxWidth="md" className="mb-6rem">
+					<div className="lesson-page-container">
+						{pageCounter === 1 && (
 							<div className="lesson-page-title">
-								<h1>Lessonssssssss {lessonid}</h1>
+								<h1>Lesson {lessonid}</h1>
 								<div className="vertical-line"></div>
-								<h2>{lesson.subtitle}</h2>
+								<h2>{lesson.lesson.subtitle}</h2>
 							</div>
-							<div className="lesson-page-content">
-								<p>{page[0]?.contents}</p>
-							</div>
-						</div>
-					</Container>
-				</div>
-			)}
+						)}
 
-			{pageCounter > 1 && (
-				<div>
-					<Container maxWidth="md" className="mb-6rem">
-						<div className="lesson-page-container">
-							<div className="lesson-page-content">
-								<p>{page[pageCounter - 1]?.contents}</p>
-							</div>
+						<div className="lesson-page-content">
+							<p>{lesson.contents[pageCounter - 1].contents}</p>
 						</div>
-					</Container>
-				</div>
-			)}
+					</div>
+				</Container>
+			</div>
 
 			<BottomControls
 				incrementPageCounter={incrementPageCounter}
 				decrementPageCounter={decrementPageCounter}
-				lessonId={lesson.id}
+				lessonId={lesson.lesson.id}
 				pageCounter={pageCounter}
-				numberOfPages={page.length}
+				numberOfPages={lesson.contents.length}
 			/>
 		</>
 	);
