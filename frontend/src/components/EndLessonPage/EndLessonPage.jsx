@@ -13,7 +13,7 @@ export const EndLessonPage = () => {
 		(async () => {
 			const lessonData = await getLesson(lessonid);
 			console.log('lessonData', lessonData);
-			setLesson(lessonData.lesson);
+			setLesson(lessonData);
 		})();
 	}, []);
 
@@ -25,12 +25,12 @@ export const EndLessonPage = () => {
 						<div className="end-lesson-page-title">
 							<h1>Lesson {lessonid}</h1>
 							<div className="vertical-line"></div>
-							<h2>{lesson.subtitle}</h2>
+							<h2>{lesson.title}</h2>
 						</div>
 						<CardMedia
 							component="img"
-							height="160"
-							image="https://source.unsplash.com/random/featured/?celebration"
+							height="400"
+							image="https://source.unsplash.com/random/featured/?celebrate"
 						/>
 						<div className="end-lesson-page-message">
 							<h3>Good Job!</h3>
