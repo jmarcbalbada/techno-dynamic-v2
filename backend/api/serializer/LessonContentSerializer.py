@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from api.model import LessonContent
-
+from api.model.LessonContent import LessonContent
 
 class LessonContentSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = LessonContents
-        fields = ['id', 'contents', 'files']
+        model = LessonContent
+        fields = ['id', 'contents', 'url', 'files']

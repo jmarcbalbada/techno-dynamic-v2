@@ -1,11 +1,12 @@
 from django.db import models
 
-class Lessons(models.Model):
+class Lesson(models.Model):
     title = models.CharField(max_length=50, default="", null=False)
     subtitle = models.CharField(max_length=50, default="", null=False)
     coverImage = models.ImageField(blank=True, upload_to='media/')
-    url = models.URLField(max_length=255, null=True, blank=True)
-    pages = []
+
+    def __str__(self):
+        return self.title + ' ' + self.subtitle
 
     def get_title(self):
         return self.title
@@ -18,18 +19,6 @@ class Lessons(models.Model):
 
     def set_subtitle(self, subtitle):
         self.subtitle = subtitle
-
-    def get_url(self):
-        return self.url
-
-    def set_url(self, url):
-        self.url = url
-
-    def get_pages(self):
-        return self.pages
-
-    def set_lesson_content(self, pages):
-        self.pages.append(pages)
 
     def get_cover_image(self):
         return self.coverImage
