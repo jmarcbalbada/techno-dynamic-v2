@@ -1,2 +1,2 @@
-# from .LessonSerializer import *
-# from .LessonContentSerializer import *
+from .LessonSerializer import *
+from .LessonContentSerializer import *
