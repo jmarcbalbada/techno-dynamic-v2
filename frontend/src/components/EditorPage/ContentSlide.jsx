@@ -89,14 +89,14 @@ export const ContentSlide = ({ index, deleteContent, ...props }) => {
 							Add Url
 						</Button>
 					)}
-					<Button
+					{/* <Button
 						variant="contained"
 						sx={{
 							backgroundColor: '#3F3F3F',
 						}}
 					>
 						Add Files
-					</Button>
+					</Button> */}
 				</div>
 				<span className="content-slide-counter">Page {index + 1}</span>
 			</div>
