@@ -4,141 +4,137 @@ import { postLesson, postContent } from "../../apis/Lessons";
 import "./EditorPage.css";
 import { ContentSlide } from "./ContentSlide";
 import { useNavigate } from "react-router-dom";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CheckIcon from '@mui/icons-material/Check';
+
 
 export const EditorPage = () => {
-  const [slides, setSlides] = useState([]);
-  const [slideCount, setSlideCount] = useState(1);
-  const [content, setContent] = useState("");
-  const [slideContent, setSlideContent] = useState('')
-  const [contentList, setContentList] = useState([]);
-  const [title, setTitle] = useState("");
-  const [lesson, setLesson] = useState({});
-  const [scrollPosition, setScrollPosition] = useState(0);
+  
   const navigate = useNavigate();
+  const [contents, setContents] = useState([{}]);
+  const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
 
-  const handleAddNewSlide = () => {
-    setSlideCount((prev) => prev + 1);
-    setSlides((prev) => [...prev, <ContentSlide />]);
-  };
-
-  const titleOnChangeHandler = (e) => {
+  const titleChangeHandler = (e) => {
     setTitle(e.target.value);
-  };
+  }
 
-  const contentOnChangeHandler = (e) => {
-    setContent(e.target.value);
-    console.log(content);
-  };
+  const subtitleChangeHandler = (e) => {
+    setSubtitle(e.target.value);
+  }
 
-  const contentSlideHandler = (e, index) => {
-    setContentList(contentList[index] = e.target.value)
-    console.log('contentList', contentList)
+  const addPageHandler = () => {
+    setContents([...contents, {}]);
+  }
+
+  const deletePageHandler = (pageCount) => {
+    setContents(contents.filter((content, index) => {
+      return index !== pageCount;
+    }));
+  }
+
+  const textChangeHandler = (index, text) => {
+    const _contents = structuredClone(contents);
+    _contents[index].content = text;
+    console.log('_contents', _contents)
+    setContents(_contents);
+  }
+
+  const urlChangeHandler = (index, url) => {
+    const _contents = structuredClone(contents);
+    _contents[index].url = url;
+    console.log('_contents', _contents)
+    setContents(_contents);
   }
 
   const saveLessonHandler = async () => {
-    const Lesson = await postLesson(title);
-    await setLesson(Lesson);
-    console.log(lesson);
-
-    // convert to loop all contents
-
-    for (let i = 0; i < contentList.length; i++) {
-        if (i === 0) {
-            setContentList(prev => [...prev], content)
-        }
-        else{
-            setContentList(prev => [...prev], )
-        }
-    }
-
-    const Content = await postContent(lesson.id, content);
-    console.log(Content);
-    navigate("/");
-  };
-
-  useEffect(() => {
-    (async () => {
-      await postContent(lesson.id, content);
-    })();
-  }, [lesson]);
+    const lesson = await postLesson(title, subtitle);
+    const lessonId = lesson.id;
+    console.log('lessonId', lessonId)
+    console.log('contentsS', contents)
+    contents.forEach(async (content, index) => {
+      console.log(content.url)
+      console.log(content.text)
+      await postContent(lessonId, index, content.content, content.url);
+    });
+    navigate(`/`);
+  }
 
   return (
-    <Container
-      maxWidth="md"
-      sx={{
-        paddingTop: "2rem",
-      }}
-    >
-      <Paper
-        elevation={16}
-        sx={{
-          padding: "2rem",
-          marginBottom: "2rem",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div className="lesson-editor-label">LESSON EDITOR</div>
+    <>
+      <div className="editor-page-backgroundColor"></div>
+      <div className="editor-page-container">
+        <Container maxWidth="md" className="mt-2rem">
+          <Paper elevation={16} className="editor-title-paper" sx={{
+            backgroundColor: "#f5f5f5",
+            borderRadius: "10px",
+          }}>
+            <div className="editor-page-lesson-label">
+              Lesson Editor
+            </div>
+            <div className="editor-page-title-input">
+              <span>Title:</span>
+              <TextField 
+                onChange={(e) => {titleChangeHandler(e)}}
+                required
+                autoComplete="off"
+                size="small"
+                sx={{
+                  width: "70%",
+                  marginBottom: "1rem",
+                }}>
+              </TextField>
+              <span>Short Description:</span>
+              <TextField 
+                onChange={(e) => {subtitleChangeHandler(e)}}
+                required
+                autoComplete="off"
+                size="small"
+                sx={{
+                  width: "70%",
+                }}>
+              </TextField>
+            </div>
+          </Paper>
 
-        <div className="lesson-editor-title">
-          <span>Title:</span>
-        </div>
+          {contents?.map((content, index) => {
+            return (
+              <ContentSlide
+                key={index}
+                content={content}
+                index={index}
+                onTextChange={textChangeHandler}
+                onUrlChange={urlChangeHandler}
+                deleteContent={deletePageHandler}/>
+            )
+          })}
 
-        <TextField
-          onChange={titleOnChangeHandler}
-          value={title}
-          size="small"
-          placeholder="Enter Title Here"
-          sx={{
-            width: "70%",
-          }}
-        ></TextField>
-
-        <div className="lesson-editor-content">
-          <span>Content:</span>
-        </div>
-
-        <TextField
-          onChange={contentOnChangeHandler}
-          value={content}
-          size="large"
-          placeholder="Write Something..."
-          multiline
-          rows={12}
-          sx={{
-            width: "70%",
-          }}
-        ></TextField>
-
-        <div className="lesson-editor-buttons">
-          <Button variant="contained">Add Url</Button>
-          <Button variant="contained">Add Files</Button>
-        </div>
-
-        <div className="lesson-editor-page-number">Slide 1</div>
-      </Paper>
-
-      {slides?.map((slide, index) => {
-        return (
-          <ContentSlide
-            contentSlideHandler={contentSlideHandler}
-            slideContent={slideContent}
-            key={index}
-            slideNum={index + 2}
-          />
-        );
-      })}
-
-      <div className="editor-bottom-controls">
-        <Button id="addButtonClicker" onClick={handleAddNewSlide}>
-          ADD NEW SLIDE
-        </Button>
-        <Button onClick={saveLessonHandler} variant="contained" id="saveButton">
-          SAVE
-        </Button>
+          <div className="editor-page-bottom-controls">
+            <Button
+              onClick={() => {addPageHandler()}}
+              variant="contained"
+              fullWidth
+              startIcon={<AddCircleOutlineIcon />}
+              sx={{
+                padding: "0.5rem",
+                marginBottom: "1rem",
+              }}>
+              Add Page
+            </Button>
+            <Button
+              onClick={saveLessonHandler}
+              variant="contained"
+              fullWidth
+              startIcon={<CheckIcon />}
+              sx={{
+                padding: "0.5rem",
+                backgroundColor: "#3F3F3F",
+              }}>
+              Save
+            </Button>
+          </div>
+        </Container>
       </div>
-    </Container>
-  );
+    </>
+  )
 };
