@@ -5,7 +5,6 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 export const ContentSlide = ({ index, deleteContent, ...props }) => {
 	const [isUrlClicked, setIsUrlClicked] = useState(false);
-	const [url, setUrl] = useState('');
 
 	const urlClickHandler = () => {
 		setIsUrlClicked(true);
@@ -57,6 +56,7 @@ export const ContentSlide = ({ index, deleteContent, ...props }) => {
 				<TextField
 					onChange={onTextChange}
 					required
+          autoComplete="off"
 					size="small"
 					margin="dense"
 					multiline
@@ -71,6 +71,8 @@ export const ContentSlide = ({ index, deleteContent, ...props }) => {
 					{isUrlClicked ? (
 						<TextField
 							onChange={onUrlChange}
+              required
+              autoComplete="off"
 							size="small"
 							label="URL"
 							fullWidth

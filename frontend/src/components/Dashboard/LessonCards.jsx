@@ -14,7 +14,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import './LessonCards.css';
 
 export const LessonCards = ({ lesson, idx }) => {
-	const [coverImage, setCoverImage] = useState('');
 	const navigate = useNavigate();
 
 	const handleOpenLesson = () => {
