@@ -399,3 +399,4 @@ FodyWeavers.xsd
 /.idea
 backend/.idea/workspace.xml
 backend/api/migrations/0001_initial.py
+backend/media
