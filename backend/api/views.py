@@ -17,7 +17,7 @@ class LessonsView(APIView):
         for lesson in serializer.data:
             lesson_instance = Lesson.objects.get(pk=lesson['id'])
             contents_serializer = LessonContentsSerializer(lesson_instance.get_contents(), many=True)
-            lesson['contents'] = contents_serializer.data
+            lesson['pages'] = contents_serializer.data
             response_data.append(lesson)
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -37,7 +37,7 @@ class LessonDetailView(APIView):
         contents_serializer = LessonContentsSerializer(lesson.get_contents(), many=True)
         response_data = {
             'lesson': lesson_serializer.data,
-            'contents': contents_serializer.data
+            'pages': contents_serializer.data
         }
         return Response(response_data, status=status.HTTP_200_OK)
 

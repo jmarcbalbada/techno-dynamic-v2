@@ -5,7 +5,8 @@ from django.db import models
 class Lesson(models.Model):
     title = models.CharField(max_length=50, default="", null=False)
     subtitle = models.CharField(max_length=50, default="", null=False)
-    url = models.URLField(max_length=255, null=True, blank=True)
+    coverImage = models.ImageField(blank=True, upload_to='media/')
+
 
     def get_contents(self):
         return LessonContents.objects.filter(lesson=self)
@@ -17,6 +18,7 @@ class LessonContents(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     contents = models.TextField(default="", null=False)
     files = models.FileField(upload_to='media/', null=True, blank=True)
+    url = models.URLField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.contents
