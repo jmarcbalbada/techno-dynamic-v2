@@ -19,7 +19,6 @@ export const BottomControls = ({
 	const handleBackButton = () => {
 		if (pageCounter > 1) {
 			decrementPageCounter();
-
 			getLesson(lessonId).then((res) => {
 				console.log('res', res);
 				navigate(`/lessons/${lessonId}/pages/${pageCounter - 1}`);

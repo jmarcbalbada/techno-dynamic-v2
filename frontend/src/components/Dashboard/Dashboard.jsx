@@ -12,11 +12,11 @@ export const Dashboard = () => {
 	const [lessons, setLessons] = useState([]);
 
 	useEffect(() => {
-		getLessons().then((res) => {
-			setLessons(res);
-			console.log('lessons', lessons);
-		});
-	}, [lessons.subtitle]);
+		(async () => {
+			const response = await getLessons();
+			setLessons(response);
+		})();
+	}, []);
 
 	return (
 		<div className="dashboard-container">
