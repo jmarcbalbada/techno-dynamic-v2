@@ -27,6 +27,6 @@ lesson_contents_detail_actions = {
 urlpatterns = [
      path('lessons/', LessonController.as_view(lesson_actions)),
      path('lessons/<int:lesson_id>', LessonController.as_view(lesson_detail_actions)),
-     path('lessons/<int:lesson_id>/contents/', LessonContentsController.as_view(lesson_contents_actions)),
-     path('lessons/<int:lesson_id>/contents/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions))
+     path('lessons/<int:lesson_id>/pages/', LessonContentsController.as_view(lesson_contents_actions)),
+     path('lessons/<int:lesson_id>/pages/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions))
 ]
