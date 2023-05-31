@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import {
 	Box,
 	Card,
@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './LessonCards.css';
 
 export const LessonCards = ({ lesson, idx }) => {
+	const [coverImage, setCoverImage] = useState('');
 	const navigate = useNavigate();
 
 	const handleOpenLesson = () => {
@@ -28,22 +29,31 @@ export const LessonCards = ({ lesson, idx }) => {
 			<Card
 				sx={{
 					backgroundColor: '#F5F5F5',
-				}}
-			>
+					}}>
 				<CardActionArea onClick={handleOpenLesson}>
 					<CardMedia
 						component="img"
 						height="140"
 						image="https://source.unsplash.com/random/featured/?education"
+						alt='education'
 					/>
 					<CardContent>
-						<h5 className="lesson-card-title">Lesson {idx + 1}</h5>
-						<p className="lesson-card-description">{lesson.subtitle}</p>
+						<p className="lesson-card-number">
+							Lesson {idx + 1}
+						</p>
+
+						<p className="lesson-card-title">
+							{lesson.title}
+						</p>
+
+						<p className="lesson-card-subtitle">
+							{lesson.subtitle}
+						</p>
 
 						<hr className="lesson-card-hr" />
 
 						<p className="lesson-card-preview">
-							{lesson.contents.length} Contents
+							{lesson.pages.length} {lesson.pages.length === 1 ? 'Content' : "Contents"}
 						</p>
 					</CardContent>
 				</CardActionArea>

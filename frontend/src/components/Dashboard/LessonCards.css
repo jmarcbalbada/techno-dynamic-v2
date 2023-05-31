@@ -3,17 +3,25 @@
     justify-content: flex-end;
 }
 
-.lesson-card-title {
+.lesson-card-number {
     margin: 0;
     margin-bottom: 1rem;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 400;
 }
 
-.lesson-card-description {
+.lesson-card-title {
     margin: 0;
     font-size: 2rem;
     font-weight: 600;
+    word-wrap: break-word;
+    margin-bottom: 0.5rem;
+}
+
+.lesson-card-subtitle {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 300;
     word-wrap: break-word;
 }
 

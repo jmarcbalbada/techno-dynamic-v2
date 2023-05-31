@@ -24,11 +24,10 @@ export const getLesson = async (id) => {
         });
 };
 
-export const postLesson = async (sub) => {
+export const postLesson = async (title, sub) => {
 	return await axios.post(`${baseUrl}api/lessons/`, {
-		title: 'sample',
+		title: title,
 		subtitle: sub,
-		url: null,
 	})
 		.then(response => {
 			return response.data;
@@ -39,9 +38,10 @@ export const postLesson = async (sub) => {
 		});
 };
 
-export const postContent = async (lessonId, index, content) => {
+export const postContent = async (lessonId, index, content, url) => {
 	return await axios.post(`${baseUrl}api/lessons/${lessonId}/contents/`, {
 		contents: content,
+		url: url,
 		files: null,
 	})
 		.then(response => {
