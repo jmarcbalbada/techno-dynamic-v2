@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.model import LessonContents
+from api.model import LessonContent
 
 
 class LessonContentSerializer(serializers.ModelSerializer):
