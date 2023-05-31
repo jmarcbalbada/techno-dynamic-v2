@@ -1,7 +1,6 @@
 from django.db import models
 from api.model.Lesson import Lesson
 
-
 class LessonContent(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     contents = models.TextField(default="", null=False)
@@ -12,13 +11,16 @@ class LessonContent(models.Model):
         return self.contents
 
     def get_lesson_id(self):
-        return self.lesson
+        return self.lesson_id
+
+    def set_lesson_id(self, lesson_id):
+        self.lesson_id = lesson_id
 
     def get_contents(self):
         return self.contents
 
-    def get_files(self):
-        return self.files
+    def set_contents(self, contents):
+        self.contents = contents
 
     def get_url(self):
         return self.url
@@ -26,13 +28,11 @@ class LessonContent(models.Model):
     def set_url(self, url):
         self.url = url
 
-    def set_contents(self, contents):
-        self.contents = contents
-
-    def get_file(self):
+    def get_files(self):
         return self.files
 
     def set_file(self, files):
         self.files = files
+
 
 
