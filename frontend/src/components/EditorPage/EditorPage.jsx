@@ -90,6 +90,9 @@ export const EditorPage = () => {
                 required
                 autoComplete="off"
                 size="small"
+                inputProps={{
+                  maxLength: 50,
+                }}
                 sx={{
                   width: "70%",
                 }}>
