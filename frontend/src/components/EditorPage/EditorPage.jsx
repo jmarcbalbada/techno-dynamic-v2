@@ -1,5 +1,5 @@
 import { Container, Paper, TextField, Button } from "@mui/material";
-import {useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { postLesson, postContent } from "../../apis/Lessons";
 import "./EditorPage.css";
 import { ContentSlide } from "./ContentSlide";
@@ -11,7 +11,10 @@ import CheckIcon from '@mui/icons-material/Check';
 export const EditorPage = () => {
   
   const navigate = useNavigate();
-  const [contents, setContents] = useState([{}]);
+  const [contents, setContents] = useState([{
+    content: null,
+    url: null
+  }]);
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
 
