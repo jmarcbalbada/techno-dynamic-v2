@@ -40,6 +40,8 @@ export const postLesson = async (title, sub) => {
 };
 
 export const postContent = async (lessonId, index, content, url) => {
+	console.log('postContent', content)
+	console.log('postURL', url)
 	return await axios.post(`${baseUrl}api/lessons/${lessonId}/pages/`, {
 		contents: content,
 		url: url,
