@@ -12,11 +12,12 @@ export const Dashboard = () => {
 	const [lessons, setLessons] = useState([]);
 
 	useEffect(() => {
-		getLessons().then((res) => {
-			setLessons(res);
-			console.log('lessons', lessons);
-		});
-	}, [lessons.subtitle]);
+		(async () => {
+			const response = await getLessons();
+			console.log(response);
+			setLessons(response);
+		})();
+	}, []);
 
 	return (
 		<div className="dashboard-container">
@@ -70,7 +71,7 @@ export const Dashboard = () => {
 
 					{lessons?.map((lesson, index) => {
 						return (
-							<Grid key={lesson.id} item sm={12} md={6} lg={4}>
+							<Grid key={lesson.id} item xs={12} sm={12} md={6} lg={4}>
 								<LessonCards lesson={lesson} idx={index} />
 							</Grid>
 						);

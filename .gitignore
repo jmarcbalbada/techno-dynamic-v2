@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/.idea
+backend/.idea/workspace.xml
+backend/api/migrations/0001_initial.py
+backend/media
