@@ -1,9 +1,9 @@
-
+import Login from "./components/login/Login";
 const App = () => {
 
   return (
     <>
-      Initial
+      <Login />
     </>
   )
 };
