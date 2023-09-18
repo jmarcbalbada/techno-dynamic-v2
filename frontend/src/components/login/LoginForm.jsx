@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { LoginValidationSchema } from './LoginValidationSchema';
+import { Link as RouterLink } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -36,7 +37,6 @@ const LoginForm = () => {
         label='Username'
         value={formik.values.username}
         onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
         error={formik.touched.username && Boolean(formik.errors.username)}
         helperText={formik.touched.username && formik.errors.username}
         InputProps={{
@@ -57,7 +57,6 @@ const LoginForm = () => {
         type='password'
         value={formik.values.password}
         onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
         error={formik.touched.password && Boolean(formik.errors.password)}
         helperText={formik.touched.password && formik.errors.password}
         InputProps={{
@@ -73,9 +72,9 @@ const LoginForm = () => {
       </Button>
       {/* Linear Progress here */}
       <Divider sx={{ my: 2 }}>or</Divider>
-      <Typography align='center'>
+      <Typography align='center' mb={5}>
         Don't have an account?{' '}
-        <Link href='#' underline='hover'>
+        <Link component={RouterLink} to='/register' underline='hover'>
           Register
         </Link>
       </Typography>
