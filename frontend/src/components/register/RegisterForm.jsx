@@ -187,15 +187,19 @@ const RegisterForm = () => {
             ))}
           </TextField>
         </Grid>
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          sx={{ mt: 3, mb: 2 }}>
-          Register
-        </Button>
+        <Grid item xs={12}>
+          <Button
+            type='submit'
+            fullWidth
+            variant='contained'
+            sx={{ mt: 3, mb: 2 }}>
+            Register
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider sx={{ mb: 2 }}>or</Divider>
+        </Grid>
       </Grid>
-      <Divider sx={{ my: 2 }}>or</Divider>
       <Typography align='center' mb={5}>
         Already have an account?{' '}
         <Link component={RouterLink} to='/login' underline='hover'>
