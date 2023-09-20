@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
 import { RegisterValidationSchema } from './RegisterValidationSchema';
@@ -7,10 +7,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const courseCategories = [
   {
@@ -43,6 +47,7 @@ const yearCategories = [
 ];
 
 const RegisterForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -51,14 +56,23 @@ const RegisterForm = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      course: 'BSCS',
-      yearLevel: '3'
+      course: '',
+      yearLevel: ''
     },
     validationSchema: RegisterValidationSchema,
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     }
   });
+
+  const handleClickShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Box component='form' onSubmit={formik.handleSubmit} mt={4}>
       <Grid container spacing={2}>
@@ -122,11 +136,23 @@ const RegisterForm = () => {
             id='password'
             name='password'
             label='Password'
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             value={formik.values.password}
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge='end'>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -136,7 +162,7 @@ const RegisterForm = () => {
             id='confirmPassword'
             name='confirmPassword'
             label='Confirm Password'
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             value={formik.values.confirmPassword}
             onChange={formik.handleChange}
             error={
@@ -146,6 +172,18 @@ const RegisterForm = () => {
             helperText={
               formik.touched.confirmPassword && formik.errors.confirmPassword
             }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge='end'>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
         </Grid>
         <Grid item xs={12} md={6}>

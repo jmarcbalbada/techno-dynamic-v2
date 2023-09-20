@@ -21,5 +21,9 @@ export const RegisterValidationSchema = yup.object({
   confirmPassword: yup
     .string('Confirm your password')
     .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Confirm Password is required')
+    .required('Confirm Password is required'),
+  course: yup
+    .string().required('Select a course'),
+  yearLevel: yup
+    .string().required('Select a year level'),
 });
