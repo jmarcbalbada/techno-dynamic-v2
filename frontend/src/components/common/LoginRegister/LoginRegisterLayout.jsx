@@ -1,11 +1,11 @@
 import React from 'react';
 import HeroGrid from './HeroGrid';
-import LoginForm from '../../login/LoginForm';
-import RegisterForm from '../../register/RegisterForm';
-import lionlogo from '../../../assets/lionlogo.png';
+import LoginForm from 'components/login/LoginForm';
+import RegisterForm from 'components/register/RegisterForm';
+import lionlogo from 'assets/lionlogo.png'
 import styles from './LoginRegisterLayout.module.css';
 import LogoDivider from './LogoDivider';
-import Copyright from '../../copyright/Copyright';
+import Copyright from 'components/copyright/Copyright';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
