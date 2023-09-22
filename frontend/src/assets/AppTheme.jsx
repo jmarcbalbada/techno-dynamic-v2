@@ -3,7 +3,7 @@ import { createTheme, responsiveFontSizes } from '@mui/material';
 const AppTheme = createTheme({
   // TODO: Add theme options here
   typography: {
-    fontFamily: ['Poppins', 'sans-serif'].join(',')
+    fontFamily: ['Poppins', 'Century Gothic', 'sans-serif'].join(',')
   }
 });
 
