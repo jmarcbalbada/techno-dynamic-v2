@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const fileNames = ['src', 'components', 'hooks', 'assets']
+const fileNames = ['src', 'components', 'hooks', 'assets', 'pages']
 
 // this will generate aliases for fileNames
 const filePaths = fileNames.reduce(
