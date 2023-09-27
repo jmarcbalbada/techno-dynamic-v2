@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { LoginValidationSchema } from './LoginValidationSchema';
 import { Link as RouterLink } from 'react-router-dom';
+import { useAuth } from 'hooks/useAuth';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -18,6 +19,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -26,7 +28,8 @@ const LoginForm = () => {
     },
     validationSchema: LoginValidationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      console.log('values', values);
+      login(values);
     }
   });
 
