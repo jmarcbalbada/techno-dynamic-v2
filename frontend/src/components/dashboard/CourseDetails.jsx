@@ -1,5 +1,14 @@
-import { Box, List, ListItem, Typography, styled } from '@mui/material';
 import React from 'react';
+
+import { styled } from '@mui/material';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
 
 const introduction = `This course is designed to introduce students to the principles and practices of Technopreneurship, which involves the process of identifying and pursuing opportunities to
 create innovative products or services using technology. The course will cover topics such as idea generation, market research, funding, team building, and product
@@ -26,20 +35,27 @@ const ObjectivesListItem = styled(ListItem)(({ theme }) => ({
 
 const CourseDetails = () => {
   return (
-    <Box
-      borderRadius={3}
-      sx={{
-        bgcolor: 'lightgrey',
-        p: 2
-      }}>
-      <Typography gutterBottom>{introduction}</Typography>
-      <Typography variant='h6'>Course Objectives</Typography>
-      <ObjectivesList disablePadding>
-        {Objectives.map((objective, index) => (
-          <ObjectivesListItem key={index}>{objective}</ObjectivesListItem>
-        ))}
-      </ObjectivesList>
-    </Box>
+    <Accordion variant='outlined' TransitionProps={{ unmountOnExit: true }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant='h5'>Course Details</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Box
+          borderRadius={3}
+          sx={{
+            bgcolor: 'lightgrey',
+            p: 2
+          }}>
+          <Typography gutterBottom>{introduction}</Typography>
+          <Typography variant='h6'>Course Objectives</Typography>
+          <ObjectivesList disablePadding>
+            {Objectives.map((objective, index) => (
+              <ObjectivesListItem key={index}>{objective}</ObjectivesListItem>
+            ))}
+          </ObjectivesList>
+        </Box>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
