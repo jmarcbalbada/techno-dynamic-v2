@@ -1,30 +1,23 @@
-import { Routes, Route } from 'react-router';
-import { Dashboard } from './components/Dashboard/Dashboard';
-import { LessonPage } from './components/LessonPage/LessonPage';
-import { EditorPage } from './components/EditorPage/EditorPage';
-import { NotFound } from './components/NotFound/NotFound';
-import { EndLessonPage } from './components/EndLessonPage/EndLessonPage';
-import './App.css';
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements
+} from 'react-router-dom';
+import { AuthLayout } from 'components/common/Layout/AuthLayout/AuthLayout';
+import Login from 'pages/Login/Login';
+import Register from 'pages/Register/Register';
+import ProtectedLayout from 'components/common/Layout/ProtectedLayout/ProtectedLayout';
+import Dashboard from 'pages/Dashboard/Dashboard';
 
-const App = () => {
-	return (
-		<>
-			<Routes>
-				<Route path="/" element={<Dashboard />}></Route>
+export const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<AuthLayout />}>
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
 
-				<Route
-					path="lessons/:lessonid/pages/:pageid"
-					element={<LessonPage />}
-				></Route>
-
-				<Route path="lessons/:lessonid/end" element={<EndLessonPage />}></Route>
-
-				<Route path="editor" element={<EditorPage />}></Route>
-
-				<Route path="*" element={<NotFound />}></Route>
-			</Routes>
-		</>
-	);
-};
-
-export default App;
+      <Route element={<ProtectedLayout />}>
+        <Route index path='/' element={<Dashboard />} />
+      </Route>
+    </Route>
+  )
+);
