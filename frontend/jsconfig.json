@@ -6,6 +6,7 @@
       "hooks/*": ["hooks/*"],
       "assets/*": ["assets/*"],
       "pages/*": ["pages/*"],
+      "apis/*": ["apis/*"],
     }
   }
 }
