@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const LessonCards = (props) => {
   const { user } = useAuth();
-  const { title, description } = props;
+  const { title, description, image } = props;
 
   return (
     <Card
@@ -23,12 +23,19 @@ const LessonCards = (props) => {
         justifyContent: 'space-between'
       }}>
       {/* TODO: add onClick handler to navigate to lesson page */}
-      <CardActionArea>
+      <CardActionArea
+        sx={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start'
+        }}>
         <CardMedia
           component='img'
           height='140'
           // TODO: change hardcoded image to actual image
-          image='https://source.unsplash.com/random/featured/?working,office'
+          image={image}
         />
         <CardContent>
           {/* TODO: change to actual details needed for the card */}
