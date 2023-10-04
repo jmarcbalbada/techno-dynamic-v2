@@ -1,6 +1,8 @@
 import { createContext, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from './useLocalStorage';
+import { UsersService } from 'apis/UsersService';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -9,7 +11,19 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const login = async (data) => {
-    setUser(data);
+    let response;
+    try {
+      response = await UsersService.login({
+        username: data.username,
+        password: data.password
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response.status);
+      }
+    }
+    console.log('response', response);
+    setUser(response.data.token);
     navigate('/', { replace: true });
   };
 
