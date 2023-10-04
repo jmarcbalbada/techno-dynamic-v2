@@ -5,11 +5,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useAuth } from 'hooks/useAuth';
 
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
+import LoadingButton from '@mui/lab/LoadingButton';
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import TextField from '@mui/material/TextField';
@@ -19,6 +19,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuth();
 
   const formik = useFormik({
@@ -26,10 +28,29 @@ const LoginForm = () => {
       username: '',
       password: ''
     },
+    // initialErrors: {
+    //   username: '',
+    //   password: ''
+    // },
     validationSchema: LoginValidationSchema,
-    onSubmit: (values) => {
-      console.log('values', values);
-      login(values);
+    onSubmit: async (values) => {
+      setIsLoggingIn(true);
+      setErrorMessage('');
+      try {
+        await login(values);
+      } catch (error) {
+        console.log('errororor', error);
+        if (error.message.includes('404') || error.message.includes('400')) {
+          setErrorMessage('Invalid username or password');
+          formik.setErrors({
+            username,
+            password
+          });
+        } else {
+          setErrorMessage('Something went wrong');
+        }
+      }
+      setIsLoggingIn(false);
     }
   });
 
@@ -85,16 +106,23 @@ const LoginForm = () => {
                 onClick={handleClickShowPassword}
                 onMouseDown={handleMouseDownPassword}
                 edge='end'>
-                {showPassword ? <VisibilityOff /> : <Visibility />}
+                {showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
           )
         }}
       />
-      <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-        Login
-      </Button>
-      {/* TODO: Linear Progress here */}
+      <LoadingButton
+        type='submit'
+        loading={isLoggingIn}
+        fullWidth
+        variant='contained'
+        sx={{ mt: 3, mb: 2 }}>
+        <span>Login</span>
+      </LoadingButton>
+      <Typography color='error' sx={{ textAlign: 'center' }}>
+        {errorMessage}
+      </Typography>
       <Divider sx={{ my: 2 }}>or</Divider>
       <Typography align='center' mb={5}>
         Don't have an account?{' '}
