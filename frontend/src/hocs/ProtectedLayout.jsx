@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from 'hooks/useAuth';
-import Appbar from '../Appbar/Appbar';
+import Appbar from 'layout/Appbar';
 
 import Box from '@mui/material/Box';
 
