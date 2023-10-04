@@ -10,7 +10,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 
-const LessonCards = (props) => {
+const LessonCard = (props) => {
   const { user } = useAuth();
   const { title, description, image } = props;
 
@@ -60,4 +60,4 @@ const LessonCards = (props) => {
   );
 };
 
-export default LessonCards;
+export default LessonCard;

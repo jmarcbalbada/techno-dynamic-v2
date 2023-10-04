@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useAuth } from 'hooks/useAuth';
-import { getLessons } from 'apis/LessonApi';
+import { LessonsService } from 'apis/LessonsService';
 import CourseDetails from 'components/dashboard/CourseDetails';
-import LessonCards from 'components/dashboard/LessonCards';
+import LessonCard from 'components/dashboard/LessonCard';
+import useTitle from 'hooks/useTitle';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -20,62 +21,24 @@ const lessonsHardCode = [
   },
   {
     image: 'https://source.unsplash.com/random/featured/?office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working,office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working,office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working,office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working,office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working,office'
   }
 ];
 
 const Dashboard = () => {
+  useTitle('Dashboard');
   const { user } = useAuth();
   const [lessons, setLessons] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getLessonsfromApi();
+    getLessons();
   }, []);
 
-  const getLessonsfromApi = async () => {
+  const getLessons = async () => {
     try {
-      const response = await getLessons();
-      setLessons(response);
-      setLoading(false);
+      const response = await LessonsService.list();
+      if (response) {
+        setLessons(response.data);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -104,19 +67,19 @@ const Dashboard = () => {
             </Grid>
           )}
           {/* TODO: change hardcoded lessoncards to actual lessons */}
-          {loading ? (
-            <h1>Loading...</h1>
-          ) : (
-            lessons.map((lesson, index) => (
-              <Grid item xs={12} md={6} lg={4} key={index}>
-                <LessonCards
-                  title={lesson.title}
-                  description={lesson.subtitle}
-                  image={lessonsHardCode[index]?.image? lessonsHardCode[index].image : 'https://source.unsplash.com/random/featured/?working,office'}
-                />
-              </Grid>
-            ))
-          )}
+          {lessons.map((lesson, index) => (
+            <Grid item xs={12} md={6} lg={4} key={index}>
+              <LessonCard
+                title={lesson.title}
+                description={lesson.subtitle}
+                image={
+                  lessonsHardCode[index % 3]?.image
+                    ? lessonsHardCode[index % 3].image
+                    : 'https://source.unsplash.com/random/featured/?working,office'
+                }
+              />
+            </Grid>
+          ))}
         </Grid>
       </Box>
     </Container>
