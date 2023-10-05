@@ -4,5 +4,6 @@ import config from 'data/config';
 const BASE_URL = `${config.API_URL}api/`;
 
 export const UsersService = {
-  login: (credentials) => axios.post(`${BASE_URL}login/`, credentials)
+  login: (credentials) => axios.post(`${BASE_URL}login/`, credentials),
+  register: (registerDetails) => axios.post(`${BASE_URL}register/`, registerDetails),
 };
