@@ -43,6 +43,7 @@ const CourseDetails = () => {
         <Box
           borderRadius={3}
           sx={{
+            // TODO: add better bg color
             bgcolor: 'lightgrey',
             p: 2
           }}>
