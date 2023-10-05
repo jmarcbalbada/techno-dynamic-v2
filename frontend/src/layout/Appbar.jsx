@@ -50,7 +50,10 @@ const Appbar = () => {
               sx={{
                 p: 0
               }}>
-              <Avatar>{user?.username?.charAt(0).toUpperCase()}</Avatar>
+              <Avatar>
+                {user?.first_name?.charAt(0).toUpperCase()}
+                {user?.last_name?.charAt(0).toUpperCase()}
+              </Avatar>
             </IconButton>
           </Tooltip>
           <Menu

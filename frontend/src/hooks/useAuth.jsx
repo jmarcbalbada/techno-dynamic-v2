@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from './useLocalStorage';
 import { UsersService } from 'apis/UsersService';
@@ -7,6 +7,7 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useLocalStorage('token', null);
   const [user, setUser] = useLocalStorage('user', null);
   const navigate = useNavigate();
 
@@ -23,16 +24,18 @@ export const AuthProvider = ({ children }) => {
       }
     }
     console.log('response', response);
-    setUser(response.data.token);
+    setToken(response.data.token);
+    setUser(response.data.user);
     navigate('/', { replace: true });
   };
 
   const logout = () => {
+    setToken(null);
     setUser(null);
     navigate('/', { replace: true });
   };
 
-  const value = useMemo(() => ({ user, login, logout }), [user]);
+  const value = useMemo(() => ({ token, user, login, logout }), [token, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

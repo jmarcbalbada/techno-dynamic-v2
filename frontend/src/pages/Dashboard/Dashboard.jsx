@@ -27,6 +27,7 @@ const lessonsHardCode = [
 const Dashboard = () => {
   useTitle('Dashboard');
   const { user } = useAuth();
+  console.log('user', user);
   const [lessons, setLessons] = useState([]);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const Dashboard = () => {
       <Box my={4}>
         <Grid container spacing={3}>
           {/* TODO: change hardcoded teacher string to user.role */}
-          {user?.username === 'teacher' && (
+          {user?.role === 'teacher' && (
             <Grid item xs={12}>
               <Button
                 // TODO: add onClick handler to navigate to add lesson page

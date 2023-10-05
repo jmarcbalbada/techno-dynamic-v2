@@ -1,0 +1,26 @@
+POST http://127.0.0.1:8000/api/login
+Content-Type: application/json
+
+{
+    "username": "Teach",
+    "password": "qweqweasd"
+}
+
+###
+
+POST http://127.0.0.1:8000/api/register
+Content-Type: application/json
+
+{
+    "username": "user1",
+    "password": "pass",
+    "email": "yebes@gmail.com"
+}
+
+###
+
+GET http://127.0.0.1:8000/api/test-token
+Content-Type: application/json
+Authorization: Token ca840065b8a76f0ce4d16ef8dc663dced3056c11
+
+{}
