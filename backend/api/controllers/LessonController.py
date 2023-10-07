@@ -2,6 +2,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
@@ -12,6 +14,9 @@ from api.serializer.LessonContentSerializer import LessonContentSerializer
 class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def getAllLessons(self, request):
         lessons = self.get_queryset()
