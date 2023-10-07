@@ -9,6 +9,7 @@ import Login from 'pages/Login/Login';
 import Register from 'pages/Register/Register';
 import ProtectedLayout from 'hocs/ProtectedLayout';
 import Dashboard from 'pages/Dashboard/Dashboard';
+import Lesson from 'pages/Lesson/Lesson';
 import Edit from 'pages/Edit/Edit';
 import Forbid from 'pages/Forbid/Forbid';
 import NotFound from 'pages/NotFound/NotFound';
@@ -21,6 +22,7 @@ export const router = createBrowserRouter(
 
       <Route element={<ProtectedLayout />}>
         <Route index path='/' element={<Dashboard />} />
+        <Route path='/lessons/:lessonid' element={<Lesson />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/edit' element={<Edit />} />
         </Route>

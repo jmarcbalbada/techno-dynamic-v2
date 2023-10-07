@@ -6,9 +6,10 @@ import Appbar from 'layout/Appbar';
 import Box from '@mui/material/Box';
 
 export const ProtectedLayout = () => {
-  const { token } = useAuth();
+  const { token, user, logout } = useAuth();
 
-  if (!token) {
+  if (!token || !user) {
+    logout(true);
     return <Navigate to='/login' />;
   }
 

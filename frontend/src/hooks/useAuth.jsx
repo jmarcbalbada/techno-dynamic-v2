@@ -29,10 +29,11 @@ export const AuthProvider = ({ children }) => {
     navigate('/', { replace: true });
   };
 
-  const logout = () => {
+  const logout = (returnEarly = false) => {
     setToken(null);
     setUser(null);
-    navigate('/', { replace: true });
+    if (returnEarly) return;
+    navigate('/login', { replace: true });
   };
 
   const value = useMemo(() => ({ token, user, login, logout }), [token, user]);

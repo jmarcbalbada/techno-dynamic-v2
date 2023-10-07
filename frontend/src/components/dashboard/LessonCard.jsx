@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from 'hooks/useAuth';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -12,7 +13,12 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const LessonCard = (props) => {
   const { user } = useAuth();
-  const { title, description, image } = props;
+  const { id, title, description, image } = props;
+  const navigate = useNavigate();
+
+  const handleLessonClick = () => {
+    navigate(`/lessons/${id}`);
+  };
 
   return (
     <Card
@@ -24,6 +30,7 @@ const LessonCard = (props) => {
       }}>
       {/* TODO: add onClick handler to navigate to lesson page */}
       <CardActionArea
+        onClick={handleLessonClick}
         sx={{
           height: '100%',
           display: 'flex',
