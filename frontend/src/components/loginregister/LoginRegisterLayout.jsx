@@ -16,9 +16,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 const LoginRegisterLayout = ({ form, title }) => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
-  if (token) {
+  if (token && user) {
     return <Navigate to='/' replace />;
   }
 

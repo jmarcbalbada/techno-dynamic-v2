@@ -71,6 +71,7 @@ const Dashboard = () => {
           {lessons.map((lesson, index) => (
             <Grid item xs={12} md={6} lg={4} key={index}>
               <LessonCard
+                id={lesson.id}
                 title={lesson.title}
                 description={lesson.subtitle}
                 image={
