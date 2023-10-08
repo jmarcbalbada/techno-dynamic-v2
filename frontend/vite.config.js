@@ -1,13 +1,23 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-const fileNames = ['src', 'components', 'hooks', 'assets', 'pages', 'apis']
+const fileNames = [
+  'apis',
+  'assets',
+  'components',
+  'data',
+  'hocs',
+  'hooks',
+  'layout',
+  'pages',
+  'src',
+];
 
 // this will generate aliases for fileNames
 const filePaths = fileNames.reduce(
   (acc, cur) => ({
     ...acc,
-    [cur]: `/${cur === 'src' ? cur: 'src/' + cur}`
+    [cur]: `/${cur === 'src' ? cur : 'src/' + cur}`
   }),
   ''
 );
@@ -22,10 +32,10 @@ export default defineConfig({
   },
   server: {
     watch: {
-      usePolling: true,
+      usePolling: true
     },
     host: true,
     strictPort: true,
     port: 5173
   }
-})
+});

@@ -3,11 +3,16 @@ import {
   createBrowserRouter,
   createRoutesFromElements
 } from 'react-router-dom';
-import { AuthLayout } from 'components/common/Layout/AuthLayout/AuthLayout';
+import { AuthLayout } from 'hocs/AuthLayout';
+import { RoleAccess } from 'hocs/RoleAccess';
 import Login from 'pages/Login/Login';
 import Register from 'pages/Register/Register';
-import ProtectedLayout from 'components/common/Layout/ProtectedLayout/ProtectedLayout';
+import ProtectedLayout from 'hocs/ProtectedLayout';
 import Dashboard from 'pages/Dashboard/Dashboard';
+import Lesson from 'pages/Lesson/Lesson';
+import Edit from 'pages/Edit/Edit';
+import Forbid from 'pages/Forbid/Forbid';
+import NotFound from 'pages/NotFound/NotFound';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,7 +22,13 @@ export const router = createBrowserRouter(
 
       <Route element={<ProtectedLayout />}>
         <Route index path='/' element={<Dashboard />} />
+        <Route path='/lessons/:lessonid' element={<Lesson />} />
+        <Route element={<RoleAccess roles={['teacher']} />}>
+          <Route path='/edit' element={<Edit />} />
+        </Route>
       </Route>
+      <Route path='/forbid' element={<Forbid />} />
+      <Route path='*' element={<NotFound />} />
     </Route>
   )
 );

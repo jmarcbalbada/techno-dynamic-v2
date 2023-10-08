@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginRegisterLayout from 'components/common/LoginRegister/LoginRegisterLayout';
+import LoginRegisterLayout from 'components/loginregister/LoginRegisterLayout';
 import useTitle from 'hooks/useTitle';
 
 const Register = () => {
