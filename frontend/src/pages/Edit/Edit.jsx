@@ -1,9 +1,15 @@
-import React from 'react'
+import React from 'react';
+import Editor from './Editor';
+import Container from '@mui/material/Container';
 
 const Edit = () => {
   return (
-    <div>Edit</div>
-  )
-}
+    <Container sx={{
+      mt: 2,
+    }}>
+      <Editor />
+    </Container>
+  );
+};
 
-export default Edit
+export default Edit;
