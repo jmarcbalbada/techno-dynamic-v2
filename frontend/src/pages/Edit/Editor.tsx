@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import {
@@ -46,14 +47,27 @@ const Editor = () => {
               hide: !showMenuBar
             },
             footer: (
-              <Button
-                variant='contained'
-                size='small'
-                onClick={() => {
-                  setSubmittedContent(rteRef.current?.editor?.getHTML() ?? '');
+              <Stack
+                direction='row'
+                spacing={2}
+                sx={{
+                  borderTopStyle: 'solid',
+                  borderTopWidth: 1,
+                  borderTopColor: (theme) => theme.palette.divider,
+                  py: 1,
+                  px: 1.5
                 }}>
-                Save
-              </Button>
+                <Button
+                  variant='contained'
+                  size='small'
+                  onClick={() => {
+                    setSubmittedContent(
+                      rteRef.current?.editor?.getHTML() ?? ''
+                    );
+                  }}>
+                  Save
+                </Button>
+              </Stack>
             )
           }}>
           {() => (
@@ -75,7 +89,7 @@ const Editor = () => {
             <code>{submittedContent}</code>
           </pre>
 
-          <Box mt={3}>
+          <Box my={3}>
             <Typography variant='overline' sx={{ mb: 2 }}>
               Read-only saved snapshot:
             </Typography>
