@@ -9,6 +9,7 @@ from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
 from api.serializer.LessonSerializer import LessonSerializer
 from api.serializer.LessonContentSerializer import LessonContentSerializer
+from api.controllers.permissions.permissions import IsTeacher
 
 
 class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin):
@@ -16,7 +17,12 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
     serializer_class = LessonSerializer
 
     authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in ['createLesson', 'updateLesson', 'deleteLesson', 'getLessonById']:
+            return [IsAuthenticated(), IsTeacher()]
+        else:
+            return [IsAuthenticated()]
 
     def getAllLessons(self, request):
         lessons = self.get_queryset()
