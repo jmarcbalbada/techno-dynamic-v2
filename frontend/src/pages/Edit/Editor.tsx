@@ -1,42 +1,99 @@
-import { useRef } from 'react';
-import Button from '@mui/material/Button';
+import { useRef, useState } from 'react';
 
-import StarterKit from "@tiptap/starter-kit";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 import {
-  MenuButtonBold,
-  MenuButtonItalic,
-  MenuControlsContainer,
-  MenuDivider,
-  MenuSelectHeading,
+  LinkBubbleMenu,
+  MenuButton,
   RichTextEditor,
+  RichTextReadOnly,
+  TableBubbleMenu,
+  insertImages,
   type RichTextEditorRef
 } from 'mui-tiptap';
+import EditorMenuControls from './EditorMenuControls';
+import useTiptapExtensions from '../../hooks/useTiptapExtensions';
 
 const Editor = () => {
+  const extensions = useTiptapExtensions({
+    placeholder: 'Enter details here...'
+  });
   const rteRef = useRef<RichTextEditorRef>(null);
+  const [isEditable, setIsEditable] = useState(true);
+  const [showMenuBar, setShowMenuBar] = useState(true);
+  const [submittedContent, setSubmittedContent] = useState('');
 
   return (
-    <div>
-      <RichTextEditor
-        ref={rteRef}
-        extensions={[StarterKit]} // Or any Tiptap extensions you wish!
-        content='<p>Hello world</p>' // Initial content for the editor
-        // Optionally include `renderControls` for a menu-bar atop the editor:
-        renderControls={() => (
-          <MenuControlsContainer>
-            <MenuSelectHeading />
-            <MenuDivider />
-            <MenuButtonBold />
-            <MenuButtonItalic />
-            {/* Add more controls of your choosing here */}
-          </MenuControlsContainer>
-        )}
-      />
+    <>
+      <Box
+        sx={{
+          '& .ProseMirror': {
+            '& h1, & h2, & h3, & h4, & h5, & h6': {
+              scrollMarginTop: showMenuBar ? 50 : 0
+            }
+          }
+        }}>
+        <RichTextEditor
+          ref={rteRef}
+          extensions={extensions}
+          editable={isEditable}
+          renderControls={() => <EditorMenuControls />}
+          RichTextFieldProps={{
+            variant: 'outlined',
+            MenuBarProps: {
+              hide: !showMenuBar
+            },
+            footer: (
+              <Button
+                variant='contained'
+                size='small'
+                onClick={() => {
+                  setSubmittedContent(rteRef.current?.editor?.getHTML() ?? '');
+                }}>
+                Save
+              </Button>
+            )
+          }}>
+          {() => (
+            <>
+              <LinkBubbleMenu />
+              <TableBubbleMenu />
+            </>
+          )}
+        </RichTextEditor>
+      </Box>
 
-      <Button onClick={() => console.log(rteRef.current?.editor?.getHTML())}>
-        Log HTML
-      </Button>
-    </div>
+      <Typography variant='h5' sx={{ mt: 5 }}>
+        Saved result:
+      </Typography>
+
+      {submittedContent ? (
+        <>
+          <pre style={{ marginTop: 10, overflow: 'auto', maxWidth: '100%' }}>
+            <code>{submittedContent}</code>
+          </pre>
+
+          <Box mt={3}>
+            <Typography variant='overline' sx={{ mb: 2 }}>
+              Read-only saved snapshot:
+            </Typography>
+
+            <RichTextReadOnly
+              content={submittedContent}
+              extensions={extensions}
+            />
+          </Box>
+        </>
+      ) : (
+        <>
+          Press “Save” above to show the HTML markup for the editor content.
+          Typically you’d use a similar <code>editor.getHTML()</code> approach
+          to save your data in a form.
+        </>
+      )}
+    </>
   );
 };
 
