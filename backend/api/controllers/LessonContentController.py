@@ -7,13 +7,19 @@ from rest_framework.permissions import IsAuthenticated
 
 from api.model.LessonContent import LessonContent
 from api.serializer.LessonContentSerializer import LessonContentSerializer
+from api.controllers.permissions.permissions import IsTeacher
 
 class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = LessonContent.objects.all()
     serializer_class = LessonContentSerializer
 
     authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in ['createLessonContents', 'updateLessonContents', 'deleteLessonContents']:
+            return [IsAuthenticated(), IsTeacher()]
+        else:
+            return [IsAuthenticated()]
 
     def getAllLessonContents(self, request, lesson_id):
         instance = self.get_queryset().filter(lesson_id=lesson_id)

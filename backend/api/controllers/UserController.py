@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -33,7 +34,16 @@ class UserController():
         try:
             serializer = UserSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                user = serializer.save()
+
+                # Check if the user's role is "student" or teacher
+                if user.role == 'student':
+                    student_group, created = Group.objects.get_or_create(name='Student')
+                    user.groups.add(student_group)
+                if user.role == 'teacher':
+                    teacher_group, created = Group.objects.get_or_create(name='Teacher')
+                    user.groups.add(teacher_group)
+
                 user = CustomUser.objects.get(username=request.data['username'])
                 user.set_password(request.data['password'])
                 user.save()
