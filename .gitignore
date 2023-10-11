@@ -400,3 +400,4 @@ FodyWeavers.xsd
 backend/.idea/workspace.xml
 backend/api/migrations/0001_initial.py
 backend/media
+backend/api/test.rest
