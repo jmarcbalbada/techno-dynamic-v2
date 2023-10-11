@@ -1,33 +1,48 @@
-import { Box, Container, Paper, Typography } from '@mui/material';
 import React from 'react';
 
-const FooterControls = () => {
+import { Box, Button, Container, Paper, Typography } from '@mui/material';
+
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
+const FooterControls = (props) => {
+  const { handleNextPage, handlePrevPage, isFirstPage } = props;
+
   return (
-    <Paper elevation={3} sx={{
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      py: 3,
-      px: 2,
-    }}>
+    <Paper
+      elevation={3}
+      sx={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        py: 2,
+        px: 2
+      }}>
       <Container>
-        <Typography variant='body1'>Controls Here</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+          <Button
+            onClick={handlePrevPage}
+            startIcon={<ArrowBackIcon />}
+            variant='outlined'
+            size='large'>
+            {isFirstPage ? 'Dashboard' : 'Prev'}
+          </Button>
+          <Button
+            onClick={handleNextPage}
+            endIcon={<ArrowForwardIcon />}
+            variant='outlined'
+            size='large'>
+            Next
+          </Button>
+        </Box>
       </Container>
     </Paper>
-    // <Box
-    //   component='footer'
-    //   sx={{
-    //     position: 'fixed',
-    //     py: 3,
-    //     px: 2,
-    //     mt: 'auto',
-    //     borderTop: '1px solid black'
-    //   }}>
-    //   <Container>
-    //     <Typography variant='body1'>Controls Here</Typography>
-    //   </Container>
-    // </Box>
   );
 };
 
