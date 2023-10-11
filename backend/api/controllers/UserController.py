@@ -36,20 +36,19 @@ class UserController():
             if serializer.is_valid():
                 user = serializer.save()
 
-                # Check if the user's role is "student" or teacher
+                # Check if the user's role is "student" or "teacher"
                 if user.role == 'student':
                     student_group, created = Group.objects.get_or_create(name='Student')
                     user.groups.add(student_group)
-                if user.role == 'teacher':
+                elif user.role == 'teacher':
                     teacher_group, created = Group.objects.get_or_create(name='Teacher')
                     user.groups.add(teacher_group)
 
-                user = CustomUser.objects.get(username=request.data['username'])
                 user.set_password(request.data['password'])
                 user.save()
                 token = Token.objects.create(user=user)
                 return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
-            return Response({"message": "Invalid data provided"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

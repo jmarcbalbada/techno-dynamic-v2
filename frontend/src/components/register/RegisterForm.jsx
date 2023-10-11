@@ -46,16 +46,19 @@ const RegisterForm = () => {
       setErrorMessage('');
       try {
         const response = await UsersService.register({
+          username: values.username,
+          password: values.password,
+          email: values.email,
           first_name: values.firstName,
           last_name: values.lastName,
-          username: values.username,
-          email: values.email,
-          password: values.password
+          role: 'student',
         });
+
         if (response.status === 201) {
           setSnackbarSuccessOpen(true);
         }
       } catch (error) {
+        console.log('error', error);
         if (axios.isAxiosError(error)) {
           const response = error.response;
           if (response && response.status) {
