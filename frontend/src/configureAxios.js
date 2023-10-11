@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import config from 'data/config';
 
 export const configureAxios = () => {

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { useAuth } from 'hooks/useAuth';
 import { LessonsService } from 'apis/LessonsService';
 import CourseDetails from 'components/dashboard/CourseDetails';
@@ -9,6 +10,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+
 import AddIcon from '@mui/icons-material/Add';
 
 // TODO: change hardcoded lessons to actual lessons
