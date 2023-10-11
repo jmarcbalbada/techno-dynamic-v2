@@ -19,7 +19,7 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def get_permissions(self):
-        if self.action in ['createLesson', 'updateLesson', 'deleteLesson', 'getLessonById']:
+        if self.action in ['createLesson', 'updateLesson', 'deleteLesson']:
             return [IsAuthenticated(), IsTeacher()]
         else:
             return [IsAuthenticated()]
