@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from 'hooks/useAuth';
 import { useFormik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
 import { RegisterValidationSchema } from './RegisterValidationSchema';
@@ -23,6 +24,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Snackbar } from '@mui/material';
 
 const RegisterForm = () => {
+  const { login } = useAuth();
+  const timer = 3000;
   const [showPassword, setShowPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -57,6 +60,12 @@ const RegisterForm = () => {
         if (response.status === 201) {
           setSnackbarSuccessOpen(true);
         }
+        setTimeout(() => {
+          login({
+            username: values.username,
+            password: values.password
+          });          
+        }, timer);
       } catch (error) {
         console.log('error', error);
         if (axios.isAxiosError(error)) {
@@ -285,7 +294,7 @@ const RegisterForm = () => {
       </Typography>
       <Snackbar
         open={snackbarSuccessOpen}
-        autoHideDuration={6000}
+        autoHideDuration={timer}
         onClose={handleSnackbarSuccessClose}>
         <SnackBarAlert
           onClose={handleSnackbarSuccessClose}
@@ -293,7 +302,7 @@ const RegisterForm = () => {
           sx={{
             width: '100%'
           }}>
-          Account successfully registered!
+          Account successfully registered! Logging you in...
         </SnackBarAlert>
       </Snackbar>
     </Box>
