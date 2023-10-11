@@ -20,6 +20,10 @@ const LessonCard = (props) => {
     navigate(`/lessons/${id}`);
   };
 
+  const handleEditClick = () => {
+    navigate(`/lessons/${id}/edit`);
+  };
+
   return (
     <Card
       sx={{
@@ -58,7 +62,7 @@ const LessonCard = (props) => {
       {user?.role === 'teacher' && (
         // TODO: add onClick handler to navigate to edit lesson page
         <CardActions>
-          <Button startIcon={<EditIcon />} fullWidth>
+          <Button onClick={handleEditClick} startIcon={<EditIcon />} fullWidth>
             Edit
           </Button>
         </CardActions>

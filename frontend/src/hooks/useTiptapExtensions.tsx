@@ -101,6 +101,7 @@ export default function useTiptapExtensions({
       }),
       TextStyle,
       Color,
+      // FontFamily,
       FontSize,
       Highlight.configure({
         multicolor: true
