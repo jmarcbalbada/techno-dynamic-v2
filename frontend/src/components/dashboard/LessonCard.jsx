@@ -17,7 +17,7 @@ const LessonCard = (props) => {
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
-    navigate(`/lessons/${id}`);
+    navigate(`/lessons/${id}/1`);
   };
 
   const handleEditClick = () => {
