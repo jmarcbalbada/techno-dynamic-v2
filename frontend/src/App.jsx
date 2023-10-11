@@ -24,7 +24,7 @@ export const router = createBrowserRouter(
         <Route index path='/' element={<Dashboard />} />
         <Route path='/lessons/:lessonid' element={<Lesson />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
-          <Route path='/edit' element={<Edit />} />
+          <Route path='/lessons/:lessonid/edit' element={<Edit />} />
         </Route>
       </Route>
       <Route path='/forbid' element={<Forbid />} />

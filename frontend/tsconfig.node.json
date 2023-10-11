@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
