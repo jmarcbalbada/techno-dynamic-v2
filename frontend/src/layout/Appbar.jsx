@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from 'hooks/useAuth';
+
 import lionLogo from 'assets/lionlogo.png';
 
 import { AppBar as MuiAppBar } from '@mui/material';

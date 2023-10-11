@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useAuth } from 'hooks/useAuth';
 import { useFormik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
-import { RegisterValidationSchema } from './RegisterValidationSchema';
-import { UsersService } from 'apis/UsersService';
-import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
+
+import { useAuth } from 'hooks/useAuth';
 import { courseCategories } from 'data/courseCategories';
+import { RegisterValidationSchema } from './RegisterValidationSchema';
+import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
+import { UsersService } from 'apis/UsersService';
 import { yearCategories } from 'data/yearCategories';
 
 import Box from '@mui/material/Box';
@@ -17,11 +18,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import LoadingButton from '@mui/lab/LoadingButton';
 import MenuItem from '@mui/material/MenuItem';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Snackbar } from '@mui/material';
 
 const RegisterForm = () => {
   const { login } = useAuth();
@@ -54,7 +56,7 @@ const RegisterForm = () => {
           email: values.email,
           first_name: values.firstName,
           last_name: values.lastName,
-          role: 'student',
+          role: 'student'
         });
 
         if (response.status === 201) {
@@ -64,7 +66,7 @@ const RegisterForm = () => {
           login({
             username: values.username,
             password: values.password
-          });          
+          });
         }, timer);
       } catch (error) {
         console.log('error', error);

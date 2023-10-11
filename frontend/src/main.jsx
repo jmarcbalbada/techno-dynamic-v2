@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
+
 import { router } from './App.jsx';
 import AppTheme from './assets/AppTheme.jsx';
 import './index.css';

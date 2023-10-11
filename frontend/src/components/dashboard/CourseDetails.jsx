@@ -5,10 +5,13 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+// TODO: add editable course details
 
 const introduction = `This course is designed to introduce students to the principles and practices of Technopreneurship, which involves the process of identifying and pursuing opportunities to
 create innovative products or services using technology. The course will cover topics such as idea generation, market research, funding, team building, and product
