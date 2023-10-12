@@ -37,7 +37,6 @@ const LoginForm = () => {
       try {
         await login(values);
       } catch (error) {
-        console.log('errororor', error);
         if (error.message.includes('404') || error.message.includes('400')) {
           setErrorMessage('Invalid username or password');
           formik.setErrors({

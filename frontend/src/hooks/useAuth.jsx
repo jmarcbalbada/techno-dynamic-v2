@@ -24,7 +24,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error(error.response.status);
       }
     }
-    console.log('response', response);
     setToken(response.data.token);
     setUser(response.data.user);
     navigate('/', { replace: true });

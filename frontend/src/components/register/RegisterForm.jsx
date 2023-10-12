@@ -69,14 +69,10 @@ const RegisterForm = () => {
           });
         }, timer);
       } catch (error) {
-        console.log('error', error);
         if (axios.isAxiosError(error)) {
           const response = error.response;
           if (response && response.status) {
-            console.log('axios.isAxiosError(error)', axios.isAxiosError(error));
             const errorStatus = response.status;
-            console.log('errorStatus', errorStatus);
-            console.log('error.response.data', response.data);
             switch (errorStatus) {
               case 400:
                 if (response.data.username) {
