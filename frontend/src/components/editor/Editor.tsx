@@ -1,9 +1,12 @@
 import { useRef, useState } from 'react';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import TextFields from '@mui/icons-material/TextFields';
 
 import {
   LinkBubbleMenu,
@@ -17,7 +20,8 @@ import {
 import EditorMenuControls from './EditorMenuControls';
 import useTiptapExtensions from '../../hooks/useTiptapExtensions';
 
-const Editor = () => {
+const Editor = (props) => {
+  const { index, handleRemovePage } = props;
   const extensions = useTiptapExtensions({
     placeholder: 'Enter details here...'
   });
@@ -25,6 +29,10 @@ const Editor = () => {
   const [isEditable, setIsEditable] = useState(true);
   const [showMenuBar, setShowMenuBar] = useState(true);
   const [submittedContent, setSubmittedContent] = useState('');
+
+  const onRemove = () => {
+    handleRemovePage(index);
+  };
 
   return (
     <>
@@ -49,6 +57,7 @@ const Editor = () => {
             footer: (
               <Stack
                 direction='row'
+                justifyContent='space-between'
                 spacing={2}
                 sx={{
                   borderTopStyle: 'solid',
@@ -57,16 +66,26 @@ const Editor = () => {
                   py: 1,
                   px: 1.5
                 }}>
-                <Button
-                  variant='contained'
+                <MenuButton
+                  value='formatting'
+                  tooltipLabel={
+                    showMenuBar ? 'Hide formatting' : 'Show formatting'
+                  }
                   size='small'
+                  onClick={() =>
+                    setShowMenuBar((currentState) => !currentState)
+                  }
+                  selected={showMenuBar}
+                  IconComponent={TextFields}
+                />
+                <MenuButton
+                  value='remove'
+                  tooltipLabel='Remove'
                   onClick={() => {
-                    setSubmittedContent(
-                      rteRef.current?.editor?.getHTML() ?? ''
-                    );
-                  }}>
-                  Save
-                </Button>
+                    onRemove();
+                  }}
+                  IconComponent={DeleteForeverIcon}
+                />
               </Stack>
             )
           }}>
@@ -79,7 +98,7 @@ const Editor = () => {
         </RichTextEditor>
       </Box>
 
-      <Typography variant='h5' sx={{ mt: 5 }}>
+      {/* <Typography variant='h5' sx={{ mt: 5 }}>
         Saved result:
       </Typography>
 
@@ -106,7 +125,7 @@ const Editor = () => {
           Typically you’d use a similar <code>editor.getHTML()</code> approach
           to save your data in a form.
         </>
-      )}
+      )} */}
     </>
   );
 };
