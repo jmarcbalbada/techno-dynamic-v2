@@ -14,6 +14,7 @@ const Lesson = () => {
   const [lesson, setLesson] = useState({});
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber));
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     getLessonById(lessonid);
@@ -24,7 +25,7 @@ const Lesson = () => {
       const response = await LessonsService.getById(id);
       setLesson(response.data);
     } catch (error) {
-      console.error(error);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -58,6 +59,8 @@ const Lesson = () => {
         }}>
         {isLoading ? (
           <div>Loading...</div>
+        ) : isError ? (
+          <div>Something went wrong, Please Try Again Later.</div>
         ) : (
           <LessonPage pageContent={lesson?.pages[currentPage - 1]?.contents} />
         )}
