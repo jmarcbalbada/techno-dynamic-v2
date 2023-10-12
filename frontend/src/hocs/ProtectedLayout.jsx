@@ -4,7 +4,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from 'hooks/useAuth';
 import Appbar from 'layout/Appbar';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 
 export const ProtectedLayout = () => {
   const { token, user, logout } = useAuth();

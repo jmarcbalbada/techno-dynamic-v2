@@ -8,7 +8,8 @@ import './index.css';
 
 import { configureAxios } from './configureAxios.js';
 
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 
 configureAxios();
 

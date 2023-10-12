@@ -6,7 +6,7 @@ import lionLogo from 'assets/lionlogo.png';
 
 import { AppBar as MuiAppBar } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
