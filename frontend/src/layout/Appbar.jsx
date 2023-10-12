@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from 'hooks/useAuth';
 
+import { useTheme } from '@mui/material';
 import lionLogo from 'assets/lionlogo.png';
 
 import { AppBar as MuiAppBar } from '@mui/material';
@@ -16,6 +17,7 @@ import Typography from '@mui/material/Typography';
 const Appbar = () => {
   const { user, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const theme = useTheme();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -32,7 +34,11 @@ const Appbar = () => {
 
   return (
     // TODO: change color to palette color
-    <MuiAppBar position='static' color='transparent'>
+    <MuiAppBar
+      position='static'
+      sx={{
+        background: theme.palette.white.main
+      }}>
       <Toolbar>
         <Box display='flex' alignItems='center' flexGrow={1}>
           <img src={lionLogo} alt='lion logo' width='40' height='40' />
@@ -40,7 +46,10 @@ const Appbar = () => {
             display={{ xs: 'none', sm: 'flex' }}
             variant='h6'
             component='div'
-            sx={{ ml: 2 }}>
+            sx={{
+              ml: 2,
+              color: theme.palette.getContrastText(theme.palette.white.main)
+            }}>
             Technopreneurship
           </Typography>
         </Box>
