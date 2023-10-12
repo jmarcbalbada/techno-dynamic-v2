@@ -4,7 +4,6 @@ import useTiptapExtensions from '../../hooks/useTiptapExtensions';
 
 const LessonPage = (props) => {
   const { pageContent } = props;
-  console.log('pageContent', pageContent);
 
   const extensions = useTiptapExtensions();
   return (

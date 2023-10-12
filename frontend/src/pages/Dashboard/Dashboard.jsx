@@ -29,7 +29,6 @@ const lessonsHardCode = [
 const Dashboard = () => {
   useTitle('Dashboard');
   const { user } = useAuth();
-  console.log('user', user);
   const [lessons, setLessons] = useState([]);
 
   useEffect(() => {
