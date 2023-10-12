@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import Editor from './Editor';
+import Editor from 'components/editor/Editor';
 
 import Container from '@mui/material/Container';
 
