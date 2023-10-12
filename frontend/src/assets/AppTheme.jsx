@@ -1,4 +1,5 @@
-import { createTheme, responsiveFontSizes } from '@mui/material';
+import { createTheme } from '@mui/material';
+import { responsiveFontSizes } from '@mui/material';
 
 const AppTheme = createTheme({
   // TODO: Add theme options here

@@ -11,7 +11,7 @@ import RegisterForm from 'components/register/RegisterForm';
 import lionlogo from 'assets/lionlogo.png';
 import styles from './LoginRegisterLayout.module.css';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';

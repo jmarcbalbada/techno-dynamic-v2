@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
 import { LessonsService } from 'apis/LessonsService';
@@ -6,7 +7,7 @@ import CourseDetails from 'components/dashboard/CourseDetails';
 import LessonCard from 'components/dashboard/LessonCard';
 import useTitle from 'hooks/useTitle';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -30,6 +31,7 @@ const Dashboard = () => {
   useTitle('Dashboard');
   const { user } = useAuth();
   const [lessons, setLessons] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getLessons();
@@ -46,6 +48,10 @@ const Dashboard = () => {
     }
   };
 
+  const handleAddLesson = () => {
+    navigate('/create');
+  };
+
   return (
     <Container>
       <h1>Dashboard</h1>
@@ -58,7 +64,7 @@ const Dashboard = () => {
           {user?.role === 'teacher' && (
             <Grid item xs={12}>
               <Button
-                // TODO: add onClick handler to navigate to add lesson page
+                onClick={handleAddLesson}
                 variant='outlined'
                 size='large'
                 startIcon={<AddIcon />}

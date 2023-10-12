@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useAuth } from 'hooks/useAuth';
 import { LoginValidationSchema } from './LoginValidationSchema';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';

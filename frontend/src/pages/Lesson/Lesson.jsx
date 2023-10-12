@@ -5,7 +5,7 @@ import { LessonsService } from 'apis/LessonsService';
 import LessonPage from 'components/lessonpage/LessonPage';
 import FooterControls from 'components/lessonpage/FooterControls';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
 
 const Lesson = () => {

@@ -10,7 +10,7 @@ import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
 import { UsersService } from 'apis/UsersService';
 import { yearCategories } from 'data/yearCategories';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';

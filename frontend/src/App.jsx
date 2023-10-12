@@ -7,6 +7,7 @@ import {
 import { AuthLayout } from 'hocs/AuthLayout';
 import { RoleAccess } from 'hocs/RoleAccess';
 
+import Create from 'pages/Create/Create';
 import Dashboard from 'pages/Dashboard/Dashboard';
 import Edit from 'pages/Edit/Edit';
 import Forbid from 'pages/Forbid/Forbid';
@@ -28,6 +29,7 @@ export const router = createBrowserRouter(
         <Route path='/lessons/:lessonid/:pageNumber' element={<Lesson />} />
         <Route path='/lessons/:lessonid/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
+          <Route path='/create' element={<Create />} />
           <Route path='/lessons/:lessonid/edit' element={<Edit />} />
         </Route>
       </Route>
