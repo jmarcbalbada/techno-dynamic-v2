@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import TextFields from '@mui/icons-material/TextFields';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 import {
   LinkBubbleMenu,
@@ -21,7 +22,7 @@ import EditorMenuControls from './EditorMenuControls';
 import useTiptapExtensions from '../../hooks/useTiptapExtensions';
 
 const Editor = (props) => {
-  const { index, handleRemovePage } = props;
+  const { contents, insert, remove } = props;
   const extensions = useTiptapExtensions({
     placeholder: 'Enter details here...'
   });
@@ -30,9 +31,23 @@ const Editor = (props) => {
   const [showMenuBar, setShowMenuBar] = useState(true);
   const [submittedContent, setSubmittedContent] = useState('');
 
-  const onRemove = () => {
-    handleRemovePage(index);
-  };
+  const editor = rteRef.current?.editor;
+  useEffect(() => {
+    if (!editor || editor.isDestroyed) {
+      return;
+    }
+    if (!editor.isFocused || !editor.isEditable) {
+      // Use queueMicrotask per https://github.com/ueberdosis/tiptap/issues/3764#issuecomment-1546854730
+      queueMicrotask(() => {
+        const currentSelection = editor.state.selection;
+        editor
+          .chain()
+          .setContent(contents)
+          .setTextSelection(currentSelection)
+          .run();
+      });
+    }
+  }, [contents, editor, editor?.isEditable, editor?.isFocused]);
 
   return (
     <>
@@ -46,6 +61,8 @@ const Editor = (props) => {
         }}>
         <RichTextEditor
           ref={rteRef}
+          content={contents}
+          //editorDependencies={[contents]} // TODO: this is inefficient for this library
           extensions={extensions}
           editable={isEditable}
           renderControls={() => <EditorMenuControls />}
@@ -66,26 +83,34 @@ const Editor = (props) => {
                   py: 1,
                   px: 1.5
                 }}>
-                <MenuButton
-                  value='formatting'
-                  tooltipLabel={
-                    showMenuBar ? 'Hide formatting' : 'Show formatting'
-                  }
-                  size='small'
-                  onClick={() =>
-                    setShowMenuBar((currentState) => !currentState)
-                  }
-                  selected={showMenuBar}
-                  IconComponent={TextFields}
-                />
-                <MenuButton
-                  value='remove'
-                  tooltipLabel='Remove'
-                  onClick={() => {
-                    onRemove();
-                  }}
-                  IconComponent={DeleteForeverIcon}
-                />
+                <Box flexGrow='1'>
+                  <MenuButton
+                    value='formatting'
+                    tooltipLabel={
+                      showMenuBar ? 'Hide formatting' : 'Show formatting'
+                    }
+                    size='small'
+                    onClick={() =>
+                      setShowMenuBar((currentState) => !currentState)
+                    }
+                    selected={showMenuBar}
+                    IconComponent={TextFields}
+                  />
+                </Box>
+                <Box>
+                  <MenuButton
+                    value='insert'
+                    tooltipLabel='Insert Page'
+                    onClick={insert}
+                    IconComponent={NoteAddIcon}
+                  />
+                  <MenuButton
+                    value='remove'
+                    tooltipLabel='Remove'
+                    onClick={remove} // Call the remove function
+                    IconComponent={DeleteForeverIcon}
+                  />
+                </Box>
               </Stack>
             )
           }}>
@@ -97,35 +122,6 @@ const Editor = (props) => {
           )}
         </RichTextEditor>
       </Box>
-
-      {/* <Typography variant='h5' sx={{ mt: 5 }}>
-        Saved result:
-      </Typography>
-
-      {submittedContent ? (
-        <>
-          <pre style={{ marginTop: 10, overflow: 'auto', maxWidth: '100%' }}>
-            <code>{submittedContent}</code>
-          </pre>
-
-          <Box my={3}>
-            <Typography variant='overline' sx={{ mb: 2 }}>
-              Read-only saved snapshot:
-            </Typography>
-
-            <RichTextReadOnly
-              content={submittedContent}
-              extensions={extensions}
-            />
-          </Box>
-        </>
-      ) : (
-        <>
-          Press “Save” above to show the HTML markup for the editor content.
-          Typically you’d use a similar <code>editor.getHTML()</code> approach
-          to save your data in a form.
-        </>
-      )} */}
     </>
   );
 };
