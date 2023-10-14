@@ -32,22 +32,22 @@ const Editor = (props) => {
   const [submittedContent, setSubmittedContent] = useState('');
 
   const editor = rteRef.current?.editor;
-  useEffect(() => {
-    if (!editor || editor.isDestroyed) {
-      return;
-    }
-    if (!editor.isFocused || !editor.isEditable) {
-      // Use queueMicrotask per https://github.com/ueberdosis/tiptap/issues/3764#issuecomment-1546854730
-      queueMicrotask(() => {
-        const currentSelection = editor.state.selection;
-        editor
-          .chain()
-          .setContent(contents)
-          .setTextSelection(currentSelection)
-          .run();
-      });
-    }
-  }, [contents, editor, editor?.isEditable, editor?.isFocused]);
+  // useEffect(() => {
+  //   if (!editor || editor.isDestroyed) {
+  //     return;
+  //   }
+  //   if (!editor.isFocused || !editor.isEditable) {
+  //     // Use queueMicrotask per https://github.com/ueberdosis/tiptap/issues/3764#issuecomment-1546854730
+  //     queueMicrotask(() => {
+  //       const currentSelection = editor.state.selection;
+  //       editor
+  //         .chain()
+  //         .setContent(contents)
+  //         .setTextSelection(currentSelection)
+  //         .run();
+  //     });
+  //   }
+  // }, [contents, editor, editor?.isEditable, editor?.isFocused]);
 
   return (
     <>
@@ -100,7 +100,7 @@ const Editor = (props) => {
                 <Box>
                   <MenuButton
                     value='insert'
-                    tooltipLabel='Insert Page'
+                    tooltipLabel='Insert Page Above'
                     onClick={insert}
                     IconComponent={NoteAddIcon}
                   />
