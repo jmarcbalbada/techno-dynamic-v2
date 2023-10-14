@@ -1,6 +1,7 @@
 from django.db import models
 
 class Lesson(models.Model):
+    lessonNumber = models.IntegerField(unique=True, null=False)
     title = models.CharField(max_length=50, default="", null=False)
     subtitle = models.CharField(max_length=50, default="", null=False)
     coverImage = models.ImageField(blank=True, upload_to='media/')
