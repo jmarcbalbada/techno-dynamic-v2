@@ -29,7 +29,7 @@ const EditorForm = () => {
       subtitle: '',
       pages: [
         {
-          contents: '<h1>Hello</h1>'
+          contents: ''
         }
       ]
     }
@@ -44,6 +44,14 @@ const EditorForm = () => {
         behavior: 'smooth'
       });
     }, 1);
+  };
+
+  const handleRemovePage = (remove, index) => {
+    if (formik.values.pages.length === 1) {
+      return;
+    }
+
+    remove(index);
   };
 
   return (
@@ -112,7 +120,7 @@ const EditorForm = () => {
                                 index={index}
                                 contents={page.contents}
                                 insert={() => insert(index, { contents: '' })}
-                                remove={() => remove(index)}
+                                remove={() => handleRemovePage(remove, index)}
                               />
                             </Box>
                           )}
