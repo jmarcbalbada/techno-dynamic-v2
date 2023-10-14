@@ -25,7 +25,7 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
             return [IsAuthenticated()]
 
     def getAllLessons(self, request):
-        lessons = self.get_queryset()
+        lessons = self.get_queryset().order_by('lessonNumber')  # Sort lessons by lessonNumber
         data = []
 
         for lesson in lessons:
