@@ -58,6 +58,9 @@ export default function EditorMenuControls() {
       <MenuDivider />
 
       <MenuButtonTextColor
+        PopperProps={{
+          disablePortal: true
+        }}
         defaultTextColor={theme.palette.text.primary}
         swatchColors={[
           { value: '#000000', label: 'Black' },
@@ -72,6 +75,9 @@ export default function EditorMenuControls() {
       />
 
       <MenuButtonHighlightColor
+        PopperProps={{
+          disablePortal: true
+        }}
         swatchColors={[
           { value: '#595959', label: 'Dark grey' },
           { value: '#dddddd', label: 'Light grey' },

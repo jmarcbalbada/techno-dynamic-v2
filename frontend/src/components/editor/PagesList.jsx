@@ -25,7 +25,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const PagesList = memo(({ pages, setPages }) => {
-  const [localPages, setLocalPages] = useState(pages);
   const [openPages, setOpenPages] = useState(Array(pages.length).fill(false));
 
   const handleOpenPage = (index) => {
@@ -41,7 +40,7 @@ const PagesList = memo(({ pages, setPages }) => {
   };
 
   const handleUpdatePage = (index, contents) => {
-    setLocalPages((prevPages) => {
+    setPages((prevPages) => {
       const newPages = [...prevPages];
       newPages[index].contents = contents;
       return newPages;
@@ -49,7 +48,7 @@ const PagesList = memo(({ pages, setPages }) => {
   };
 
   const handleAddPage = () => {
-    setLocalPages((prevPages) => [
+    setPages((prevPages) => [
       ...prevPages,
       {
         contents: `<h1>New Page ${prevPages.length + 1}</h1>`
@@ -65,13 +64,13 @@ const PagesList = memo(({ pages, setPages }) => {
   };
 
   const handleRemovePage = (index) => {
-    setLocalPages((prevPages) => [
+    setPages((prevPages) => [
       ...prevPages.filter((page, i) => i !== index)
     ]);
   };
 
   const handleInsertBelow = (index) => {
-    setLocalPages((prevPages) => [
+    setPages((prevPages) => [
       ...prevPages.slice(0, index + 1),
       {
         contents: `<h1>New Page ${prevPages.length + 1}</h1>`
@@ -81,7 +80,7 @@ const PagesList = memo(({ pages, setPages }) => {
   };
 
   const handleInsertAbove = (index) => {
-    setLocalPages((prevPages) => [
+    setPages((prevPages) => [
       ...prevPages.slice(0, index),
       {
         contents: `<h1>New Page ${prevPages.length + 1}</h1>`
@@ -91,7 +90,7 @@ const PagesList = memo(({ pages, setPages }) => {
   };
 
   const handleMoveUp = (index) => {
-    setLocalPages((prevPages) => {
+    setPages((prevPages) => {
       if (index === 0) return prevPages;
       const newPages = [...prevPages];
       const temp = newPages[index];
@@ -102,7 +101,7 @@ const PagesList = memo(({ pages, setPages }) => {
   };
 
   const handleMoveDown = (index) => {
-    setLocalPages((prevPages) => {
+    setPages((prevPages) => {
       if (index === prevPages.length - 1) return prevPages;
       const newPages = [...prevPages];
       const temp = newPages[index];
@@ -120,7 +119,7 @@ const PagesList = memo(({ pages, setPages }) => {
         Pages
       </Typography>
       <Stack divider={<Divider flexItem />} spacing={2}>
-        {localPages.map((page, index) => (
+        {pages.map((page, index) => (
           <Box key={index}>
             <FieldPaper>
               <Box display='flex'>
@@ -150,7 +149,7 @@ const PagesList = memo(({ pages, setPages }) => {
                 mt={2}>
                 <Box>
                   <Typography variant='caption'>
-                    Page {index + 1} of {localPages.length}
+                    Page {index + 1} of {pages.length}
                   </Typography>
                 </Box>
                 <Box>
