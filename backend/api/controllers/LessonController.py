@@ -75,6 +75,23 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
 
         return Response(LessonSerializer(instance).data)
 
+    def patchLesson(self, request, lesson_id=None):
+        lesson = self.get_queryset().filter(id=lesson_id).first()
+        if lesson is None:
+            return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+
+        if 'title' in data:
+            lesson.set_title(data['title'])
+        if 'subtitle' in data:
+            lesson.set_subtitle(data['subtitle'])
+        if 'coverImage' in data:
+            lesson.set_cover_image(data['coverImage'])
+
+        lesson.save()
+        return Response(LessonSerializer(lesson).data)
+
     def deleteLesson(self, request, lesson_id):
         instance = self.get_queryset().filter(id=lesson_id).first()
 
