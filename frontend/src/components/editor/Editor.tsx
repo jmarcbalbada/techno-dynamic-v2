@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
+} from 'react';
 
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -21,33 +27,23 @@ import {
 import EditorMenuControls from './EditorMenuControls';
 import useTiptapExtensions from '../../hooks/useTiptapExtensions';
 
-const Editor = (props) => {
-  const { contents, insert, remove } = props;
+const Editor = (props, ref) => {
+  // add useImperativeHandle to Editor.tsx and return a fcuntion: rteRef.current?.editor?.getHTML() ?? ""
+  const { contents } = props;
   const extensions = useTiptapExtensions({
     placeholder: 'Enter details here...'
   });
   const rteRef = useRef<RichTextEditorRef>(null);
   const [isEditable, setIsEditable] = useState(true);
   const [showMenuBar, setShowMenuBar] = useState(true);
-  const [submittedContent, setSubmittedContent] = useState('');
 
-  const editor = rteRef.current?.editor;
-  // useEffect(() => {
-  //   if (!editor || editor.isDestroyed) {
-  //     return;
-  //   }
-  //   if (!editor.isFocused || !editor.isEditable) {
-  //     // Use queueMicrotask per https://github.com/ueberdosis/tiptap/issues/3764#issuecomment-1546854730
-  //     queueMicrotask(() => {
-  //       const currentSelection = editor.state.selection;
-  //       editor
-  //         .chain()
-  //         .setContent(contents)
-  //         .setTextSelection(currentSelection)
-  //         .run();
-  //     });
-  //   }
-  // }, [contents, editor, editor?.isEditable, editor?.isFocused]);
+  const getHTMLContent = () => {
+    return rteRef.current?.editor?.getHTML() ?? '';
+  };
+
+  useImperativeHandle(ref, () => ({
+    getHTMLContent
+  }));
 
   return (
     <>
@@ -62,7 +58,6 @@ const Editor = (props) => {
         <RichTextEditor
           ref={rteRef}
           content={contents}
-          //editorDependencies={[contents]} // TODO: this is inefficient for this library
           extensions={extensions}
           editable={isEditable}
           renderControls={() => <EditorMenuControls />}
@@ -97,20 +92,6 @@ const Editor = (props) => {
                     IconComponent={TextFields}
                   />
                 </Box>
-                <Box>
-                  <MenuButton
-                    value='insert'
-                    tooltipLabel='Insert Page Above'
-                    onClick={insert}
-                    IconComponent={NoteAddIcon}
-                  />
-                  <MenuButton
-                    value='remove'
-                    tooltipLabel='Remove'
-                    onClick={remove} // Call the remove function
-                    IconComponent={DeleteForeverIcon}
-                  />
-                </Box>
               </Stack>
             )
           }}>
@@ -126,4 +107,4 @@ const Editor = (props) => {
   );
 };
 
-export default Editor;
+export default forwardRef(Editor);
