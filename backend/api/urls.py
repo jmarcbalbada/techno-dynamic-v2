@@ -11,6 +11,7 @@ lesson_actions = {
 lesson_detail_actions = {
     'get': 'getLessonById',
     'put': 'updateLesson',
+    'patch': 'patchLesson',
     'delete': 'deleteLesson',
 }
 
@@ -22,6 +23,7 @@ lesson_contents_actions = {
 lesson_contents_detail_actions = {
     'get': 'getLessonContentsById',
     'put': 'updateLessonContents',
+    'patch': 'patchLessonContents',
     'delete': 'deleteLessonContents',
 }
 

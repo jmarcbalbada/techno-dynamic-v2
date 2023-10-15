@@ -54,12 +54,34 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         data = request.data
 
         newLesson = Lesson()
+        newLesson.set_lesson_number(data['lessonNumber'])
         newLesson.set_title(data['title'])
         newLesson.set_subtitle(data['subtitle'])
-        newLesson.set_cover_image(data['coverImage'])
+        newLesson.set_cover_image(data.get('coverImage', None))
         newLesson.save()
 
-        return Response(LessonSerializer(newLesson).data)
+        # Create LessonContents for each page
+        if 'pages' in data:
+            pages_data = data['pages']
+            lesson_contents = []
+            for page_data in pages_data:
+                page_contents = page_data.get('contents', '')
+                page_url = page_data.get('url', None)
+                page_files = page_data.get('files', None)
+
+                new_page = LessonContent(
+                    lesson=newLesson,
+                    contents=page_contents,
+                    url=page_url,
+                    files=page_files
+                )
+                new_page.save()
+                lesson_contents.append(new_page)
+
+        lesson_data = LessonSerializer(newLesson).data
+        lesson_data['pages'] = LessonContentSerializer(lesson_contents, many=True).data
+
+        return Response(lesson_data)
 
     def updateLesson(self, request, lesson_id):
         data = request.data
@@ -74,6 +96,23 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         instance.save()
 
         return Response(LessonSerializer(instance).data)
+
+    def patchLesson(self, request, lesson_id=None):
+        lesson = self.get_queryset().filter(id=lesson_id).first()
+        if lesson is None:
+            return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+
+        if 'title' in data:
+            lesson.set_title(data['title'])
+        if 'subtitle' in data:
+            lesson.set_subtitle(data['subtitle'])
+        if 'coverImage' in data:
+            lesson.set_cover_image(data['coverImage'])
+
+        lesson.save()
+        return Response(LessonSerializer(lesson).data)
 
     def deleteLesson(self, request, lesson_id):
         instance = self.get_queryset().filter(id=lesson_id).first()
