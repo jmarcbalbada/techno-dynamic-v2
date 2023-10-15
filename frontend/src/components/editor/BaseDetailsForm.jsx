@@ -24,6 +24,10 @@ const BaseDetailsForm = memo(({ formikBase }) => {
               type='number'
               value={formikBase.values.lessonNumber}
               onChange={formikBase.handleChange}
+              error={
+                formikBase.touched.lessonNumber &&
+                Boolean(formikBase.errors.lessonNumber)
+              }
             />
           </FieldPaper>
         </Box>
@@ -38,6 +42,9 @@ const BaseDetailsForm = memo(({ formikBase }) => {
               label='Title'
               value={formikBase.values.title}
               onChange={formikBase.handleChange}
+              error={
+                formikBase.touched.title && Boolean(formikBase.errors.title)
+              }
             />
           </FieldPaper>
         </Box>
@@ -55,6 +62,10 @@ const BaseDetailsForm = memo(({ formikBase }) => {
               label='Subtitle/Description'
               value={formikBase.values.subtitle}
               onChange={formikBase.handleChange}
+              error={
+                formikBase.touched.subtitle &&
+                Boolean(formikBase.errors.subtitle)
+              }
             />
           </FieldPaper>
         </Box>

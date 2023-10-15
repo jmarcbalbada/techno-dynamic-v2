@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { useFormik } from 'formik';
 
+import { BaseDetailsValidationSchema } from './BaseDetailsValidationSchema';
 import BaseDetailsForm from './BaseDetailsForm';
 import PagesList from './PagesList';
 
 import { Box } from '@mui/material';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
@@ -18,12 +20,17 @@ const EditorForm = () => {
       lessonNumber: 0,
       title: '',
       subtitle: ''
+    },
+    validationSchema: BaseDetailsValidationSchema,
+    onSubmit: (values) => {
+      console.log('pages', pages);
+      console.log('values', values);
     }
   });
 
   return (
     <Container component='main'>
-      <Box component='form' my={4}>
+      <Box component='form' onSubmit={formikBase.handleSubmit} my={4}>
         <Stack divider={<Divider flexItem />} spacing={2}>
           <Typography variant='h4'>Create a New Lesson</Typography>
           <Box mt={4}>
@@ -31,6 +38,11 @@ const EditorForm = () => {
           </Box>
           <Box mt={4}>
             <PagesList pages={pages} setPages={setPages} />
+          </Box>
+          <Box>
+            <Button type='submit' fullWidth variant='contained'>
+              Create Lesson
+            </Button>
           </Box>
         </Stack>
       </Box>

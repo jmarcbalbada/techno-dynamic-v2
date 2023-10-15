@@ -97,8 +97,15 @@ const Editor = (props, ref) => {
           }}>
           {() => (
             <>
-              <LinkBubbleMenu />
-              <TableBubbleMenu />
+              <LinkBubbleMenu
+                disablePortal
+                PaperProps={{
+                  sx: {
+                    zIndex: 2000
+                  }
+                }}
+              />
+              <TableBubbleMenu disablePortal />
             </>
           )}
         </RichTextEditor>
