@@ -54,6 +54,7 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         data = request.data
 
         newLesson = Lesson()
+        newLesson.set_lesson_number(data['lessonNumber'])
         newLesson.set_title(data['title'])
         newLesson.set_subtitle(data['subtitle'])
         newLesson.set_cover_image(data['coverImage'])
