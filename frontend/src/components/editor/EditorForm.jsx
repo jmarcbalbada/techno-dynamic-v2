@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useFormik } from 'formik';
 
+import { LessonsService } from 'apis/LessonsService';
 import { BaseDetailsValidationSchema } from './BaseDetailsValidationSchema';
 import BaseDetailsForm from './BaseDetailsForm';
 import PagesList from './PagesList';
@@ -22,9 +23,20 @@ const EditorForm = () => {
       subtitle: ''
     },
     validationSchema: BaseDetailsValidationSchema,
-    onSubmit: (values) => {
-      console.log('pages', pages);
-      console.log('values', values);
+    onSubmit: async (values) => {
+      try {
+        const data = {
+          lessonNumber: values.lessonNumber,
+          title: values.title,
+          subtitle: values.subtitle,
+          pages: pages
+        };
+        console.log('data', data)
+        const response = await LessonsService.create(data);
+        console.log('response', response);
+      } catch (error) {
+        console.log('error', error);
+      }
     }
   });
 
