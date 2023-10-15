@@ -9,6 +9,12 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title + ' ' + self.subtitle
 
+    def get_lesson_number(self):
+        return self.lessonNumber
+
+    def set_lesson_number(self, lesson_number):
+        self.lessonNumber = lesson_number
+
     def get_title(self):
         return self.title
 
