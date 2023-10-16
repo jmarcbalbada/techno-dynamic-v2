@@ -34,10 +34,17 @@ const PagesList = memo(({ pages, setPages }) => {
     setOpenPages(newOpenPages);
   };
 
-  const handleClosePage = (index) => {
-    const newOpenPages = [...openPages];
-    newOpenPages[index] = false;
-    setOpenPages(newOpenPages);
+  const handleClosePage = (index, requireConfirmation = false) => {
+    if (
+      !requireConfirmation ||
+      window.confirm(
+        'Are you sure you want to close? Any unsaved changes will be lost.'
+      )
+    ) {
+      const newOpenPages = [...openPages];
+      newOpenPages[index] = false;
+      setOpenPages(newOpenPages);
+    }
   };
 
   const handleUpdatePage = (index, contents) => {
@@ -175,7 +182,9 @@ const PagesList = memo(({ pages, setPages }) => {
               index={index}
               handleUpdatePage={handleUpdatePage}
               open={openPages[index] || false}
-              handleClosePage={() => handleClosePage(index)} // Pass the index to close the correct page
+              handleClosePage={(requireConfirmation) =>
+                handleClosePage(index, requireConfirmation)
+              }
               Transition={Transition}
             />
           </Box>

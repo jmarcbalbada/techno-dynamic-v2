@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 
 import Editor from './Editor';
+import FieldPaper from '../fieldpaper/FieldPaper.jsx';
 
 import {
   AppBar,
@@ -36,7 +37,11 @@ const EditorModal = ({
       console.log('editorContent', editorContent);
       handleUpdatePage(index, editorContent);
     }
-    handleClose();
+    handleClose(false);
+  };
+
+  const handleCloseWithConfirmation = () => {
+    handleClose(true);
   };
 
   return (
@@ -46,12 +51,13 @@ const EditorModal = ({
         open={open}
         onClose={handleClose}
         TransitionComponent={Transition}>
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar
+          sx={{ color: '#000', background: '#fff', position: 'relative' }}>
           <Toolbar>
             <IconButton
               edge='start'
               color='inherit'
-              onClick={handleClose}
+              onClick={handleCloseWithConfirmation}
               aria-label='close'>
               <CloseIcon />
             </IconButton>
@@ -65,12 +71,13 @@ const EditorModal = ({
         </AppBar>
         <Box my={2}>
           <Container>
-            {/* Add a ref to editor */}
-            <Editor
-              ref={editorRef}
-              contents={contents}
-              handleSave={handleSave}
-            />
+            <FieldPaper>
+              <Editor
+                ref={editorRef}
+                contents={contents}
+                handleSave={handleSave}
+              />
+            </FieldPaper>
           </Container>
         </Box>
       </Dialog>
