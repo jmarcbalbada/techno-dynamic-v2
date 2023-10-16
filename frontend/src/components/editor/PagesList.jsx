@@ -26,6 +26,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const PagesList = memo(({ pages, setPages }) => {
   const [openPages, setOpenPages] = useState(Array(pages.length).fill(false));
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const handleOpenPage = (index) => {
     const newOpenPages = [...openPages];
@@ -64,9 +65,7 @@ const PagesList = memo(({ pages, setPages }) => {
   };
 
   const handleRemovePage = (index) => {
-    setPages((prevPages) => [
-      ...prevPages.filter((page, i) => i !== index)
-    ]);
+    setPages((prevPages) => [...prevPages.filter((page, i) => i !== index)]);
   };
 
   const handleInsertBelow = (index) => {
@@ -111,6 +110,9 @@ const PagesList = memo(({ pages, setPages }) => {
     });
   };
 
+  const handleMouseOver = (index) => setHoveredIndex(index);
+  const handleMouseOut = () => setHoveredIndex(null);
+
   console.log('I am re-rendering');
 
   return (
@@ -120,7 +122,11 @@ const PagesList = memo(({ pages, setPages }) => {
       </Typography>
       <Stack divider={<Divider flexItem />} spacing={2}>
         {pages.map((page, index) => (
-          <Box key={index}>
+          <Box
+            key={index}
+            component='div'
+            onMouseOver={() => handleMouseOver(index)}
+            onMouseOut={handleMouseOut}>
             <FieldPaper>
               <Box display='flex'>
                 <Box flexGrow={1}>
@@ -129,7 +135,12 @@ const PagesList = memo(({ pages, setPages }) => {
                 <Box
                   display='flex'
                   flexDirection='column'
-                  justifyContent='flex-start'>
+                  justifyContent='flex-start'
+                  visibility={hoveredIndex === index ? 'visible' : 'hidden'}
+                  sx={{
+                    transition: 'visibility 0s, opacity 0.2s ease-in-out',
+                    opacity: hoveredIndex === index ? 1 : 0
+                  }}>
                   <IconButton
                     onClick={() => handleMoveUp(index)}
                     color='primary'>
@@ -152,7 +163,12 @@ const PagesList = memo(({ pages, setPages }) => {
                     Page {index + 1} of {pages.length}
                   </Typography>
                 </Box>
-                <Box>
+                <Box
+                  visibility={hoveredIndex === index ? 'visible' : 'hidden'}
+                  sx={{
+                    transition: 'visibility 0s, opacity 0.2s ease-in-out',
+                    opacity: hoveredIndex === index ? 1 : 0
+                  }}>
                   <ButtonGroup size='small' variant='text'>
                     <Button onClick={() => handleOpenPage(index)}>Edit</Button>
                     <Button onClick={() => handleInsertAbove(index)}>
