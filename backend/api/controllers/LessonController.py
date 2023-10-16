@@ -4,6 +4,7 @@ from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateMode
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
@@ -41,6 +42,25 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         lesson = self.get_queryset().filter(id=lesson_id).first()
 
         if lesson is None:
+            return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        lesson_data = LessonSerializer(lesson).data
+        lesson_contents = LessonContent.objects.filter(lesson=lesson)
+        lesson_contents_data = LessonContentSerializer(lesson_contents, many=True).data
+        lesson_data['pages'] = lesson_contents_data
+
+        return Response(lesson_data)
+
+    @action(detail=False, methods=['GET'])
+    def findLessonbyLessonNumber(self, request):
+        lesson_number = request.query_params.get('lessonNumber')
+
+        if lesson_number is None:
+            return Response({"error": "lessonNumber parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            lesson = Lesson.objects.get(lessonNumber=lesson_number)
+        except Lesson.DoesNotExist:
             return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
 
         lesson_data = LessonSerializer(lesson).data
