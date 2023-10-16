@@ -28,11 +28,15 @@ lesson_contents_detail_actions = {
 }
 
 urlpatterns = [
+    # Paths
     re_path('login', UserController.login),
     re_path('register', UserController.register),
     re_path('test-token', UserController.test_token),
-     path('lessons/', LessonController.as_view(lesson_actions)),
-     path('lessons/<int:lesson_id>', LessonController.as_view(lesson_detail_actions)),
-     path('lessons/<int:lesson_id>/pages/', LessonContentsController.as_view(lesson_contents_actions)),
-     path('lessons/<int:lesson_id>/pages/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions))
+    path('lessons/', LessonController.as_view(lesson_actions)),
+    path('lessons/<int:lesson_id>', LessonController.as_view(lesson_detail_actions)),
+    path('lessons/<int:lesson_id>/pages/', LessonContentsController.as_view(lesson_contents_actions)),
+    path('lessons/<int:lesson_id>/pages/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions)),
+
+    # Queries
+    path('lessons', LessonController.as_view({'get': 'findLessonbyLessonNumber'})),
 ]
