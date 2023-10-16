@@ -4,6 +4,7 @@ from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateMode
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
@@ -50,6 +51,25 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
 
         return Response(lesson_data)
 
+    @action(detail=False, methods=['GET'])
+    def findLessonbyLessonNumber(self, request):
+        lesson_number = request.query_params.get('lessonNumber')
+
+        if lesson_number is None:
+            return Response({"error": "lessonNumber parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            lesson = Lesson.objects.get(lessonNumber=lesson_number)
+        except Lesson.DoesNotExist:
+            return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        lesson_data = LessonSerializer(lesson).data
+        lesson_contents = LessonContent.objects.filter(lesson=lesson)
+        lesson_contents_data = LessonContentSerializer(lesson_contents, many=True).data
+        lesson_data['pages'] = lesson_contents_data
+
+        return Response(lesson_data)
+
     def createLesson(self, request):
         data = request.data
 
@@ -69,12 +89,11 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                 page_url = page_data.get('url', None)
                 page_files = page_data.get('files', None)
 
-                new_page = LessonContent(
-                    lesson=newLesson,
-                    contents=page_contents,
-                    url=page_url,
-                    files=page_files
-                )
+                new_page = LessonContent()
+                new_page.set_lesson_id(newLesson.id)
+                new_page.set_contents(page_contents)
+                new_page.set_url(page_url)
+                new_page.set_file(page_files)
                 new_page.save()
                 lesson_contents.append(new_page)
 
@@ -90,12 +109,57 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         if instance is None:
             return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        instance.set_title(data['title'])
-        instance.set_subtitle(data['subtitle'])
-        instance.set_url(data['url'])
+        if 'pages' in data:
+            updated_pages = data['pages']
+            existing_pages = LessonContent.objects.filter(lesson=instance)
+
+            # Update or create pages in the request
+            updated_page_ids = set()
+            for page_data in updated_pages:
+                page_id = page_data.get('id')
+
+                if page_id:
+                    # Update an existing page
+                    existing_page = existing_pages.filter(id=page_id).first()
+                    if existing_page:
+                        existing_page.contents = page_data.get('contents', '')
+                        existing_page.url = page_data.get('url', None)
+                        existing_page.files = page_data.get('files', None)
+                        existing_page.save()
+                        updated_page_ids.add(existing_page.id)
+                    else:
+                        return Response({"error": f"Page with ID {page_id} not found"},
+                                        status=status.HTTP_404_NOT_FOUND)
+                else:
+                    # Create a new page
+                    new_page = LessonContent()
+                    new_page.set_lesson_id(instance.id)
+                    new_page.set_contents(page_data.get('contents', ''))
+                    new_page.set_url(page_data.get('url', None))
+                    new_page.set_file(page_data.get('files', None))
+                    new_page.save()
+                    updated_page_ids.add(new_page.id)
+
+            # Delete pages that are not in the updated request
+            for existing_page in existing_pages:
+                if existing_page.id not in updated_page_ids:
+                    existing_page.delete()
+
+        # Update other lesson fields if needed
+        instance.set_lesson_number(data.get('lessonNumber', instance.get_lesson_number()))
+        instance.set_title(data.get('title', instance.get_title()))
+        instance.set_subtitle(data.get('subtitle', instance.get_subtitle()))
+        instance.set_cover_image(data.get('coverImage', instance.get_cover_image()))
         instance.save()
 
-        return Response(LessonSerializer(instance).data)
+        # Retrieve the updated list of pages for the response
+        updated_pages_data = LessonContentSerializer(LessonContent.objects.filter(lesson=instance), many=True).data
+
+        # Include the updated pages in the response
+        response_data = LessonSerializer(instance).data
+        response_data['pages'] = updated_pages_data
+
+        return Response(response_data)
 
     def patchLesson(self, request, lesson_id=None):
         lesson = self.get_queryset().filter(id=lesson_id).first()
