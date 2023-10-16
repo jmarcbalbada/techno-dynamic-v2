@@ -3,6 +3,7 @@ import React, { useState, useEffect, memo, forwardRef } from 'react';
 import ReadOnlyPage from './ReadOnlyPage';
 import EditorModal from './EditorModal';
 import FieldPaper from '../fieldpaper/FieldPaper';
+import styles from './PagesList.module.css';
 
 import {
   Box,
@@ -26,7 +27,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const PagesList = memo(({ pages, setPages }) => {
   const [openPages, setOpenPages] = useState(Array(pages.length).fill(false));
-  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const handleOpenPage = (index) => {
     const newOpenPages = [...openPages];
@@ -110,9 +110,6 @@ const PagesList = memo(({ pages, setPages }) => {
     });
   };
 
-  const handleMouseOver = (index) => setHoveredIndex(index);
-  const handleMouseOut = () => setHoveredIndex(null);
-
   console.log('I am re-rendering');
 
   return (
@@ -122,25 +119,17 @@ const PagesList = memo(({ pages, setPages }) => {
       </Typography>
       <Stack divider={<Divider flexItem />} spacing={2}>
         {pages.map((page, index) => (
-          <Box
-            key={index}
-            component='div'
-            onMouseOver={() => handleMouseOver(index)}
-            onMouseOut={handleMouseOut}>
+          <Box key={index} className={styles['button-controls-container']}>
             <FieldPaper>
               <Box display='flex'>
                 <Box flexGrow={1}>
                   <ReadOnlyPage content={page.contents} />
                 </Box>
                 <Box
+                  className={styles['button-controls-content']}
                   display='flex'
                   flexDirection='column'
-                  justifyContent='flex-start'
-                  visibility={hoveredIndex === index ? 'visible' : 'hidden'}
-                  sx={{
-                    transition: 'visibility 0s, opacity 0.2s ease-in-out',
-                    opacity: hoveredIndex === index ? 1 : 0
-                  }}>
+                  justifyContent='flex-start'>
                   <IconButton
                     onClick={() => handleMoveUp(index)}
                     color='primary'>
@@ -163,12 +152,7 @@ const PagesList = memo(({ pages, setPages }) => {
                     Page {index + 1} of {pages.length}
                   </Typography>
                 </Box>
-                <Box
-                  visibility={hoveredIndex === index ? 'visible' : 'hidden'}
-                  sx={{
-                    transition: 'visibility 0s, opacity 0.2s ease-in-out',
-                    opacity: hoveredIndex === index ? 1 : 0
-                  }}>
+                <Box className={styles['button-controls-content']}>
                   <ButtonGroup size='small' variant='text'>
                     <Button onClick={() => handleOpenPage(index)}>Edit</Button>
                     <Button onClick={() => handleInsertAbove(index)}>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useFormik } from 'formik';
 
 import { LessonsService } from 'apis/LessonsService';
@@ -31,7 +31,7 @@ const EditorForm = () => {
           subtitle: values.subtitle,
           pages: pages
         };
-        console.log('data', data)
+        console.log('data', data);
         const response = await LessonsService.create(data);
         console.log('response', response);
       } catch (error) {
@@ -52,7 +52,7 @@ const EditorForm = () => {
             <PagesList pages={pages} setPages={setPages} />
           </Box>
           <Box>
-            <Button type='submit' fullWidth variant='contained'>
+            <Button type='submit' fullWidth size='large' variant='contained'>
               Create Lesson
             </Button>
           </Box>
