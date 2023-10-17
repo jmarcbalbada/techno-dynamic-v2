@@ -32,6 +32,7 @@ import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
+import Youtube from '@tiptap/extension-youtube';
 import {
   FontSize,
   HeadingWithAnchor,
@@ -117,6 +118,13 @@ export default function useTiptapExtensions({
       }),
       Placeholder.configure({
         placeholder
+      }),
+
+      Youtube.configure({
+        inline: false,
+        width: 480,
+        height: 320,
+        disableKBcontrols: true
       }),
 
       History
