@@ -10,5 +10,6 @@ export const LessonsService = {
   getByLessonNumber: (lessonNumber) =>
     axios.get(`${BASE_URL}`, { params: { lessonNumber } }),
   create: (data) => axios.post(`${BASE_URL}/`, data),
-  update: (id, data) => axios.put(`${BASE_URL}/${id}`, data)
+  update: (id, data) => axios.put(`${BASE_URL}/${id}`, data),
+  delete: (id) => axios.delete(`${BASE_URL}/${id}`)
 };
