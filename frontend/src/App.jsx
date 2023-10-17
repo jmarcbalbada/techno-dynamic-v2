@@ -26,8 +26,8 @@ export const router = createBrowserRouter(
 
       <Route element={<ProtectedLayout />}>
         <Route index path='/' element={<Dashboard />} />
-        <Route path='/lessons/:lessonid/:pageNumber' element={<Lesson />} />
-        <Route path='/lessons/:lessonid/end' element={<LessonEnd />} />
+        <Route path='/lessons/:lessonNumber/:pageNumber' element={<Lesson />} />
+        <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/create' element={<Create />} />
           <Route path='/lessons/:lessonid/edit' element={<Edit />} />

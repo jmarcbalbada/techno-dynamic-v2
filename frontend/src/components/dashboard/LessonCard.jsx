@@ -15,15 +15,16 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const LessonCard = (props) => {
   const { user } = useAuth();
-  const { id, title, description, image } = props;
+  const { id, lessonNumber, title, description, image } = props;
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
-    navigate(`/lessons/${id}/1`);
+
+    navigate(`/lessons/${lessonNumber}/1`);
   };
 
   const handleEditClick = () => {
-    navigate(`/lessons/${id}/edit`);
+    navigate(`/lessons/${lessonNumber}/edit`);
   };
 
   return (

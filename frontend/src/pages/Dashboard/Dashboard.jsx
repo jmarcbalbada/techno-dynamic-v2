@@ -60,7 +60,6 @@ const Dashboard = () => {
       </Box>
       <Box my={4}>
         <Grid container spacing={3}>
-          {/* TODO: change hardcoded teacher string to user.role */}
           {user?.role === 'teacher' && (
             <Grid item xs={12}>
               <Button
@@ -74,11 +73,11 @@ const Dashboard = () => {
               </Button>
             </Grid>
           )}
-          {/* TODO: change hardcoded lessoncards to actual lessons */}
           {lessons.map((lesson, index) => (
             <Grid item xs={12} md={6} lg={4} key={index}>
               <LessonCard
                 id={lesson.id}
+                lessonNumber={lesson.lessonNumber}
                 title={lesson.title}
                 description={lesson.subtitle}
                 image={
