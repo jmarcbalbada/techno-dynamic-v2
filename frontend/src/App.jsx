@@ -30,7 +30,7 @@ export const router = createBrowserRouter(
         <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/create' element={<Create />} />
-          <Route path='/lessons/:lessonid/edit' element={<Edit />} />
+          <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
         </Route>
       </Route>
       <Route path='/forbid' element={<Forbid />} />

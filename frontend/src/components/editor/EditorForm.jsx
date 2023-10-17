@@ -16,8 +16,10 @@ import Typography from '@mui/material/Typography';
 
 import CloseIcon from '@mui/icons-material/Close';
 
-const EditorForm = () => {
-  const [pages, setPages] = useState([{ contents: '<h1>Page 1</h1>' }]);
+const EditorForm = ({ lesson, initialLessonNumber }) => {
+  const [pages, setPages] = useState(
+    lesson ? lesson.pages : [{ contents: '<h1>Page 1</h1>' }]
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,9 +42,9 @@ const EditorForm = () => {
 
   const formikBase = useFormik({
     initialValues: {
-      lessonNumber: 0,
-      title: '',
-      subtitle: ''
+      lessonNumber: lesson ? lesson.lessonNumber : initialLessonNumber,
+      title: lesson ? lesson.title : '',
+      subtitle: lesson ? lesson.subtitle : ''
     },
     validationSchema: BaseDetailsValidationSchema,
     onSubmit: async (values) => {
@@ -54,8 +56,15 @@ const EditorForm = () => {
           pages: pages
         };
         console.log('data', data);
-        const response = await LessonsService.create(data);
-        console.log('response', response);
+        // TODO: add error handling
+        if (lesson) {
+          const response = await LessonsService.update(lesson.id, data);
+          console.log('Updateresponse', response);
+        } else {
+          const response = await LessonsService.create(data);
+          console.log('Createresponse', response);
+        }
+        navigate('/', { replace: true });
       } catch (error) {
         console.log('error', error);
       }
@@ -68,7 +77,6 @@ const EditorForm = () => {
     );
     if (confirmed) {
       console.log('handleClose');
-      // Navigate to the dashboard here
       navigate('/', { replace: true });
     }
   }, []);
@@ -78,7 +86,11 @@ const EditorForm = () => {
       <Box component='form' onSubmit={formikBase.handleSubmit} my={4}>
         <Stack divider={<Divider flexItem />} spacing={2}>
           <Box display='flex' justifyContent='space-between'>
-            <Typography variant='h4'>Create a New Lesson</Typography>
+            <Typography variant='h4'>
+              {lesson
+                ? `Editing Lesson ${lesson.lessonNumber}`
+                : 'Create a New Lesson'}
+            </Typography>
             <Button onClick={handleClose} endIcon={<CloseIcon />}>
               Dashboard
             </Button>
@@ -91,7 +103,7 @@ const EditorForm = () => {
           </Box>
           <Box>
             <Button type='submit' fullWidth size='large' variant='contained'>
-              Create Lesson
+              {lesson ? 'Save Changes' : 'Create Lesson'}
             </Button>
           </Box>
         </Stack>
