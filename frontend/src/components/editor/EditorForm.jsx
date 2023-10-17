@@ -6,20 +6,25 @@ import { LessonsService } from 'apis/LessonsService';
 import { BaseDetailsValidationSchema } from './BaseDetailsValidationSchema';
 import BaseDetailsForm from './BaseDetailsForm';
 import PagesList from './PagesList';
+import DeleteLessonDialog from 'components/deleteDialog/DeleteLessonDialog';
 
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import CloseIcon from '@mui/icons-material/Close';
+import WarningIcon from '@mui/icons-material/Warning';
+import Delete from '@mui/icons-material/Delete';
 
 const EditorForm = ({ lesson, initialLessonNumber }) => {
   const [pages, setPages] = useState(
     lesson ? lesson.pages : [{ contents: '<h1>Page 1</h1>' }]
   );
+  const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,6 +86,23 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
     }
   }, []);
 
+  const handleDialogOpen = useCallback(() => {
+    setOpenDialog(true);
+  }, []);
+
+  const handleDialogClose = useCallback(() => {
+    setOpenDialog(false);
+  }, []);
+
+  const handleDialogDelete = useCallback(async () => {
+    try {
+      await LessonsService.delete(lesson.id);
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.log('error', error);
+    }
+  }, []);
+
   return (
     <Container component='main'>
       <Box component='form' onSubmit={formikBase.handleSubmit} my={4}>
@@ -106,6 +128,41 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
               {lesson ? 'Save Changes' : 'Create Lesson'}
             </Button>
           </Box>
+          {lesson && (
+            <Paper
+              variant='outlined'
+              sx={{
+                mt: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                bgcolor: 'rgba(235, 0, 20, 0.1)',
+                borderColor: 'error.main'
+              }}>
+              <Box sx={{ m: 3 }}>
+                <Box>
+                  <Typography variant='h6' display='flex' alignItems='center'>
+                    <WarningIcon color='error' sx={{ mr: 0.5 }} />
+                    Danger Zone
+                  </Typography>
+                </Box>
+                <Box sx={{ mt: 3 }}>
+                  <Button
+                    onClick={handleDialogOpen}
+                    color='error'
+                    variant='outlined'>
+                    Delete Lesson
+                  </Button>
+                  {openDialog && (
+                    <DeleteLessonDialog
+                      open={openDialog}
+                      handleClose={handleDialogClose}
+                      handleDelete={() => handleDialogDelete()}
+                    />
+                  )}
+                </Box>
+              </Box>
+            </Paper>
+          )}
         </Stack>
       </Box>
     </Container>
