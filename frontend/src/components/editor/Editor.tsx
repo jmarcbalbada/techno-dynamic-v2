@@ -60,7 +60,7 @@ const Editor = (props, ref) => {
           content={contents}
           extensions={extensions}
           editable={isEditable}
-          renderControls={() => <EditorMenuControls />}
+          renderControls={() => <EditorMenuControls rteRef={rteRef} />}
           RichTextFieldProps={{
             variant: 'outlined',
             MenuBarProps: {

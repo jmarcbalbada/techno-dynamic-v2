@@ -1,4 +1,5 @@
-import { useTheme } from '@mui/material';
+import React, { useCallback } from 'react';
+import { IconButton, useTheme } from '@mui/material';
 import {
   MenuButtonAddTable,
   MenuButtonBlockquote,
@@ -31,8 +32,37 @@ import {
   isTouchDevice
 } from 'mui-tiptap';
 
-export default function EditorMenuControls() {
+import YouTubeIcon from '@mui/icons-material/YouTube';
+
+export default function EditorMenuControls({ rteRef }) {
   const theme = useTheme();
+
+  // Function to insert a YouTube video
+  const addYoutubeVideo = useCallback(() => {
+    const youtubeUrl = prompt('Enter the YouTube video URL:');
+
+    if (youtubeUrl === null) {
+      // User cancelled, do nothing
+      return;
+    }
+
+    if (youtubeUrl === '') {
+      // If the URL is empty, clear the content (can adjust this behavior)
+      rteRef.current?.editor
+        ?.chain()
+        .focus()
+        .extendMarkRange('youtube')
+        .clearContent()
+        .run();
+      return;
+    }
+
+    // Insert the YouTube video using your editor's command
+    rteRef.current?.editor?.commands.setYoutubeVideo({
+      src: youtubeUrl
+    });
+  }, [rteRef]);
+
   return (
     <MenuControlsContainer>
       <MenuSelectHeading />
@@ -94,6 +124,11 @@ export default function EditorMenuControls() {
       <MenuDivider />
 
       <MenuButtonEditLink />
+
+      {/* Custom */}
+      <IconButton onClick={addYoutubeVideo}>
+        <YouTubeIcon />
+      </IconButton>
 
       <MenuDivider />
 
