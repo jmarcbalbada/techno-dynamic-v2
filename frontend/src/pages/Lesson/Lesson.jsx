@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 import { LessonsService } from 'apis/LessonsService';
 import LessonPage from 'components/lessonpage/LessonPage';
@@ -9,7 +9,7 @@ import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
 
 const Lesson = () => {
-  const { lessonid, pageNumber } = useParams();
+  const { lessonNumber, pageNumber } = useParams();
   const navigate = useNavigate();
   const [lesson, setLesson] = useState({});
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber));
@@ -17,12 +17,12 @@ const Lesson = () => {
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    getLessonById(lessonid);
+    getLessonLessonNumber(lessonNumber);
   }, []);
 
-  const getLessonById = async (id) => {
+  const getLessonLessonNumber = async (lessonNumber) => {
     try {
-      const response = await LessonsService.getById(id);
+      const response = await LessonsService.getByLessonNumber(lessonNumber);
       setLesson(response.data);
     } catch (error) {
       setIsError(true);
@@ -34,16 +34,16 @@ const Lesson = () => {
   const handleNextPage = () => {
     if (currentPage < lesson?.pages?.length) {
       setCurrentPage((prev) => prev + 1);
-      navigate(`/lessons/${lessonid}/${currentPage + 1}`);
+      navigate(`/lessons/${lessonNumber}/${currentPage + 1}`);
     } else {
-      navigate(`/lessons/${lessonid}/end`);
+      navigate(`/lessons/${lessonNumber}/end`);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
-      navigate(`/lessons/${lessonid}/${currentPage - 1}`);
+      navigate(`/lessons/${lessonNumber}/${currentPage - 1}`);
     } else {
       navigate(`/`);
     }
