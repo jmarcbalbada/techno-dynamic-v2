@@ -72,6 +72,9 @@ const PagesList = memo(({ pages, setPages }) => {
   };
 
   const handleRemovePage = (index) => {
+    if (pages.length === 1) {
+      return;
+    }
     setPages((prevPages) => [...prevPages.filter((page, i) => i !== index)]);
   };
 
