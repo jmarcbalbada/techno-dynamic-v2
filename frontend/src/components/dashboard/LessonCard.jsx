@@ -16,10 +16,10 @@ import EditIcon from '@mui/icons-material/Edit';
 const LessonCard = (props) => {
   const { user } = useAuth();
   const { id, lessonNumber, title, description, image } = props;
+  console.log('image', image);
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
-
     navigate(`/lessons/${lessonNumber}/1`);
   };
 
@@ -48,8 +48,11 @@ const LessonCard = (props) => {
         <CardMedia
           component='img'
           height='140'
-          // TODO: change hardcoded image to actual image
-          image={image}
+          image={
+            image.includes('null')
+              ? 'https://source.unsplash.com/random/featured/?working,office'
+              : `http://127.0.0.1:8000${image}`
+          }
         />
         <CardContent>
           {/* TODO: change to actual details needed for the card */}
@@ -63,7 +66,6 @@ const LessonCard = (props) => {
       </CardActionArea>
       {/* TODO: change hardcoded teacher string to user.role */}
       {user?.role === 'teacher' && (
-        // TODO: add onClick handler to navigate to edit lesson page
         <CardActions>
           <Button onClick={handleEditClick} startIcon={<EditIcon />} fullWidth>
             Edit
