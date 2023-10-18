@@ -1,3 +1,4 @@
+import json
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
@@ -80,10 +81,12 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         newLesson.set_cover_image(data.get('coverImage', None))
         newLesson.save()
 
+        lesson_contents = []
+
         # Create LessonContents for each page
         if 'pages' in data:
-            pages_data = data['pages']
-            lesson_contents = []
+            pages_data = json.loads(data['pages'])
+
             for page_data in pages_data:
                 page_contents = page_data.get('contents', '')
                 page_url = page_data.get('url', None)
@@ -103,14 +106,26 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         return Response(lesson_data)
 
     def updateLesson(self, request, lesson_id):
-        data = request.data
         instance = self.get_queryset().filter(id=lesson_id).first()
 
         if instance is None:
             return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        if 'pages' in data:
-            updated_pages = data['pages']
+        # Retrieve form data fields
+        lesson_data = {
+            "lessonNumber": request.data.get("lessonNumber", instance.get_lesson_number()),
+            "title": request.data.get("title", instance.get_title()),
+            "subtitle": request.data.get("subtitle", instance.get_subtitle()),
+            "coverImage": request.data.get("coverImage", instance.get_cover_image()),
+        }
+
+        # Check if "pages" is in the request data
+        if "pages" in request.data:
+            try:
+                updated_pages = json.loads(request.data["pages"])
+            except json.JSONDecodeError:
+                return Response({"error": "Invalid JSON data for 'pages'"}, status=status.HTTP_400_BAD_REQUEST)
+
             existing_pages = LessonContent.objects.filter(lesson=instance)
 
             # Update or create pages in the request
@@ -146,10 +161,10 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                     existing_page.delete()
 
         # Update other lesson fields if needed
-        instance.set_lesson_number(data.get('lessonNumber', instance.get_lesson_number()))
-        instance.set_title(data.get('title', instance.get_title()))
-        instance.set_subtitle(data.get('subtitle', instance.get_subtitle()))
-        instance.set_cover_image(data.get('coverImage', instance.get_cover_image()))
+        instance.set_lesson_number(lesson_data['lessonNumber'])
+        instance.set_title(lesson_data['title'])
+        instance.set_subtitle(lesson_data['subtitle'])
+        instance.set_cover_image(lesson_data['coverImage'])
         instance.save()
 
         # Retrieve the updated list of pages for the response

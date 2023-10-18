@@ -9,7 +9,17 @@ export const LessonsService = {
   getById: (id) => axios.get(`${BASE_URL}/${id}`),
   getByLessonNumber: (lessonNumber) =>
     axios.get(`${BASE_URL}`, { params: { lessonNumber } }),
-  create: (data) => axios.post(`${BASE_URL}/`, data),
-  update: (id, data) => axios.put(`${BASE_URL}/${id}`, data),
+  create: (data) =>
+    axios.post(`${BASE_URL}/`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }),
+  update: (id, data) =>
+    axios.put(`${BASE_URL}/${id}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }),
   delete: (id) => axios.delete(`${BASE_URL}/${id}`)
 };

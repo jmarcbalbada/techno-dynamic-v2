@@ -49,24 +49,25 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
     initialValues: {
       lessonNumber: lesson ? lesson.lessonNumber : initialLessonNumber,
       title: lesson ? lesson.title : '',
-      subtitle: lesson ? lesson.subtitle : ''
+      subtitle: lesson ? lesson.subtitle : '',
+      coverImage: lesson ? (lesson.coverImage ? lesson.coverImage : null) : null
     },
     validationSchema: BaseDetailsValidationSchema,
     onSubmit: async (values) => {
       try {
-        const data = {
-          lessonNumber: values.lessonNumber,
-          title: values.title,
-          subtitle: values.subtitle,
-          pages: pages
-        };
-        console.log('data', data);
+        const formData = new FormData();
+        formData.append('title', values.title);
+        formData.append('subtitle', values.subtitle);
+        formData.append('lessonNumber', values.lessonNumber);
+        formData.append('pages', JSON.stringify(pages));
+        formData.append('coverImage', values.coverImage);
+        console.log('formData', formData);
         // TODO: add error handling
         if (lesson) {
-          const response = await LessonsService.update(lesson.id, data);
+          const response = await LessonsService.update(lesson.id, formData);
           console.log('Updateresponse', response);
         } else {
-          const response = await LessonsService.create(data);
+          const response = await LessonsService.create(formData);
           console.log('Createresponse', response);
         }
         navigate('/', { replace: true });

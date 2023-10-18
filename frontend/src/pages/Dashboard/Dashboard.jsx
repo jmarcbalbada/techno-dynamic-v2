@@ -14,19 +14,6 @@ import Grid from '@mui/material/Grid';
 
 import AddIcon from '@mui/icons-material/Add';
 
-// TODO: change hardcoded lessons to actual lessons
-const lessonsHardCode = [
-  {
-    image: 'https://source.unsplash.com/random/featured/?working,office'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?working'
-  },
-  {
-    image: 'https://source.unsplash.com/random/featured/?office'
-  }
-];
-
 const Dashboard = () => {
   useTitle('Dashboard');
   const { user } = useAuth();
@@ -80,11 +67,7 @@ const Dashboard = () => {
                 lessonNumber={lesson.lessonNumber}
                 title={lesson.title}
                 description={lesson.subtitle}
-                image={
-                  lessonsHardCode[index % 3]?.image
-                    ? lessonsHardCode[index % 3].image
-                    : 'https://source.unsplash.com/random/featured/?working,office'
-                }
+                image={lesson.coverImage}
               />
             </Grid>
           ))}
