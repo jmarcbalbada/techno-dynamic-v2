@@ -9,7 +9,7 @@ const AppTheme = createTheme({
       contrastText: '#000'
     },
     background: {
-      default: '#f0f2f5'
+      default: '#f9fafb'
     }
   },
   typography: {
