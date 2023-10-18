@@ -60,7 +60,15 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
         formData.append('subtitle', values.subtitle);
         formData.append('lessonNumber', values.lessonNumber);
         formData.append('pages', JSON.stringify(pages));
-        formData.append('coverImage', values.coverImage);
+
+        if (values.coverImage instanceof File) {
+          formData.append('coverImage', values.coverImage);
+        } else if (lesson && lesson.coverImage) {
+          if (values.coverImage !== lesson.coverImage) {
+            formData.append('coverImage', lesson.coverImage);
+          }
+        }
+
         console.log('formData', formData);
         // TODO: add error handling
         if (lesson) {
