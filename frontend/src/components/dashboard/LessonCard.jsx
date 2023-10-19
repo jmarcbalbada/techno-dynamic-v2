@@ -49,9 +49,11 @@ const LessonCard = (props) => {
           component='img'
           height='140'
           image={
-            image.includes('null')
-              ? 'https://source.unsplash.com/random/featured/?working,office'
-              : `http://127.0.0.1:8000${image}`
+            image
+              ? image.includes('null')
+                ? 'https://source.unsplash.com/random/featured/?working,office'
+                : `http://127.0.0.1:8000${image}`
+              : 'https://source.unsplash.com/random/featured/?working,office'
           }
         />
         <CardContent>
