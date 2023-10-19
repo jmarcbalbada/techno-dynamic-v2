@@ -3,6 +3,7 @@ from .controllers.UserController import UserController
 from .controllers.LessonController import LessonController
 from .controllers.LessonContentController import LessonContentsController
 from .controllers.ChatBotController import ChatBotController
+from .controllers.QueryController import QueryController
 
 lesson_actions = {
     'get': 'getAllLessons',
@@ -28,17 +29,34 @@ lesson_contents_detail_actions = {
     'delete': 'deleteLessonContents',
 }
 
+query_actions = {
+    'get': 'getAllQueries',
+    'post': 'createQuery',
+}
+
+query_detail_actions = {
+    'get': 'getQueryById',
+    'delete': 'deleteQuery',
+}
+
+
 urlpatterns = [
     # Paths
     re_path('login', UserController.login),
     re_path('register', UserController.register),
     re_path('test-token', UserController.test_token),
+
+    path('users/', UserController.get_all_users),
+    path('users/<int:user_id>/', UserController.get_user),
+
     path('lessons/', LessonController.as_view(lesson_actions)),
     path('lessons/<int:lesson_id>', LessonController.as_view(lesson_detail_actions)),
     path('lessons/<int:lesson_id>/pages/', LessonContentsController.as_view(lesson_contents_actions)),
     path('lessons/<int:lesson_id>/pages/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions)),
-
     path('lessons/<int:lesson_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response'})),
+
+    path('queries/', QueryController.as_view(query_actions)),
+    path('queries/<int:pk>', QueryController.as_view(query_detail_actions)),
 
     # Queries
     path('lessons', LessonController.as_view({'get': 'findLessonbyLessonNumber'})),
