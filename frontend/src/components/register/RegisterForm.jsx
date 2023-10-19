@@ -56,6 +56,8 @@ const RegisterForm = () => {
           email: values.email,
           first_name: values.firstName,
           last_name: values.lastName,
+          course: values.course,
+          year: values.yearLevel,
           role: 'student'
         });
 
