@@ -68,15 +68,11 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
             formData.append('coverImage', lesson.coverImage);
           }
         }
-
-        console.log('formData', formData);
         // TODO: add error handling
         if (lesson) {
           const response = await LessonsService.update(lesson.id, formData);
-          console.log('Updateresponse', response);
         } else {
           const response = await LessonsService.create(formData);
-          console.log('Createresponse', response);
         }
         navigate('/', { replace: true });
       } catch (error) {
@@ -90,7 +86,6 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
       'Are you sure you want to go back to the dashboard? Any unsaved changes will be lost.'
     );
     if (confirmed) {
-      console.log('handleClose');
       navigate('/', { replace: true });
     }
   }, []);

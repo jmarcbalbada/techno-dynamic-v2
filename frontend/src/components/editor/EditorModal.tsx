@@ -34,7 +34,6 @@ const EditorModal = ({
   const handleSave = () => {
     if (editorRef.current) {
       const editorContent = editorRef.current.getHTMLContent();
-      console.log('editorContent', editorContent);
       handleUpdatePage(index, editorContent);
     }
     handleClose(false);
