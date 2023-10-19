@@ -1,4 +1,8 @@
-import { useLoaderData, Outlet } from 'react-router-dom';
+import {
+  useLoaderData, // TODO: implement useLoaderData with Suspense
+  Outlet
+} from 'react-router-dom';
+
 import { AuthProvider } from 'hooks/useAuth';
 
 export const AuthLayout = () => {

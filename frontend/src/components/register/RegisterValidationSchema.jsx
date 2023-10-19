@@ -3,12 +3,18 @@ import * as yup from 'yup';
 export const RegisterValidationSchema = yup.object({
   firstName: yup
     .string('Enter your firstname')
+    .min(2, 'Firstname should be of minimum 2 characters length')
+    .max(50, 'Firstname should be of maximum 50 characters length')
     .required('Firstname is required'),
   lastName: yup
     .string('Enter your lastname')
+    .min(2, 'Lastname should be of minimum 2 characters length')
+    .max(50, 'Lastname should be of maximum 50 characters length')
     .required('Lastname is required'),
   username: yup
     .string('Enter your username')
+    .min(4, 'Username should be of minimum 2 characters length')
+    .max(15, 'Username should be of maximum 50 characters length')
     .required('Username is required'),
   email: yup
     .string('Enter your email')
@@ -22,8 +28,6 @@ export const RegisterValidationSchema = yup.object({
     .string('Confirm your password')
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Confirm Password is required'),
-  course: yup
-    .string().required('Select a course'),
-  yearLevel: yup
-    .string().required('Select a year level'),
+  course: yup.string().required('Select a course'),
+  yearLevel: yup.string().required('Select a year level')
 });

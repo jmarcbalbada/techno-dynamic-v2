@@ -1,0 +1,16 @@
+.button-controls-container {
+  transition: all 0.2s ease-in-out;
+}
+
+.button-controls-container:hover {
+  scale: 1.02;
+}
+
+.button-controls-content {
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.button-controls-container:hover .button-controls-content {
+  opacity: 1;
+}

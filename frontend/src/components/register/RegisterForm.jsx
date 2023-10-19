@@ -1,53 +1,38 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useFormik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
-import { RegisterValidationSchema } from './RegisterValidationSchema';
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import { useAuth } from 'hooks/useAuth';
+import { courseCategories } from 'data/courseCategories';
+import { RegisterValidationSchema } from './RegisterValidationSchema';
+import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
+import { UsersService } from 'apis/UsersService';
+import { yearCategories } from 'data/yearCategories';
+
+import { Box } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
+import LoadingButton from '@mui/lab/LoadingButton';
 import MenuItem from '@mui/material/MenuItem';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const courseCategories = [
-  {
-    value: 'BSCS',
-    label: 'BS Computer Science'
-  },
-  {
-    value: 'BSIT',
-    label: 'BS Information Technology'
-  }
-];
-
-const yearCategories = [
-  {
-    value: '1',
-    label: '1st Year'
-  },
-  {
-    value: '2',
-    label: '2nd Year'
-  },
-  {
-    value: '3',
-    label: '3rd Year'
-  },
-  {
-    value: '4',
-    label: '4th Year'
-  }
-];
-
 const RegisterForm = () => {
+  const { login } = useAuth();
+  const timer = 3000;
   const [showPassword, setShowPassword] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [snackbarSuccessOpen, setSnackbarSuccessOpen] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -60,8 +45,58 @@ const RegisterForm = () => {
       yearLevel: ''
     },
     validationSchema: RegisterValidationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      // TODO: try to separate fetching logic and axios checking from this component
+      setIsRegistering(true);
+      setErrorMessage('');
+      try {
+        const response = await UsersService.register({
+          username: values.username,
+          password: values.password,
+          email: values.email,
+          first_name: values.firstName,
+          last_name: values.lastName,
+          course: values.course,
+          year: values.yearLevel,
+          role: 'student'
+        });
+
+        if (response.status === 201) {
+          setSnackbarSuccessOpen(true);
+        }
+        setTimeout(() => {
+          login({
+            username: values.username,
+            password: values.password
+          });
+        }, timer);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const response = error.response;
+          if (response && response.status) {
+            const errorStatus = response.status;
+            switch (errorStatus) {
+              case 400:
+                if (response.data.username) {
+                  formik.setErrors({
+                    username: 'Username already exists'
+                  });
+                } else if (response.data.email) {
+                  formik.setErrors({
+                    email: 'Email already exists'
+                  });
+                }
+                break;
+              default:
+                setErrorMessage('Something went wrong');
+                break;
+            }
+          } else {
+            setErrorMessage('Something went wrong');
+          }
+        }
+      }
+      setIsRegistering(false);
     }
   });
 
@@ -71,6 +106,13 @@ const RegisterForm = () => {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleSnackbarSuccessClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarSuccessOpen(false);
   };
 
   return (
@@ -147,8 +189,9 @@ const RegisterForm = () => {
                   <IconButton
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
+                    tabIndex={-1}
                     edge='end'>
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               )
@@ -178,8 +221,9 @@ const RegisterForm = () => {
                   <IconButton
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
+                    tabIndex={-1}
                     edge='end'>
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               )
@@ -226,13 +270,17 @@ const RegisterForm = () => {
           </TextField>
         </Grid>
         <Grid item xs={12}>
-          <Button
+          <LoadingButton
             type='submit'
+            loading={isRegistering}
             fullWidth
             variant='contained'
             sx={{ mt: 3, mb: 2 }}>
-            Register
-          </Button>
+            <span>Register</span>
+          </LoadingButton>
+          <Typography color='error' sx={{ textAlign: 'center' }}>
+            {errorMessage}
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <Divider sx={{ mb: 2 }}>or</Divider>
@@ -244,6 +292,19 @@ const RegisterForm = () => {
           Login
         </Link>
       </Typography>
+      <Snackbar
+        open={snackbarSuccessOpen}
+        autoHideDuration={timer}
+        onClose={handleSnackbarSuccessClose}>
+        <SnackBarAlert
+          onClose={handleSnackbarSuccessClose}
+          severity='success'
+          sx={{
+            width: '100%'
+          }}>
+          Account successfully registered! Logging you in...
+        </SnackBarAlert>
+      </Snackbar>
     </Box>
   );
 };

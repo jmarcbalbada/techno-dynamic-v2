@@ -1,14 +1,16 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from 'hooks/useAuth';
-import Appbar from '../Appbar/Appbar';
 
-import Box from '@mui/material/Box';
+import { useAuth } from 'hooks/useAuth';
+import Appbar from 'layout/Appbar';
+
+import { Box } from '@mui/material';
 
 export const ProtectedLayout = () => {
-  const { user } = useAuth();
+  const { token, user, logout } = useAuth();
 
-  if (!user) {
+  if (!token || !user) {
+    logout(true);
     return <Navigate to='/login' />;
   }
 
