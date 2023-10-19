@@ -90,7 +90,8 @@ export default function useTiptapExtensions({
       Strike,
       CustomLinkExtension.configure({
         autolink: true,
-        linkOnPaste: true
+        linkOnPaste: true,
+        openOnClick: false
       }),
       LinkBubbleMenuHandler,
 
