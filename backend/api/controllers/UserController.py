@@ -95,11 +95,19 @@ class UserController():
             print(e)
             return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @api_view(['GET'])
+    @authentication_classes([SessionAuthentication, TokenAuthentication])
+    @permission_classes([IsAuthenticated])
+    def test_token(request):
+        return Response("passed for {}".format(request.user.email), status=status.HTTP_200_OK)
+
+    @api_view(['GET'])
     def get_all_users(request):
         users = CustomUser.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @api_view(['GET'])
     def get_user(request, user_id):
         try:
             user = CustomUser.objects.get(id=user_id)
@@ -107,9 +115,3 @@ class UserController():
             return Response(serializer.data, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-    @api_view(['GET'])
-    @authentication_classes([SessionAuthentication, TokenAuthentication])
-    @permission_classes([IsAuthenticated])
-    def test_token(request):
-        return Response("passed for {}".format(request.user.email), status=status.HTTP_200_OK)
