@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { LoginValidationSchema } from './LoginValidationSchema';
 import { Link as RouterLink } from 'react-router-dom';
-import { useAuth } from 'hooks/useAuth';
 
-import Box from '@mui/material/Box';
+import { useAuth } from 'hooks/useAuth';
+import { LoginValidationSchema } from './LoginValidationSchema';
+
+import { Box } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import LoadingButton from '@mui/lab/LoadingButton';
-import LockIcon from '@mui/icons-material/Lock';
-import PersonIcon from '@mui/icons-material/Person';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+
+import LockIcon from '@mui/icons-material/Lock';
+import PersonIcon from '@mui/icons-material/Person';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
@@ -28,10 +30,6 @@ const LoginForm = () => {
       username: '',
       password: ''
     },
-    // initialErrors: {
-    //   username: '',
-    //   password: ''
-    // },
     validationSchema: LoginValidationSchema,
     onSubmit: async (values) => {
       setIsLoggingIn(true);
@@ -39,7 +37,6 @@ const LoginForm = () => {
       try {
         await login(values);
       } catch (error) {
-        console.log('errororor', error);
         if (error.message.includes('404') || error.message.includes('400')) {
           setErrorMessage('Invalid username or password');
           formik.setErrors({

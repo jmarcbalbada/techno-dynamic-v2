@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
+
 import { router } from './App.jsx';
 import AppTheme from './assets/AppTheme.jsx';
 import './index.css';
 
 import { configureAxios } from './configureAxios.js';
 
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 
 configureAxios();
 

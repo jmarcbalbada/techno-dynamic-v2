@@ -1,6 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { useAuth } from 'hooks/useAuth';
-import { Navigate, useNavigate } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -9,15 +10,20 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+
 import EditIcon from '@mui/icons-material/Edit';
 
 const LessonCard = (props) => {
   const { user } = useAuth();
-  const { id, title, description, image } = props;
+  const { id, lessonNumber, title, description, image } = props;
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
-    navigate(`/lessons/${id}`);
+    navigate(`/lessons/${lessonNumber}/1`);
+  };
+
+  const handleEditClick = () => {
+    navigate(`/lessons/${lessonNumber}/edit`);
   };
 
   return (
@@ -41,8 +47,13 @@ const LessonCard = (props) => {
         <CardMedia
           component='img'
           height='140'
-          // TODO: change hardcoded image to actual image
-          image={image}
+          image={
+            image
+              ? image.includes('null')
+                ? 'https://source.unsplash.com/random/featured/?working,office'
+                : `http://127.0.0.1:8000${image}`
+              : 'https://source.unsplash.com/random/featured/?working,office'
+          }
         />
         <CardContent>
           {/* TODO: change to actual details needed for the card */}
@@ -56,9 +67,8 @@ const LessonCard = (props) => {
       </CardActionArea>
       {/* TODO: change hardcoded teacher string to user.role */}
       {user?.role === 'teacher' && (
-        // TODO: add onClick handler to navigate to edit lesson page
         <CardActions>
-          <Button startIcon={<EditIcon />} fullWidth>
+          <Button onClick={handleEditClick} startIcon={<EditIcon />} fullWidth>
             Edit
           </Button>
         </CardActions>

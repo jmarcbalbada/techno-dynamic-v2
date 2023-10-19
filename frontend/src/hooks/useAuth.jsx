@@ -1,8 +1,9 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import { useLocalStorage } from './useLocalStorage';
 import { UsersService } from 'apis/UsersService';
-import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -23,7 +24,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error(error.response.status);
       }
     }
-    console.log('response', response);
     setToken(response.data.token);
     setUser(response.data.user);
     navigate('/', { replace: true });
