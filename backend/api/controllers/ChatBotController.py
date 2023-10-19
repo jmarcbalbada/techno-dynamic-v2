@@ -42,7 +42,7 @@ class ChatBotController(GenericViewSet):
                 {"role": "system",
                  "content": f"You are a helpful assistant that provides information based on the lesson provided only. If the question is not related to the lesson, "
                             f"then you can say that it is not related. Lesson Content: {lesson_data}"},
-                {"role": "user", "content": f"Can you answer my question: {user_message}?"},
+                {"role": "user", "content": f"Can you answer my question or Do what I say directly: {user_message}?"},
             ],
         )
 
