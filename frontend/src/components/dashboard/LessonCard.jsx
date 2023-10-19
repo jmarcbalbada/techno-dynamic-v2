@@ -16,7 +16,6 @@ import EditIcon from '@mui/icons-material/Edit';
 const LessonCard = (props) => {
   const { user } = useAuth();
   const { id, lessonNumber, title, description, image } = props;
-  console.log('image', image);
   const navigate = useNavigate();
 
   const handleLessonClick = () => {

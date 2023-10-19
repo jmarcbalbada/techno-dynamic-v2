@@ -120,8 +120,6 @@ const PagesList = memo(({ pages, setPages }) => {
     });
   };
 
-  console.log('I am re-rendering');
-
   return (
     <Box>
       <Typography variant='h5' gutterBottom>
