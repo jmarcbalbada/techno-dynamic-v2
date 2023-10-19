@@ -12,6 +12,9 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from ..models import CustomUser
+
+
 class UserController():
     @api_view(['POST'])
     def login(request):
@@ -91,6 +94,19 @@ class UserController():
         except Exception as e:
             print(e)
             return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def get_all_users(request):
+        users = CustomUser.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get_user(request, user_id):
+        try:
+            user = CustomUser.objects.get(id=user_id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
     @api_view(['GET'])
     @authentication_classes([SessionAuthentication, TokenAuthentication])

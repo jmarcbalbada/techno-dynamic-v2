@@ -2,8 +2,11 @@ import json
 import openai
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.conf import settings
+
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
+from api.model.Query import Query
+from api.model.SubQuery import SubQuery
 
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.viewsets import GenericViewSet
@@ -47,5 +50,27 @@ class ChatBotController(GenericViewSet):
         )
 
         bot_message = response['choices'][0]['message']['content'].strip()
+
+        # Create a new SubQuery with the question and response
+        subquery = SubQuery()
+        subquery.question = user_message
+        subquery.response = bot_message
+        subquery.save()
+
+        # Get the user from the request
+        user = request.user
+
+        # Check if there's an existing query for this lesson and user combination
+        try:
+            existing_query = Query.objects.get(lesson=lesson, user=user)
+            # Add the new SubQuery to the existing query's subqueries
+            existing_query.add_subquery(subquery)
+        except Query.DoesNotExist:
+            # If no existing query, create a new one
+            new_query = Query()
+            new_query.set_lesson(lesson)
+            new_query.set_user(user)
+            new_query.save()
+            new_query.add_subquery(subquery)
 
         return JsonResponse({"response": bot_message})
