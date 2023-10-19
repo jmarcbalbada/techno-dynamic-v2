@@ -2,15 +2,12 @@ import React, { useState, memo } from 'react';
 
 import FieldPaper from 'components/fieldpaper/FieldPaper';
 
-import {
-  styled,
-  Box,
-  Button,
-  Divider,
-  Stack,
-  TextField,
-  Typography
-} from '@mui/material';
+import { styled, Box } from '@mui/material';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import ImageIcon from '@mui/icons-material/Image';
 

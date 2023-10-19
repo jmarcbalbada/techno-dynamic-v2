@@ -3,16 +3,14 @@ import React, { useRef } from 'react';
 import Editor from './Editor';
 import FieldPaper from '../fieldpaper/FieldPaper.jsx';
 
-import {
-  AppBar,
-  Box,
-  Button,
-  Dialog,
-  IconButton,
-  Typography,
-  Toolbar,
-  Container
-} from '@mui/material';
+import { Box } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Dialog from '@mui/material/Dialog';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 
 import CloseIcon from '@mui/icons-material/Close';
 

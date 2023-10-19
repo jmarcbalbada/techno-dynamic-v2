@@ -1,34 +1,21 @@
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState
-} from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
 import { Box } from '@mui/material';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import TextFields from '@mui/icons-material/TextFields';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 import {
   LinkBubbleMenu,
   MenuButton,
   RichTextEditor,
-  RichTextReadOnly,
   TableBubbleMenu,
-  insertImages,
   type RichTextEditorRef
 } from 'mui-tiptap';
 import EditorMenuControls from './EditorMenuControls';
 import useTiptapExtensions from '../../hooks/useTiptapExtensions';
 
 const Editor = (props, ref) => {
-  // add useImperativeHandle to Editor.tsx and return a fcuntion: rteRef.current?.editor?.getHTML() ?? ""
   const { contents } = props;
   const extensions = useTiptapExtensions({
     placeholder: 'Enter details here...'

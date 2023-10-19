@@ -18,7 +18,6 @@ import Typography from '@mui/material/Typography';
 
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
-import Delete from '@mui/icons-material/Delete';
 
 const EditorForm = ({ lesson, initialLessonNumber }) => {
   const [pages, setPages] = useState(

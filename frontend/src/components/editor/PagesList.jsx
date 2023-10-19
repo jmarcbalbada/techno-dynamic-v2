@@ -5,16 +5,13 @@ import EditorModal from './EditorModal';
 import FieldPaper from '../fieldpaper/FieldPaper';
 import styles from './PagesList.module.css';
 
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Divider,
-  IconButton,
-  Stack,
-  Slide,
-  Typography
-} from '@mui/material';
+import { Box, Slide } from '@mui/material';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
