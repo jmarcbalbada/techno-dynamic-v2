@@ -2,6 +2,7 @@ from django.urls import path, re_path
 from .controllers.UserController import UserController
 from .controllers.LessonController import LessonController
 from .controllers.LessonContentController import LessonContentsController
+from .controllers.ChatBotController import ChatBotController
 
 lesson_actions = {
     'get': 'getAllLessons',
@@ -36,6 +37,8 @@ urlpatterns = [
     path('lessons/<int:lesson_id>', LessonController.as_view(lesson_detail_actions)),
     path('lessons/<int:lesson_id>/pages/', LessonContentsController.as_view(lesson_contents_actions)),
     path('lessons/<int:lesson_id>/pages/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions)),
+
+    path('lessons/<int:lesson_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response'})),
 
     # Queries
     path('lessons', LessonController.as_view({'get': 'findLessonbyLessonNumber'})),
