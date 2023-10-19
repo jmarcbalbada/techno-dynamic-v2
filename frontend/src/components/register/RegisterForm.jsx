@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
-import { RegisterValidationSchema } from './RegisterValidationSchema';
-import { UsersService } from 'apis/UsersService';
-import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
+
+import { useAuth } from 'hooks/useAuth';
 import { courseCategories } from 'data/courseCategories';
+import { RegisterValidationSchema } from './RegisterValidationSchema';
+import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
+import { UsersService } from 'apis/UsersService';
 import { yearCategories } from 'data/yearCategories';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -16,13 +18,16 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import LoadingButton from '@mui/lab/LoadingButton';
 import MenuItem from '@mui/material/MenuItem';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Snackbar } from '@mui/material';
 
 const RegisterForm = () => {
+  const { login } = useAuth();
+  const timer = 3000;
   const [showPassword, setShowPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -46,23 +51,30 @@ const RegisterForm = () => {
       setErrorMessage('');
       try {
         const response = await UsersService.register({
+          username: values.username,
+          password: values.password,
+          email: values.email,
           first_name: values.firstName,
           last_name: values.lastName,
-          username: values.username,
-          email: values.email,
-          password: values.password
+          course: values.course,
+          year: values.yearLevel,
+          role: 'student'
         });
+
         if (response.status === 201) {
           setSnackbarSuccessOpen(true);
         }
+        setTimeout(() => {
+          login({
+            username: values.username,
+            password: values.password
+          });
+        }, timer);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const response = error.response;
           if (response && response.status) {
-            console.log('axios.isAxiosError(error)', axios.isAxiosError(error));
             const errorStatus = response.status;
-            console.log('errorStatus', errorStatus);
-            console.log('error.response.data', response.data);
             switch (errorStatus) {
               case 400:
                 if (response.data.username) {
@@ -282,7 +294,7 @@ const RegisterForm = () => {
       </Typography>
       <Snackbar
         open={snackbarSuccessOpen}
-        autoHideDuration={6000}
+        autoHideDuration={timer}
         onClose={handleSnackbarSuccessClose}>
         <SnackBarAlert
           onClose={handleSnackbarSuccessClose}
@@ -290,7 +302,7 @@ const RegisterForm = () => {
           sx={{
             width: '100%'
           }}>
-          Account successfully registered!
+          Account successfully registered! Logging you in...
         </SnackBarAlert>
       </Snackbar>
     </Box>

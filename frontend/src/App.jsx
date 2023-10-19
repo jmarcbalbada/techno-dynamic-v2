@@ -3,16 +3,20 @@ import {
   createBrowserRouter,
   createRoutesFromElements
 } from 'react-router-dom';
+
 import { AuthLayout } from 'hocs/AuthLayout';
 import { RoleAccess } from 'hocs/RoleAccess';
-import Login from 'pages/Login/Login';
-import Register from 'pages/Register/Register';
-import ProtectedLayout from 'hocs/ProtectedLayout';
+
+import Create from 'pages/Create/Create';
 import Dashboard from 'pages/Dashboard/Dashboard';
-import Lesson from 'pages/Lesson/Lesson';
 import Edit from 'pages/Edit/Edit';
 import Forbid from 'pages/Forbid/Forbid';
+import Lesson from 'pages/Lesson/Lesson';
+import LessonEnd from './pages/Lesson/LessonEnd';
+import Login from 'pages/Login/Login';
 import NotFound from 'pages/NotFound/NotFound';
+import ProtectedLayout from 'hocs/ProtectedLayout';
+import Register from 'pages/Register/Register';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,9 +26,11 @@ export const router = createBrowserRouter(
 
       <Route element={<ProtectedLayout />}>
         <Route index path='/' element={<Dashboard />} />
-        <Route path='/lessons/:lessonid' element={<Lesson />} />
+        <Route path='/lessons/:lessonNumber/:pageNumber' element={<Lesson />} />
+        <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
-          <Route path='/edit' element={<Edit />} />
+          <Route path='/create' element={<Create />} />
+          <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
         </Route>
       </Route>
       <Route path='/forbid' element={<Forbid />} />
