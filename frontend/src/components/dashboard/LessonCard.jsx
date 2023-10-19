@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { useAuth } from 'hooks/useAuth';
 
 import Button from '@mui/material/Button';
@@ -8,11 +10,21 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+
 import EditIcon from '@mui/icons-material/Edit';
 
-const LessonCards = (props) => {
+const LessonCard = (props) => {
   const { user } = useAuth();
-  const { title, description, image } = props;
+  const { id, lessonNumber, title, description, image } = props;
+  const navigate = useNavigate();
+
+  const handleLessonClick = () => {
+    navigate(`/lessons/${lessonNumber}/1`);
+  };
+
+  const handleEditClick = () => {
+    navigate(`/lessons/${lessonNumber}/edit`);
+  };
 
   return (
     <Card
@@ -24,6 +36,7 @@ const LessonCards = (props) => {
       }}>
       {/* TODO: add onClick handler to navigate to lesson page */}
       <CardActionArea
+        onClick={handleLessonClick}
         sx={{
           height: '100%',
           display: 'flex',
@@ -34,8 +47,13 @@ const LessonCards = (props) => {
         <CardMedia
           component='img'
           height='140'
-          // TODO: change hardcoded image to actual image
-          image={image}
+          image={
+            image
+              ? image.includes('null')
+                ? 'https://source.unsplash.com/random/featured/?working,office'
+                : `http://127.0.0.1:8000${image}`
+              : 'https://source.unsplash.com/random/featured/?working,office'
+          }
         />
         <CardContent>
           {/* TODO: change to actual details needed for the card */}
@@ -48,10 +66,9 @@ const LessonCards = (props) => {
         </CardContent>
       </CardActionArea>
       {/* TODO: change hardcoded teacher string to user.role */}
-      {user?.username === 'teacher' && (
-        // TODO: add onClick handler to navigate to edit lesson page
+      {user?.role === 'teacher' && (
         <CardActions>
-          <Button startIcon={<EditIcon />} fullWidth>
+          <Button onClick={handleEditClick} startIcon={<EditIcon />} fullWidth>
             Edit
           </Button>
         </CardActions>
@@ -60,4 +77,4 @@ const LessonCards = (props) => {
   );
 };
 
-export default LessonCards;
+export default LessonCard;

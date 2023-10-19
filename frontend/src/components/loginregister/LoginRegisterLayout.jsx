@@ -1,24 +1,26 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+
+import { useAuth } from 'hooks/useAuth';
+import Copyright from 'components/copyright/Copyright';
 import HeroGrid from './HeroGrid';
 import LoginForm from 'components/login/LoginForm';
+import LogoDivider from './LogoDivider';
 import RegisterForm from 'components/register/RegisterForm';
+
 import lionlogo from 'assets/lionlogo.png';
 import styles from './LoginRegisterLayout.module.css';
-import LogoDivider from './LogoDivider';
-import Copyright from 'components/copyright/Copyright';
-import { useAuth } from 'hooks/useAuth';
 
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 const LoginRegisterLayout = ({ form, title }) => {
-  const { user } = useAuth();
+  const { token, user } = useAuth();
 
-  if (user) {
+  if (token && user) {
     return <Navigate to='/' replace />;
   }
 
