@@ -1,13 +1,14 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
 import styles from './LessonEnd.module.css';
 
 const LessonEnd = () => {
+  const { lessonNumber } = useParams();
   const navigate = useNavigate();
   const handleBacktoDashboard = () => {
     navigate('/');
@@ -15,12 +16,15 @@ const LessonEnd = () => {
 
   return (
     <Container>
-      <Box display='flex' flexDirection='column' alignItems='center'>
+      <Box mt={3} display='flex' flexDirection='column' alignItems='center'>
         <img
           src='/illustrations/done.png'
           className={styles['done']}
           alt='Done'
         />
+        <Typography variant='h4' align='center' gutterBottom>
+          Lesson {lessonNumber} Completed!
+        </Typography>
         <Box>
           <Button
             onClick={handleBacktoDashboard}
