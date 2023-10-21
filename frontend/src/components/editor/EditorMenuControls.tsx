@@ -100,7 +100,7 @@ export default function EditorMenuControls({ rteRef }) {
           { value: '#ff9900', label: 'Orange' },
           { value: '#ffff00', label: 'Yellow' },
           { value: '#00d000', label: 'Green' },
-          { value: '#0000ff', label: 'Blue' }
+          { value: '#004aad', label: 'Blue' }
         ]}
       />
 
