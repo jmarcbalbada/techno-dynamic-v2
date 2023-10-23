@@ -35,9 +35,11 @@ const Appbar = () => {
   return (
     // TODO: change color to palette color
     <MuiAppBar
+      variant='outlined'
       position='static'
       sx={{
-        background: theme.palette.white.main
+        background: theme.palette.white.main,
+        borderBottom: '1px dashed #e0e0e0'
       }}>
       <Toolbar>
         <Box display='flex' alignItems='center' flexGrow={1}>
