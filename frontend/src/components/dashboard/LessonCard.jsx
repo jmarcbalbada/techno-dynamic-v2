@@ -32,9 +32,9 @@ const LessonCard = (props) => {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'
       }}>
-      {/* TODO: add onClick handler to navigate to lesson page */}
       <CardActionArea
         onClick={handleLessonClick}
         sx={{
@@ -65,7 +65,6 @@ const LessonCard = (props) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      {/* TODO: change hardcoded teacher string to user.role */}
       {user?.role === 'teacher' && (
         <CardActions>
           <Button onClick={handleEditClick} startIcon={<EditIcon />} fullWidth>
