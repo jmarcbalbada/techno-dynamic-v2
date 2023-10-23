@@ -1,16 +1,16 @@
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
     ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 )
-from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from api.model.LessonContent import LessonContent
-from api.model.ImageModel import ImageModel  # Import the ImageModel
+from api.model.ImageModel import ImageModel
 from api.serializer.LessonContentSerializer import LessonContentSerializer
-from api.serializer.ImageModelSerializer import ImageModelSerializer  # Import the ImageModelSerializer
+from api.serializer.ImageModelSerializer import ImageModelSerializer
 from api.controllers.permissions.permissions import IsTeacher
 
 class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin):
@@ -37,7 +37,7 @@ class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixi
         if instance is None:
             return Response({"error": "Lesson contents not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = self.get_serializer(instance)
+        serializer = LessonContentSerializer(instance)
 
         return Response(serializer.data)
 
@@ -51,12 +51,12 @@ class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixi
         new_lesson_content.save()
         
         # Handle image upload and association with the lesson content
-        if 'files' in request.FILES:
-            image = ImageModel(imageLink=request.FILES['files'])
+        image_data = request.FILES.getlist('files')  # Handle multiple images
+        for file in image_data:
+            image = ImageModel(imageLink=file)
             image.save()
-            new_lesson_content.image = image  # Assuming LessonContent has a ForeignKey to ImageModel
-            new_lesson_content.save()
-
+            new_lesson_content.images.add(image)  # Assuming LessonContent has a ManyToManyField 'images'
+        
         serializer = LessonContentSerializer(new_lesson_content)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -73,13 +73,41 @@ class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixi
         instance.url = data['url']
         instance.save()
         
-        # Update the associated image
-        if 'files' in request.FILES:
-            instance.image.imageLink = request.FILES['files']
-            instance.image.save()
-
+       
+        instance.images.clear()  
+        image_data = request.FILES.getlist('files')
+        for file in image_data:
+            image = ImageModel(imageLink=file)
+            image.save()
+            instance.images.add(image)
+            
         serializer = LessonContentSerializer(instance)
 
         return Response(serializer.data)
+    
+    def patchLessonContents(self, request, lesson_contents_id=None, lesson_id=None):
+        lesson_content = self.get_queryset().filter(id=lesson_contents_id, lesson_id=lesson_id).first()
+        if lesson_content is None:
+            return Response({"error": "Lesson content not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    # ... Other methods remain the same ...
+        data = request.data
+
+        if 'contents' in data:
+            lesson_content.set_contents(data['contents'])
+        if 'url' in data:
+            lesson_content.set_url(data['url'])
+        if 'files' in request.FILES:
+            lesson_content.set_file(request.FILES['files'])
+
+        lesson_content.save()
+        return Response(LessonContentSerializer(lesson_content).data)
+
+    def deleteLessonContents(self, request, lesson_contents_id, lesson_id):
+        instance = self.get_queryset().filter(id=lesson_contents_id, lesson_id=lesson_id).first()
+
+        if instance is None:
+            return Response({"error": "Lesson contents not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        instance.delete()
+
+        return Response({"success": "Lesson contents deleted"})
