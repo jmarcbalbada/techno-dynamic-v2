@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
-import { useTheme } from '@mui/material';
+import { Button, useTheme } from '@mui/material';
 import lionLogo from 'assets/lionlogo.png';
 
 import { AppBar as MuiAppBar } from '@mui/material';
@@ -20,6 +20,8 @@ const Appbar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
   const theme = useTheme();
+
+  const open = Boolean(anchorElUser);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -71,16 +73,15 @@ const Appbar = () => {
         </Box>
         <Box flexGrow={0}>
           <Tooltip title='Open Settings'>
-            <IconButton
+            <Button
               onClick={handleOpenUserMenu}
-              sx={{
-                p: 0
-              }}>
-              <Avatar>
-                {user?.first_name?.charAt(0).toUpperCase()}
-                {user?.last_name?.charAt(0).toUpperCase()}
-              </Avatar>
-            </IconButton>
+              size='large'
+              aria-controls={open ? 'account-menu' : undefined}
+              aria-haspopup='true'
+              aria-expanded={open ? 'true' : undefined}>
+              <Typography sx={{ mr: 1 }}>{user?.first_name}</Typography>
+              <Avatar>{user?.first_name?.charAt(0).toUpperCase()}</Avatar>
+            </Button>
           </Tooltip>
           <Menu
             sx={{
