@@ -1,16 +1,12 @@
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.mixins import (
-    ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
-)
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from api.model.LessonContent import LessonContent
-from api.model.ImageModel import ImageModel
 from api.serializer.LessonContentSerializer import LessonContentSerializer
-from api.serializer.ImageModelSerializer import ImageModelSerializer
 from api.controllers.permissions.permissions import IsTeacher
 
 class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin):
@@ -37,7 +33,7 @@ class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixi
         if instance is None:
             return Response({"error": "Lesson contents not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = LessonContentSerializer(instance)
+        serializer = self.get_serializer(instance)
 
         return Response(serializer.data)
 
@@ -48,15 +44,8 @@ class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixi
         new_lesson_content.set_lesson_id(lesson_id)
         new_lesson_content.set_contents(data['contents'])
         new_lesson_content.set_url(data['url'])
+        new_lesson_content.set_file(request.FILES.get('files'))
         new_lesson_content.save()
-        
-        # Handle image upload and association with the lesson content
-        image_data = request.FILES.getlist('files')  # Handle multiple images
-        for file in image_data:
-            image = ImageModel(imageLink=file)
-            image.save()
-            new_lesson_content.images.add(image)  # Assuming LessonContent has a ManyToManyField 'images'
-        
         serializer = LessonContentSerializer(new_lesson_content)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -70,21 +59,12 @@ class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixi
             return Response({"error": "Lesson contents not found"}, status=status.HTTP_404_NOT_FOUND)
 
         instance.contents = data['contents']
-        instance.url = data['url']
+        instance.files = request.FILES.get('files')
         instance.save()
-        
-       
-        instance.images.clear()  
-        image_data = request.FILES.getlist('files')
-        for file in image_data:
-            image = ImageModel(imageLink=file)
-            image.save()
-            instance.images.add(image)
-            
         serializer = LessonContentSerializer(instance)
 
         return Response(serializer.data)
-    
+
     def patchLessonContents(self, request, lesson_contents_id=None, lesson_id=None):
         lesson_content = self.get_queryset().filter(id=lesson_contents_id, lesson_id=lesson_id).first()
         if lesson_content is None:
