@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
-import { Button, useTheme } from '@mui/material';
+import { Button, ListItemIcon, useTheme } from '@mui/material';
 import lionLogo from 'assets/lionlogo.png';
 
 import { AppBar as MuiAppBar } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import { Box } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
 
 const Appbar = () => {
   const { user, logout } = useAuth();
@@ -100,8 +102,18 @@ const Appbar = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}>
             {/* TODO: Add Profile Navigation Handling  */}
-            <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <ListItemIcon>
+                <PersonIcon fontSize='small' />
+              </ListItemIcon>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon fontSize='small' />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>
