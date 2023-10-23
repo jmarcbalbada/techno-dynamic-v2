@@ -91,6 +91,7 @@ const Dashboard = () => {
                 lessonNumber={lesson.lessonNumber}
                 title={lesson.title}
                 description={lesson.subtitle}
+                pageCount={lesson.pages.length}
                 image={lesson.coverImage}
               />
             </Grid>
