@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useAuth } from 'hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
+import { useAuth } from 'hooks/useAuth';
 import { useTheme } from '@mui/material';
 import lionLogo from 'assets/lionlogo.png';
 
@@ -17,10 +18,15 @@ import Typography from '@mui/material/Typography';
 const Appbar = () => {
   const { user, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+  };
+
+  const handleNavigateToDashboard = () => {
+    navigate('/');
   };
 
   const handleCloseUserMenu = () => {
@@ -43,17 +49,25 @@ const Appbar = () => {
       }}>
       <Toolbar>
         <Box display='flex' alignItems='center' flexGrow={1}>
-          <img src={lionLogo} alt='lion logo' width='40' height='40' />
-          <Typography
-            display={{ xs: 'none', sm: 'flex' }}
-            variant='h6'
-            component='div'
+          <Box
+            onClick={handleNavigateToDashboard}
+            display='flex'
+            alignItems='center'
             sx={{
-              ml: 2,
-              color: theme.palette.getContrastText(theme.palette.white.main)
+              cursor: 'pointer'
             }}>
-            Technopreneurship
-          </Typography>
+            <img src={lionLogo} alt='lion logo' width='40' height='40' />
+            <Typography
+              display={{ xs: 'none', sm: 'flex' }}
+              variant='h6'
+              component='div'
+              sx={{
+                ml: 2,
+                color: theme.palette.getContrastText(theme.palette.white.main)
+              }}>
+              Technopreneurship
+            </Typography>
+          </Box>
         </Box>
         <Box flexGrow={0}>
           <Tooltip title='Open Settings'>
