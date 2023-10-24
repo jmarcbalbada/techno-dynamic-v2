@@ -4,6 +4,7 @@ from .controllers.LessonController import LessonController
 from .controllers.LessonContentController import LessonContentsController
 from .controllers.ChatBotController import ChatBotController
 from .controllers.QueryController import QueryController
+from .controllers.ImageController import ImageModelController  # Import the ImageModelController
 
 lesson_actions = {
     'get': 'getAllLessons',
@@ -39,7 +40,16 @@ query_detail_actions = {
     'delete': 'deleteQuery',
 }
 
-
+image_actions = {
+    'get': 'getAllImageById',
+    'post': 'createImage',
+}
+image_detail_actions = {
+    
+    'get': 'getImageById',
+    'put': 'updateImage',
+    'delete': 'deleteImage',
+}
 urlpatterns = [
     # Paths
     re_path('login', UserController.login),
@@ -57,6 +67,11 @@ urlpatterns = [
 
     path('queries/', QueryController.as_view(query_actions)),
     path('queries/<int:pk>', QueryController.as_view(query_detail_actions)),
+
+    # Add a URL pattern for image associated with a LessonContent
+    path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/images/', ImageModelController.as_view(image_actions)),
+    path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/images/', ImageModelController.as_view(image_detail_actions)),
+    
 
     # Queries
     path('lessons', LessonController.as_view({'get': 'findLessonbyLessonNumber'})),
