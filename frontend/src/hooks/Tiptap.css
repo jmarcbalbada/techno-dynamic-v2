@@ -1,6 +1,6 @@
 iframe {
   border: 1px solid #000;
-  border-radius: 4px;
+  border-radius: 10px;
   min-width: 200px;
   min-height: 200px;
   display: block;
