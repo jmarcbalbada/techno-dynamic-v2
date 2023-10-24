@@ -46,6 +46,7 @@ const Appbar = () => {
     // TODO: change color to palette color
     <MuiAppBar
       variant='outlined'
+      elevation={0}
       position='static'
       sx={{
         background: theme.palette.white.main,
