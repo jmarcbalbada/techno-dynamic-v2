@@ -18,7 +18,7 @@ import useTiptapExtensions from '../../hooks/useTiptapExtensions';
 const Editor = (props, ref) => {
   const { contents } = props;
   const extensions = useTiptapExtensions({
-    placeholder: 'Enter details here...'
+    placeholder: 'Enter the contents here...'
   });
   const rteRef = useRef<RichTextEditorRef>(null);
   const [isEditable, setIsEditable] = useState(true);

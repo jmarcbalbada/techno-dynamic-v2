@@ -21,7 +21,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 
 const EditorForm = ({ lesson, initialLessonNumber }) => {
   const [pages, setPages] = useState(
-    lesson ? lesson.pages : [{ contents: '<h1>Page 1</h1>' }]
+    lesson ? lesson.pages : [{ contents: '' }]
   );
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
