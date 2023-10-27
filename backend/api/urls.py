@@ -1,10 +1,13 @@
+
 from django.urls import path, re_path
 from .controllers.UserController import UserController
 from .controllers.LessonController import LessonController
 from .controllers.LessonContentController import LessonContentsController
 from .controllers.ChatBotController import ChatBotController
 from .controllers.QueryController import QueryController
-from .controllers.ImageController import ImageModelController  # Import the ImageModelController
+from .controllers.ImageController import ImageModelController
+from .controllers.ImageMediaController import ImageMediaController
+
 
 lesson_actions = {
     'get': 'getAllLessons',
@@ -50,6 +53,17 @@ image_detail_actions = {
     'put': 'updateImage',
     'delete': 'deleteImage',
 }
+
+image_media_actions = {
+    'get': 'getAllImageMedia',
+    'post': 'createImageMedia',
+}
+image_media_detail_actions = {
+    'get': 'getImageMediaById',
+    'put': 'updateImageMedia',
+    'delete': 'deleteImageMedia',
+}
+
 urlpatterns = [
     # Paths
     re_path('login', UserController.login),
@@ -67,6 +81,13 @@ urlpatterns = [
 
     path('queries/', QueryController.as_view(query_actions)),
     path('queries/<int:pk>', QueryController.as_view(query_detail_actions)),
+
+    # ImageMedia
+    path('media/', ImageMediaController.as_view(image_media_actions)),
+    path('media/create/', ImageMediaController.as_view(image_media_actions)),
+    path('media/<int:pk>/', ImageMediaController.as_view(image_media_detail_actions)),
+    path('media/update/<int:pk>/', ImageMediaController.as_view(image_media_detail_actions)),
+    path('media/delete/<int:pk>/', ImageMediaController.as_view(image_media_detail_actions)),
 
     # Add a URL pattern for image associated with a LessonContent
     path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/images/', ImageModelController.as_view(image_actions)),
