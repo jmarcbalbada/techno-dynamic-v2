@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { ImagesService } from '../../apis/ImagesService.js';
 import { IconButton, useTheme } from '@mui/material';
 import {
   MenuButtonAddTable,
@@ -62,6 +63,26 @@ export default function EditorMenuControls({ rteRef }) {
       src: youtubeUrl
     });
   }, [rteRef]);
+
+  async function uploadImagesToServer(files) {
+    const imageUrls = [];
+
+    for (const file of files) {
+      try {
+        const formData = new FormData();
+        formData.append('image_link', file);
+
+        const response = await ImagesService.upload(formData);
+
+        if (response.status === 201) {
+          imageUrls.push(response.data.image_link);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    return imageUrls;
+  }
 
   return (
     <MenuControlsContainer>
@@ -166,21 +187,17 @@ clutter. */}
 
       <MenuDivider />
 
-      {/* <MenuButtonImageUpload
-        onUploadFiles={(files) =>
-          // For the sake of a demo, we don't have a server to upload the files
-          // to, so we'll instead convert each one to a local "temporary" object
-          // URL. This will not persist properly in a production setting. You
-          // should instead upload the image files to your server, or perhaps
-          // convert the images to bas64 if you would like to encode the image
-          // data directly into the editor content, though that can make the
-          // editor content very large.
-          files.map((file) => ({
-            src: URL.createObjectURL(file),
-            alt: file.name
-          }))
-        }
-      /> */}
+      <MenuButtonImageUpload
+        onUploadFiles={async (files) => {
+          try {
+            const imageUrls = await uploadImagesToServer(files);
+            return imageUrls.map((url) => ({ src: url }));
+          } catch (err) {
+            console.log(err);
+            return [];
+          }
+        }}
+      />
 
       {/* <MenuDivider /> */}
 
