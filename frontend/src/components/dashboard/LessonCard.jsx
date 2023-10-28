@@ -69,7 +69,7 @@ const LessonCard = (props) => {
             {description}
           </Typography>
           <Typography variant='caption' color='text.secondary'>
-            {pageCount} pages
+            {pageCount} {pageCount === 1 ? 'page' : 'pages'}
           </Typography>
         </CardContent>
       </CardActionArea>
