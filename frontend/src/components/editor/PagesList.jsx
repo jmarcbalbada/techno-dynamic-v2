@@ -56,7 +56,7 @@ const PagesList = memo(({ pages, setPages }) => {
     setPages((prevPages) => [
       ...prevPages,
       {
-        contents: `<h1>New Page ${prevPages.length + 1}</h1>`
+        contents: ``
       }
     ]);
 
@@ -79,7 +79,7 @@ const PagesList = memo(({ pages, setPages }) => {
     setPages((prevPages) => [
       ...prevPages.slice(0, index + 1),
       {
-        contents: `<h1>New Page ${prevPages.length + 1}</h1>`
+        contents: ``
       },
       ...prevPages.slice(index + 1)
     ]);
@@ -89,7 +89,7 @@ const PagesList = memo(({ pages, setPages }) => {
     setPages((prevPages) => [
       ...prevPages.slice(0, index),
       {
-        contents: `<h1>New Page ${prevPages.length + 1}</h1>`
+        contents: ``
       },
       ...prevPages.slice(index)
     ]);
