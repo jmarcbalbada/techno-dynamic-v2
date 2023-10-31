@@ -17,7 +17,12 @@ const courseDetails =
 const CourseDetails = () => {
   const extensions = useTiptapExtensions();
   return (
-    <Accordion variant='outlined' TransitionProps={{ unmountOnExit: true }}>
+    <Accordion
+      variant='outlined'
+      TransitionProps={{ unmountOnExit: true }}
+      sx={{
+        boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'
+      }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant='h5'>Course Details</Typography>
       </AccordionSummary>

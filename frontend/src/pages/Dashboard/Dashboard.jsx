@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 
 import AddIcon from '@mui/icons-material/Add';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
 const Dashboard = () => {
   useTitle('Dashboard');
@@ -48,17 +49,40 @@ const Dashboard = () => {
       <Box my={4}>
         <Grid container spacing={3}>
           {user?.role === 'teacher' && (
-            <Grid item xs={12}>
-              <Button
-                onClick={handleAddLesson}
-                variant='outlined'
-                size='large'
-                startIcon={<AddIcon />}
-                // TODO: add color from palette
-                fullWidth>
-                Add A New Lesson
-              </Button>
-            </Grid>
+            <>
+              <Grid item xs={12} md={6}>
+                <Button
+                  onClick={handleAddLesson}
+                  variant='contained'
+                  size='large'
+                  startIcon={<AddIcon />}
+                  // TODO: add color from palette
+                  fullWidth
+                  sx={{
+                    height: '100px',
+                    boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'
+                  }}>
+                  Add A New Lesson
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button
+                  // TODO: add onClick for queries
+                  //onClick={handleAddLesson}
+                  variant='contained'
+                  color='info'
+                  size='large'
+                  startIcon={<QueryStatsIcon />}
+                  // TODO: add color from palette
+                  fullWidth
+                  sx={{
+                    height: '100px',
+                    boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'
+                  }}>
+                  View Queries
+                </Button>
+              </Grid>
+            </>
           )}
           {lessons.map((lesson, index) => (
             <Grid item xs={12} md={6} lg={4} key={index}>
@@ -67,6 +91,7 @@ const Dashboard = () => {
                 lessonNumber={lesson.lessonNumber}
                 title={lesson.title}
                 description={lesson.subtitle}
+                pageCount={lesson.pages.length}
                 image={lesson.coverImage}
               />
             </Grid>

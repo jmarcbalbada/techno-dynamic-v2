@@ -1,26 +1,36 @@
 import React, { useState } from 'react';
-import { useAuth } from 'hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
-import { useTheme } from '@mui/material';
+import { useAuth } from 'hooks/useAuth';
+import { Button, ListItemIcon, useTheme } from '@mui/material';
 import lionLogo from 'assets/lionlogo.png';
 
 import { AppBar as MuiAppBar } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import { Box } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
+
 const Appbar = () => {
   const { user, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const navigate = useNavigate();
   const theme = useTheme();
+
+  const open = Boolean(anchorElUser);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+  };
+
+  const handleNavigateToDashboard = () => {
+    navigate('/');
   };
 
   const handleCloseUserMenu = () => {
@@ -35,36 +45,46 @@ const Appbar = () => {
   return (
     // TODO: change color to palette color
     <MuiAppBar
+      variant='outlined'
+      elevation={0}
       position='static'
       sx={{
-        background: theme.palette.white.main
+        background: theme.palette.white.main,
+        borderBottom: '1px dashed #e0e0e0'
       }}>
       <Toolbar>
         <Box display='flex' alignItems='center' flexGrow={1}>
-          <img src={lionLogo} alt='lion logo' width='40' height='40' />
-          <Typography
-            display={{ xs: 'none', sm: 'flex' }}
-            variant='h6'
-            component='div'
+          <Box
+            onClick={handleNavigateToDashboard}
+            display='flex'
+            alignItems='center'
             sx={{
-              ml: 2,
-              color: theme.palette.getContrastText(theme.palette.white.main)
+              cursor: 'pointer'
             }}>
-            Technopreneurship
-          </Typography>
+            <img src={lionLogo} alt='lion logo' width='40' height='40' />
+            <Typography
+              display={{ xs: 'none', sm: 'flex' }}
+              variant='h6'
+              component='div'
+              sx={{
+                ml: 2,
+                color: theme.palette.getContrastText(theme.palette.white.main)
+              }}>
+              Technopreneurship
+            </Typography>
+          </Box>
         </Box>
         <Box flexGrow={0}>
           <Tooltip title='Open Settings'>
-            <IconButton
+            <Button
               onClick={handleOpenUserMenu}
-              sx={{
-                p: 0
-              }}>
-              <Avatar>
-                {user?.first_name?.charAt(0).toUpperCase()}
-                {user?.last_name?.charAt(0).toUpperCase()}
-              </Avatar>
-            </IconButton>
+              size='large'
+              aria-controls={open ? 'account-menu' : undefined}
+              aria-haspopup='true'
+              aria-expanded={open ? 'true' : undefined}>
+              <Typography sx={{ mr: 1 }}>{user?.first_name}</Typography>
+              <Avatar>{user?.first_name?.charAt(0).toUpperCase()}</Avatar>
+            </Button>
           </Tooltip>
           <Menu
             sx={{
@@ -83,8 +103,18 @@ const Appbar = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}>
             {/* TODO: Add Profile Navigation Handling  */}
-            <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <ListItemIcon>
+                <PersonIcon fontSize='small' />
+              </ListItemIcon>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon fontSize='small' />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>
