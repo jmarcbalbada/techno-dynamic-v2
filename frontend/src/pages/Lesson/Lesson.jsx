@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import {
+  useParams,
+  useNavigate,
+  useLocation,
+  Navigate
+} from 'react-router-dom';
 
 import { LessonsService } from 'apis/LessonsService';
 import LessonPage from 'components/lessonpage/LessonPage';
@@ -64,7 +69,7 @@ const Lesson = () => {
         {isLoading ? (
           <div>Loading...</div>
         ) : isError ? (
-          <div>Something went wrong, Please Try Again Later.</div>
+          <Navigate to='/404' replace />
         ) : (
           <LessonPage pageContent={lesson?.pages[currentPage - 1]?.contents} />
         )}
