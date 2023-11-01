@@ -7,6 +7,7 @@ from .controllers.ChatBotController import ChatBotController
 from .controllers.QueryController import QueryController
 from .controllers.ImageController import ImageModelController
 from .controllers.ImageMediaController import ImageMediaController
+from .controllers.FileController import FileController
 
 
 lesson_actions = {
@@ -64,6 +65,16 @@ image_media_detail_actions = {
     'delete': 'deleteImageMedia',
 }
 
+file_actions = {
+    'get': 'getAllFile',
+    'post': 'createFile',
+}
+file_detail_actions = {
+    'get': 'getFileById',
+    'put': 'updateFile',
+    'delete': 'deleteFile',
+}
+
 urlpatterns = [
     # Paths
     re_path('login', UserController.login),
@@ -88,6 +99,13 @@ urlpatterns = [
     path('media/<int:pk>/', ImageMediaController.as_view(image_media_detail_actions)),
     path('media/update/<int:pk>/', ImageMediaController.as_view(image_media_detail_actions)),
     path('media/delete/<int:pk>/', ImageMediaController.as_view(image_media_detail_actions)),
+
+    #File
+    path('file/', FileController.as_view(file_actions)),
+    path('file/create/', FileController.as_view(file_actions)),
+    path('media/<int:pk>/', FileController.as_view(file_detail_actions)),
+    path('file/update/<int:pk>/', FileController.as_view(file_detail_actions)),
+    path('file/delete/<int:pk>/', FileController.as_view(file_detail_actions)),
 
     # Add a URL pattern for image associated with a LessonContent
     path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/images/', ImageModelController.as_view(image_actions)),
