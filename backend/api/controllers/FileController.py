@@ -9,19 +9,19 @@ from rest_framework.decorators import action
 from api.model import File
 from api.serializer import FileSerializer
 
-class FileMediaController(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
+class FileController(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = File.objects.all()
     serializer_class = FileSerializer
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['GET'])
-    def getAllFileMedia(self, request):
+    def getAllFile(self, request):
         file_media = File.objects.all()
         serializer = self.get_serializer(file_media, many=True)
         return Response(serializer.data)
 
-    def createFileMedia(self, request):
+    def createFile(self, request):
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
@@ -29,7 +29,7 @@ class FileMediaController(GenericViewSet, ListModelMixin, CreateModelMixin, Retr
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def getFileMediaById(self, request, pk):
+    def getFileById(self, request, pk):
         file_media = File.objects.all().filter(id=pk).first()
 
         if file_media is None:
@@ -38,7 +38,7 @@ class FileMediaController(GenericViewSet, ListModelMixin, CreateModelMixin, Retr
         serializer = self.get_serializer(file_media)
         return Response(serializer.data)
 
-    def updateFileMedia(self, request, pk):
+    def updateFile(self, request, pk):
         instance = File.objects.all().filter(id=pk).first()
 
         if instance is None:
@@ -51,7 +51,7 @@ class FileMediaController(GenericViewSet, ListModelMixin, CreateModelMixin, Retr
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def deleteFileMedia(self, request, pk):
+    def deleteFile(self, request, pk):
         instance = File.objects.all().filter(id=pk).first()
 
         if instance is None:
