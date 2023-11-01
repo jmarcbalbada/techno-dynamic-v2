@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from api.model import File
-from api.serializer import FileSerializer
+from api.model.File import File
+from api.serializer.FileSerializer import FileSerializer
 
 class FileController(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = File.objects.all()
