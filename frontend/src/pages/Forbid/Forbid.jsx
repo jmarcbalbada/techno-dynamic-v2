@@ -16,7 +16,13 @@ const Forbid = () => {
 
   return (
     <Container>
-      <Box mt={3} display='flex' flexDirection='column' alignItems='center'>
+      <Box
+        display='flex'
+        flexDirection='column'
+        alignItems='center'
+        justifyContent='center'
+        width={1}
+        height='100dvh'>
         <img
           src='/illustrations/Forbidden.png'
           className={styles['forbid']}
