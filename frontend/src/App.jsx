@@ -33,7 +33,7 @@ export const router = createBrowserRouter(
           <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
         </Route>
       </Route>
-      <Route path='/forbid' element={<Forbid />} />
+      <Route path='/403' element={<Forbid />} />
       <Route path='404' element={<NotFound />} />
       <Route path='*' element={<NotFound />} />
     </Route>
