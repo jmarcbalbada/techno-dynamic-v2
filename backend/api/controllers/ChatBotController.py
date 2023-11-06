@@ -1,6 +1,6 @@
 import json
 import openai
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.conf import settings
 
 from api.model.Lesson import Lesson
@@ -16,7 +16,7 @@ class ChatBotController(GenericViewSet):
     openai.api_key = settings.OPENAI_API_KEY
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
-    def chatbot_response(self, request, lesson_id):
+    def chatbot_response(self, request, lesson_id, lesson_content_id):
         # Extract the message from the JSON request body
         try:
             body = json.loads(request.body)
@@ -30,13 +30,15 @@ class ChatBotController(GenericViewSet):
         except Lesson.DoesNotExist:
             return JsonResponse({"error": "Lesson not found"}, status=404)
 
-        # Get the lesson's pages/content
-        lesson_contents = LessonContent.objects.filter(lesson=lesson)
-        content_strings = [content.get_contents() for content in lesson_contents]
+        # Retrieve content based on the specified lesson_content_id
+        try:
+            lesson_content = LessonContent.objects.get(id=lesson_content_id, lesson=lesson)
+        except LessonContent.DoesNotExist:
+            return HttpResponseNotFound("Lesson content not found")
 
-        # Compile the lesson data into a single string
-        lesson_data = f"Title: {lesson.get_title()}\nSubtitle: {lesson.get_subtitle()}\n\n"
-        lesson_data += "\n\n".join(content_strings)
+        lesson_title = lesson.get_title()
+        lesson_subtitle = lesson.get_subtitle()
+        content = lesson_content.get_contents()
 
         # Using OpenAI's GPT-3.5 to get a response
         response = openai.ChatCompletion.create(
@@ -44,8 +46,9 @@ class ChatBotController(GenericViewSet):
             messages=[
                 {"role": "system",
                  "content": f"You are a helpful assistant that provides information based on the lesson provided only. If the question is not related to the lesson, "
-                            f"then you can say that it is not related. Lesson Content: {lesson_data}"},
-                {"role": "user", "content": f"Can you answer my question or Do what I say directly: {user_message}?"},
+                 f"then you can say that it is not related. Lesson Title: {lesson_title}\nSubtitle: {lesson_subtitle}\nContent: {content}"},
+                {"role": "user",
+                 "content": f"Can you answer my question or Do what I say directly: {user_message}?"},
             ],
         )
 
