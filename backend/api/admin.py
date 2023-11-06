@@ -6,6 +6,9 @@ from .models import CustomUser
 from .model.Student import Student
 from .model.Query import Query
 from .model.SubQuery import SubQuery
+from .model.ImageModel import ImageModel
+from .model.ImageMedia import ImageMedia
+from .model.File import File
 
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff',
@@ -24,3 +27,7 @@ admin.site.register(Lesson)
 admin.site.register(LessonContent)
 admin.site.register(Query)
 admin.site.register(SubQuery)
+admin.site.register(ImageModel)
+admin.site.register(ImageMedia)
+admin.site.register(File)
+

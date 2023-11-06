@@ -49,6 +49,10 @@ const Lesson = () => {
     }
   };
 
+  const handleEditPage = () => {
+    navigate(`/lessons/${lessonNumber}/edit`);
+  };
+
   return (
     <Box>
       <Container
@@ -69,6 +73,7 @@ const Lesson = () => {
         isFirstPage={currentPage === 1}
         handleNextPage={handleNextPage}
         handlePrevPage={handlePrevPage}
+        handleEditPage={handleEditPage}
       />
     </Box>
   );
