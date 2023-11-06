@@ -15,7 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const LessonCard = (props) => {
   const { user } = useAuth();
-  const { id, lessonNumber, title, description, image } = props;
+  const { id, lessonNumber, title, description, pageCount, image } = props;
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
@@ -32,9 +32,14 @@ const LessonCard = (props) => {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+        '&:hover': {
+          // add scale effect on hover
+          transform: 'scale(1.03)',
+          transition: 'transform 0.2s'
+        }
       }}>
-      {/* TODO: add onClick handler to navigate to lesson page */}
       <CardActionArea
         onClick={handleLessonClick}
         sx={{
@@ -60,12 +65,14 @@ const LessonCard = (props) => {
           <Typography gutterBottom variant='h5' component='div'>
             {title}
           </Typography>
-          <Typography variant='body2' color='text.secondary'>
+          <Typography gutterBottom variant='body1' color='text.secondary'>
             {description}
+          </Typography>
+          <Typography variant='caption' color='text.secondary'>
+            {pageCount} {pageCount === 1 ? 'page' : 'pages'}
           </Typography>
         </CardContent>
       </CardActionArea>
-      {/* TODO: change hardcoded teacher string to user.role */}
       {user?.role === 'teacher' && (
         <CardActions>
           <Button onClick={handleEditClick} startIcon={<EditIcon />} fullWidth>

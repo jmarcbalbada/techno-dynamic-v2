@@ -41,6 +41,8 @@ import {
   TableImproved
 } from 'mui-tiptap';
 
+import './Tiptap.css';
+
 export type UseExtensionsOptions = {
   placeholder?: string;
 };
@@ -122,9 +124,11 @@ export default function useTiptapExtensions({
       }),
 
       Youtube.configure({
+        HTMLAttributes: {
+          width: '100%',
+          height: 'auto'
+        },
         inline: false,
-        width: 480,
-        height: 320,
         disableKBcontrols: true
       }),
 
