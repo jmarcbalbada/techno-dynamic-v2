@@ -9,6 +9,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -34,11 +35,8 @@ const LessonCard = (props) => {
         flexDirection: 'column',
         justifyContent: 'space-between',
         boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
-        '&:hover': {
-          // add scale effect on hover
-          transform: 'scale(1.03)',
-          transition: 'transform 0.2s'
-        }
+        transition: 'transform 0.15s ease-in-out',
+        '&:hover': { transform: 'scale3d(1.02, 1.02, 1)' }
       }}>
       <CardActionArea
         onClick={handleLessonClick}
@@ -60,15 +58,31 @@ const LessonCard = (props) => {
               : 'https://source.unsplash.com/random/featured/?working,office'
           }
         />
-        <CardContent>
-          {/* TODO: change to actual details needed for the card */}
+        <CardContent
+          sx={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
           <Typography gutterBottom variant='h5' component='div'>
             {title}
           </Typography>
-          <Typography gutterBottom variant='body1' color='text.secondary'>
+          <Typography
+            gutterBottom
+            variant='body1'
+            color='text.secondary'
+            sx={{
+              flexGrow: '1'
+            }}>
             {description}
           </Typography>
-          <Typography variant='caption' color='text.secondary'>
+          <Divider
+            sx={{
+              mb: '0.5rem'
+            }}
+          />
+          <Typography gutterBottom variant='caption' color='text.secondary'>
             {pageCount} {pageCount === 1 ? 'page' : 'pages'}
           </Typography>
         </CardContent>
