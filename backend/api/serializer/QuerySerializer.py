@@ -22,5 +22,13 @@ class QuerySerializer(serializers.ModelSerializer):
             'username': instance.user.username,
             'first_name': instance.user.first_name,
             'last_name': instance.user.last_name,
+            'role': instance.user.role,
         }
+
+        # Check if the user's role is "student" and if there is a related student instance
+        if instance.user.role == "student" and hasattr(instance.user, 'student_profile'):
+            student = instance.user.student_profile
+            representation['user']['course'] = student.course
+            representation['user']['year'] = student.year
+
         return representation

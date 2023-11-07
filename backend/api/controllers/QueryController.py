@@ -3,7 +3,6 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 
 from api.model import Lesson, SubQuery
 from api.model.Query import Query
@@ -15,7 +14,6 @@ class QueryController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Create
     serializer_class = QuerySerializer
 
     authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def getAllQueries(self, request):
         queries = self.get_queryset()
