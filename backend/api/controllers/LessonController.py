@@ -28,7 +28,7 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
             return [IsAuthenticated()]
 
     def getAllLessons(self, request):
-        lessons = self.get_queryset().order_by('lessonNumber')  # Sort lessons by lessonNumber
+        lessons = self.get_queryset().order_by('lessonNumber')  #Sort lessons by lessonNumber
         data = []
 
         for lesson in lessons:
@@ -91,20 +91,25 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
             for page_data in pages_data:
                 page_contents = page_data.get('contents', '')
                 page_url = page_data.get('url', None)
-                page_files = page_data.get('files', None)
 
                 new_page = LessonContent()
                 new_page.set_lesson_id(newLesson.id)
                 new_page.set_contents(page_contents)
                 new_page.set_url(page_url)
-                new_page.set_file(page_files)
                 new_page.save()
                 lesson_contents.append(new_page)
+
+                # Create and associate files with the lesson content
+                if 'files' in page_data:
+                    for file_data in page_data['files']:
+                        file_item = FileItem.objects.create(file=file_data)
+                        new_page.files.add(file_item)
 
         lesson_data = LessonSerializer(newLesson).data
         lesson_data['pages'] = LessonContentSerializer(lesson_contents, many=True).data
 
         return Response(lesson_data)
+
 
     def updateLesson(self, request, lesson_id):
         instance = self.get_queryset().filter(id=lesson_id).first()
