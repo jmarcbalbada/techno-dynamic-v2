@@ -10,6 +10,7 @@ import json
 
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
+from api.model.File import File
 from api.serializer.LessonSerializer import LessonSerializer
 from api.serializer.LessonContentSerializer import LessonContentSerializer
 from api.controllers.permissions.permissions import IsTeacher
@@ -102,7 +103,7 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                 # Create and associate files with the lesson content
                 if 'files' in page_data:
                     for file_data in page_data['files']:
-                        file_item = FileItem.objects.create(file=file_data)
+                        file_item = File.objects.create(file=file_data)
                         new_page.files.add(file_item)
 
         lesson_data = LessonSerializer(newLesson).data
