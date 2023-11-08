@@ -70,6 +70,7 @@ file_actions = {
     'post': 'createFile',
 }
 file_detail_actions = {
+    'get': 'getAllFileByLessonId',
     'get': 'getFileById',
     'put': 'updateFile',
     'delete': 'deleteFile',
@@ -88,7 +89,7 @@ urlpatterns = [
     path('lessons/<int:lesson_id>', LessonController.as_view(lesson_detail_actions)),
     path('lessons/<int:lesson_id>/pages/', LessonContentsController.as_view(lesson_contents_actions)),
     path('lessons/<int:lesson_id>/pages/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions)),
-    path('lessons/<int:lesson_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response'})),
+    path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response'})),
 
     path('queries/', QueryController.as_view(query_actions)),
     path('queries/<int:pk>', QueryController.as_view(query_detail_actions)),
@@ -102,10 +103,11 @@ urlpatterns = [
 
     #File
     path('files/', FileController.as_view(file_actions)),
-    path('files/create/', FileController.as_view(file_actions)),
+    path('lessons/<int:lesson_id>/files/create', FileController.as_view(file_actions)),
+    path('lessons/<int:lesson_id>/files/',FileController.as_view(file_detail_actions)),
     path('files/<int:pk>/', FileController.as_view(file_detail_actions)),
-    path('files/update/<int:pk>/', FileController.as_view(file_detail_actions)),
-    path('files/delete/<int:pk>/', FileController.as_view(file_detail_actions)),
+    path('lessons/<int:lesson_id>/files/update/<int:pk>/', FileController.as_view(file_detail_actions)),
+    path('lessons/<int:lesson_id>/files/delete/<int:pk>/', FileController.as_view(file_detail_actions)),
 
     # Add a URL pattern for image associated with a LessonContent
     path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/images/', ImageModelController.as_view(image_actions)),
