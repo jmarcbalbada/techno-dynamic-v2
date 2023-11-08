@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from api.model.File import File
 from api.model.Lesson import Lesson  # Update this import to match the location of your models
-from api.serializer import FileSerializer
+from api.serializer.FileSerializer import FileSerializer
 
 class FileController(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = File.objects.all()
