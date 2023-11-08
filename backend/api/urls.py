@@ -67,11 +67,11 @@ image_media_detail_actions = {
 
 file_actions = {
     'get': 'getAllFile',
-    'post': 'createFile',
 }
 file_detail_actions = {
     'get': 'getAllFileByLessonId',
-    'get': 'getFileById',
+    #'get': 'getFileById',
+    'post': 'createFile',
     'put': 'updateFile',
     'delete': 'deleteFile',
 }
@@ -103,9 +103,9 @@ urlpatterns = [
 
     #File
     path('files/', FileController.as_view(file_actions)),
-    path('lessons/<int:lesson_id>/files/create', FileController.as_view(file_actions)),
     path('lessons/<int:lesson_id>/files/',FileController.as_view(file_detail_actions)),
-    path('files/<int:pk>/', FileController.as_view(file_detail_actions)),
+    path('lessons/<int:lesson_id>/files/create', FileController.as_view(file_detail_actions)),
+    #path('files/<int:pk>/', FileController.as_view(file_detail_actions)),
     path('lessons/<int:lesson_id>/files/update/<int:pk>/', FileController.as_view(file_detail_actions)),
     path('lessons/<int:lesson_id>/files/delete/<int:pk>/', FileController.as_view(file_detail_actions)),
 
