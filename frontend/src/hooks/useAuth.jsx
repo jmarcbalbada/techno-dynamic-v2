@@ -25,7 +25,15 @@ export const AuthProvider = ({ children }) => {
       }
     }
     setToken(response.data.token);
-    setUser(response.data.user);
+    if (response.data.student_data) {
+      setUser({
+        ...response.data.user,
+        student_data: response.data.student_data
+      });
+    } else {
+      setUser(response.data.user);
+    }
+    console.log('response', response);
     navigate('/', { replace: true });
   };
 

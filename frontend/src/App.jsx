@@ -15,6 +15,7 @@ import Lesson from 'pages/Lesson/Lesson';
 import LessonEnd from './pages/Lesson/LessonEnd';
 import Login from 'pages/Login/Login';
 import NotFound from 'pages/NotFound/NotFound';
+import Profile from 'pages/Profile/Profile';
 import ProtectedLayout from 'hocs/ProtectedLayout';
 import Register from 'pages/Register/Register';
 
@@ -32,6 +33,7 @@ export const router = createBrowserRouter(
           <Route path='/create' element={<Create />} />
           <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
         </Route>
+        <Route path='/profile' element={<Profile />} />
       </Route>
       <Route path='/403' element={<Forbid />} />
       <Route path='404' element={<NotFound />} />
