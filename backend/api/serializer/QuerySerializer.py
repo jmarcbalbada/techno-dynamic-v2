@@ -4,10 +4,11 @@ from api.serializer.SubQuerySerializer import SubQuerySerializer
 
 class QuerySerializer(serializers.ModelSerializer):
     subqueries = SubQuerySerializer(many=True, read_only=True)
+    context = serializers.CharField(read_only=True)
 
     class Meta:
         model = Query
-        fields = ('id', 'lesson', 'user', 'subqueries')
+        fields = ('id', 'lesson', 'user', 'subqueries', 'context')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
