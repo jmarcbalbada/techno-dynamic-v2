@@ -12,7 +12,13 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const FooterControls = (props) => {
-  const { handleNextPage, handlePrevPage, handleEditPage, isFirstPage } = props;
+  const {
+    handleNextPage,
+    handlePrevPage,
+    handleEditPage,
+    isFirstPage,
+    handleOpenFiles
+  } = props;
   const { user } = useAuth();
 
   return (
@@ -40,11 +46,16 @@ const FooterControls = (props) => {
             size='large'>
             {isFirstPage ? 'Dashboard' : 'Prev'}
           </Button>
-          {user.role === 'teacher' && (
-            <Button onClick={handleEditPage} variant='outlined' size='large'>
-              Edit
+          <Box display='flex' gap={1}>
+            {user.role === 'teacher' && (
+              <Button onClick={handleEditPage} variant='outlined' size='large'>
+                Edit
+              </Button>
+            )}
+            <Button onClick={handleOpenFiles} variant='outlined' size='large'>
+              Files
             </Button>
-          )}
+          </Box>
           <Button
             onClick={handleNextPage}
             endIcon={<ArrowForwardIcon />}
