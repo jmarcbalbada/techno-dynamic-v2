@@ -117,7 +117,7 @@ const BaseDetailsForm = memo(({ formikBase }) => {
             </Typography>
             <Box my={1}>
               <Box display='flex' alignItems='center' gap={1}>
-                <ImageIcon />
+                <ImageIcon color='primary'/>
                 <Typography variant='body2'>{displayText}</Typography>
               </Box>
             </Box>
