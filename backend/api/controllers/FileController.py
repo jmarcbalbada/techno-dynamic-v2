@@ -28,17 +28,11 @@ class FileController(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveM
         serializer = self.get_serializer(files, many=True)
         return Response(serializer.data)
 
-    def createFile(self, request):
-        # Include lesson_id in the request data
-        lesson_id = request.data.get('lesson_id', None)
-        
-        if lesson_id is not None:
-            try:
-                lesson = Lesson.objects.get(pk=lesson_id)
-            except Lesson.DoesNotExist:
-                return Response({"error": "Lesson not found"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"error": "lesson_id is required to create a file"}, status=status.HTTP_400_BAD_REQUEST)
+    def createFile(self, request, lesson_id):
+        try:
+            lesson = Lesson.objects.get(pk=lesson_id)
+        except Lesson.DoesNotExist:
+            return Response({"error": "Lesson not found"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Modify the serializer to handle multiple files
         data = request.data.copy()
