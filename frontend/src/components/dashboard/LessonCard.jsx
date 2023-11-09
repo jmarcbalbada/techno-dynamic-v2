@@ -16,7 +16,8 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const LessonCard = (props) => {
   const { user } = useAuth();
-  const { id, lessonNumber, title, description, pageCount, image } = props;
+  const { id, lessonNumber, title, description, pageCount, image, fileCount } =
+    props;
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
@@ -84,6 +85,8 @@ const LessonCard = (props) => {
           />
           <Typography gutterBottom variant='caption' color='text.secondary'>
             {pageCount} {pageCount === 1 ? 'page' : 'pages'}
+            {' · '}
+            {fileCount} {fileCount === 1 ? 'file' : 'files'}
           </Typography>
         </CardContent>
       </CardActionArea>
