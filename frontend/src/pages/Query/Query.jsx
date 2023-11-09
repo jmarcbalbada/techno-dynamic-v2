@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
@@ -8,10 +8,10 @@ const Query = () => {
   return (
     <Container component='main'>
       <Box>
-        <QueriesTable /> 
+        <QueriesTable />
       </Box>
     </Container>
-  )
-}
+  );
+};
 
 export default Query;
