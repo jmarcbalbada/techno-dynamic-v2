@@ -9,6 +9,7 @@ import {
 import { LessonsService } from 'apis/LessonsService';
 import LessonPage from 'components/lessonpage/LessonPage';
 import FooterControls from 'components/lessonpage/FooterControls';
+import FilesModal from 'components/lessonpage/FilesModal';
 
 import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
@@ -18,6 +19,7 @@ const Lesson = () => {
   const navigate = useNavigate();
   const [lesson, setLesson] = useState({});
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber));
+  const [fileModalOpen, setFileModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -29,6 +31,7 @@ const Lesson = () => {
     try {
       const response = await LessonsService.getByLessonNumber(lessonNumber);
       setLesson(response.data);
+      console.log('response.data', response.data);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -58,6 +61,14 @@ const Lesson = () => {
     navigate(`/lessons/${lessonNumber}/edit`);
   };
 
+  const handleOpenFiles = () => {
+    setFileModalOpen(true);
+  };
+
+  const handleCloseFiles = () => {
+    setFileModalOpen(false);
+  };
+
   return (
     <Box>
       <Container
@@ -71,7 +82,16 @@ const Lesson = () => {
         ) : isError ? (
           <Navigate to='/404' replace />
         ) : (
-          <LessonPage pageContent={lesson?.pages[currentPage - 1]?.contents} />
+          <>
+            <LessonPage
+              pageContent={lesson?.pages[currentPage - 1]?.contents}
+            />
+            <FilesModal
+              files={lesson?.lesson_files}
+              open={fileModalOpen}
+              handleClose={handleCloseFiles}
+            />
+          </>
         )}
       </Container>
       <FooterControls
@@ -79,6 +99,7 @@ const Lesson = () => {
         handleNextPage={handleNextPage}
         handlePrevPage={handlePrevPage}
         handleEditPage={handleEditPage}
+        handleOpenFiles={handleOpenFiles}
       />
     </Box>
   );
