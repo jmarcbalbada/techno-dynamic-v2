@@ -1,0 +1,28 @@
+.response-bubble, .question-bubble {
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: fit-content;
+  max-width: 75%;
+}
+
+.response-bubble {
+  background-color: #f0f0f0; /* Left bubble background color */
+  align-self: flex-end;
+  margin-right: auto;
+}
+
+.question-bubble {
+  background-color: #fee16d; /* Right bubble background color */
+  align-self: flex-start;
+  margin-left: auto;
+}
+
+.box-container {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin-right: 5px;
+}
+
+
