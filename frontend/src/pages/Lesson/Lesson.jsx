@@ -10,9 +10,13 @@ import { LessonsService } from 'apis/LessonsService';
 import LessonPage from 'components/lessonpage/LessonPage';
 import FooterControls from 'components/lessonpage/FooterControls';
 import FilesModal from 'components/lessonpage/FilesModal';
+import ChatbotDialog from 'components/lessonpage/ChatbotDialog';
 
 import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
+import Fab from '@mui/material/Fab';
+
+import ChatIcon from '@mui/icons-material/Chat';
 
 const Lesson = () => {
   const { lessonNumber, pageNumber } = useParams();
@@ -20,6 +24,7 @@ const Lesson = () => {
   const [lesson, setLesson] = useState({});
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber));
   const [fileModalOpen, setFileModalOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -69,6 +74,14 @@ const Lesson = () => {
     setFileModalOpen(false);
   };
 
+  const handleOpenChat = () => {
+    setIsChatOpen(true);
+  };
+
+  const handleCloseChat = () => {
+    setIsChatOpen(false);
+  };
+
   return (
     <Box>
       <Container
@@ -90,6 +103,22 @@ const Lesson = () => {
               files={lesson?.lesson_files}
               open={fileModalOpen}
               handleClose={handleCloseFiles}
+            />
+            <Fab
+              color='primary'
+              onClick={handleOpenChat}
+              sx={{
+                position: 'fixed',
+                bottom: '100px',
+                right: '50px'
+              }}>
+              <ChatIcon />
+            </Fab>
+            <ChatbotDialog
+              open={isChatOpen}
+              handleClose={handleCloseChat}
+              lessonId={lesson.id}
+              pageId={lesson?.pages[currentPage - 1]?.id}
             />
           </>
         )}

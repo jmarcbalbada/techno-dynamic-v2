@@ -21,5 +21,9 @@ export const LessonsService = {
         'Content-Type': 'multipart/form-data'
       }
     }),
-  delete: (id) => axios.delete(`${BASE_URL}/${id}`)
+  delete: (id) => axios.delete(`${BASE_URL}/${id}`),
+  chatbot: (lessonId, pageId, message) =>
+    axios.post(`${BASE_URL}/${lessonId}/pages/${pageId}/chatbot/`, {
+      message
+    })
 };
