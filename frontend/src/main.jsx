@@ -1,13 +1,23 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import { BrowserRouter } from 'react-router-dom'
-import './index.css'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
+
+import { router } from './App.jsx';
+import AppTheme from './assets/AppTheme.jsx';
+import './index.css';
+
+import { configureAxios } from './configureAxios.js';
+
+import { ThemeProvider } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+
+configureAxios();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
-)
+    <ThemeProvider theme={AppTheme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  </React.StrictMode>
+);

@@ -1,30 +1,45 @@
-import { Routes, Route } from 'react-router';
-import { Dashboard } from './components/Dashboard/Dashboard';
-import { LessonPage } from './components/LessonPage/LessonPage';
-import { EditorPage } from './components/EditorPage/EditorPage';
-import { NotFound } from './components/NotFound/NotFound';
-import { EndLessonPage } from './components/EndLessonPage/EndLessonPage';
-import './App.css';
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements
+} from 'react-router-dom';
 
-const App = () => {
-	return (
-		<>
-			<Routes>
-				<Route path="/" element={<Dashboard />}></Route>
+import { AuthLayout } from 'hocs/AuthLayout';
+import { RoleAccess } from 'hocs/RoleAccess';
 
-				<Route
-					path="lessons/:lessonid/pages/:pageid"
-					element={<LessonPage />}
-				></Route>
+import Create from 'pages/Create/Create';
+import Dashboard from 'pages/Dashboard/Dashboard';
+import Edit from 'pages/Edit/Edit';
+import Forbid from 'pages/Forbid/Forbid';
+import Lesson from 'pages/Lesson/Lesson';
+import LessonEnd from './pages/Lesson/LessonEnd';
+import Login from 'pages/Login/Login';
+import NotFound from 'pages/NotFound/NotFound';
+import Profile from 'pages/Profile/Profile';
+import Query from 'pages/Query/Query';
+import ProtectedLayout from 'hocs/ProtectedLayout';
+import Register from 'pages/Register/Register';
 
-				<Route path="lessons/:lessonid/end" element={<EndLessonPage />}></Route>
+export const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<AuthLayout />}>
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
 
-				<Route path="editor" element={<EditorPage />}></Route>
-
-				<Route path="*" element={<NotFound />}></Route>
-			</Routes>
-		</>
-	);
-};
-
-export default App;
+      <Route element={<ProtectedLayout />}>
+        <Route index path='/' element={<Dashboard />} />
+        <Route path='/lessons/:lessonNumber/:pageNumber' element={<Lesson />} />
+        <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
+        <Route element={<RoleAccess roles={['teacher']} />}>
+          <Route path='/create' element={<Create />} />
+          <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
+          <Route path='/queries' element={<Query />} />
+        </Route>
+        <Route path='/profile' element={<Profile />} />
+      </Route>
+      <Route path='/403' element={<Forbid />} />
+      <Route path='404' element={<NotFound />} />
+      <Route path='*' element={<NotFound />} />
+    </Route>
+  )
+);
