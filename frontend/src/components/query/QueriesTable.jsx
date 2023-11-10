@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
+import { format } from 'date-fns';
 
 import { QueriesService } from 'apis/QueriesService';
 import QueryDetailsDialog from './QueryDetailsDialog';
@@ -15,10 +16,10 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 
 const columns = [
-  { field: 'createdAt', headerName: 'Created At', width: 110 },
+  { field: 'createdAt', headerName: 'Created At', width: 170 },
   { field: 'lessonInfo', headerName: 'Lesson', width: 210 },
   { field: 'fullName', headerName: 'Name', width: 210 },
-  { field: 'courseYear', headerName: 'Course & Year', width: 240 },
+  { field: 'courseYear', headerName: 'Course & Year', width: 250 },
   { field: 'preview', headerName: 'Preview', width: 320 }
 ];
 
@@ -47,42 +48,52 @@ const QueriesTable = () => {
   }, []);
 
   const getQueries = async () => {
-  try {
-    const queryResponse = await QueriesService.list();
-    if (queryResponse) {
-      // Transform the response data into rows for the DataGrid
-      const formattedQueries = queryResponse.data.map((query) => ({
-        id: query.id,
-        lessonId: query.lesson.id,
-        lessonNumber: query.lesson.lessonNumber,
-        title: query.lesson.title,
-        firstName: query.user.first_name,
-        lastName: query.user.last_name,
-        preview: query.subqueries.question,
-        course: query.user.course,
-        year: query.user.year,
-        lessonInfo: `${query.lesson.lessonNumber} - ${query.lesson.title}`,
-        fullName: `${query.user.first_name} ${query.user.last_name}`,
-        courseYear:
-          query.user.course && query.user.year
-            ? `${query.user.year} - ${query.user.course}`
-            : 'Teacher',
-        preview: query.subqueries[0]
-          ? query.subqueries[0].question
-          : 'No question available',
-        createdAt: query.subqueries[0] ? query.subqueries[0].created_at : null
-      }));
+    try {
+      const queryResponse = await QueriesService.list();
 
-      formattedQueries.sort((a, b) => {
-        return b.createdAt - a.createdAt;
-      });
+      if (queryResponse) {
+        // Transform the response data into rows for the DataGrid
+        const formattedQueries = queryResponse.data.map((query) => {
+          const createdAt = query.subqueries[0]
+            ? new Date(query.subqueries[0].created_at)
+            : null;
+          const formattedDate = createdAt
+            ? format(createdAt, 'MM/dd/yyyy HH:mm:ss')
+            : null;
 
-      setQueries(formattedQueries);
+          return {
+            id: query.id,
+            lessonId: query.lesson.id,
+            lessonNumber: query.lesson.lessonNumber,
+            title: query.lesson.title,
+            firstName: query.user.first_name,
+            lastName: query.user.last_name,
+            preview: query.subqueries.question,
+            course: query.user.course,
+            year: query.user.year,
+            lessonInfo: `${query.lesson.lessonNumber} - ${query.lesson.title}`,
+            fullName: `${query.user.first_name} ${query.user.last_name}`,
+            courseYear:
+              query.user.course && query.user.year
+                ? `${query.user.year} - ${query.user.course}`
+                : 'Teacher',
+            preview: query.subqueries[0]
+              ? query.subqueries[0].question
+              : 'No question available',
+            createdAt: formattedDate
+          };
+        });
+
+        formattedQueries.sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+
+        setQueries(formattedQueries);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+  };
 
   return (
     <Container component='main'>
@@ -100,18 +111,20 @@ const QueriesTable = () => {
               columns={columns}
               initialState={{
                 pagination: {
-                  paginationModel: { page: 0, pageSize: 8 }
+                  paginationModel: { page: 0, pageSize: 5 }
+                },
+                sorting: {
+                  sortingModel: [
+                    {
+                      field: 'createdAt',
+                      sort: 'desc'
+                    }
+                  ]
                 }
               }}
-              pageSizeOptions={[5, 6, 7, 8, 9, 10]}
+              pageSizeOptions={[5, 10]}
               onRowClick={handleRowClick}
               singleRowSelection
-              sortModel={[
-                {
-                  field: 'createdAt',
-                  sort: 'desc', 
-                }
-              ]}
             />
           </Box>
         </Stack>
