@@ -7,6 +7,7 @@ class Query(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     subqueries = models.ManyToManyField(SubQuery)
+    context = models.TextField(blank=True, default='')
 
     def __str__(self):
         return f"Query for Lesson {self.lesson.lessonNumber} by {self.user.username}"
@@ -20,6 +21,9 @@ class Query(models.Model):
     def get_user(self):
         return self.user
 
+    def get_context(self):
+        return self.context
+
     # Setters
     def set_lesson(self, lesson_instance):
         self.lesson = lesson_instance
@@ -32,3 +36,6 @@ class Query(models.Model):
 
     def remove_subquery(self, subquery_instance):
         self.subqueries.remove(subquery_instance)
+
+    def set_context(self, context):
+        self.context = context
