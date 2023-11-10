@@ -5,10 +5,10 @@ const AppTheme = createTheme({
   // TODO: Add theme options here
   palette: {
     primary: {
-      main: '#3362cc'
+      main: '#1b5e20'
     },
     secondary: {
-      main: '#0174BE'
+      main: '#cfd8dc'
     },
     white: {
       main: '#fff',
@@ -16,7 +16,10 @@ const AppTheme = createTheme({
     },
     background: {
       default: '#f9fafb'
-    }
+    },
+    textfield: {
+      main: '#204045'
+    },
   },
   typography: {
     fontFamily: ['Poppins', 'Century Gothic', 'sans-serif'].join(',')

@@ -11,13 +11,13 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import LoadingButton from '@mui/lab/LoadingButton';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+import { CustomTextField } from '../loginregister/CustomTextField';
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +61,7 @@ const LoginForm = () => {
 
   return (
     <Box component='form' onSubmit={formik.handleSubmit} mt={4}>
-      <TextField
+      <CustomTextField 
         margin='normal'
         fullWidth
         autoFocus
@@ -80,7 +80,7 @@ const LoginForm = () => {
           )
         }}
       />
-      <TextField
+      <CustomTextField
         margin='normal'
         fullWidth
         autoComplete='off'
