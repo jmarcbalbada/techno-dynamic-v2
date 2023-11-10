@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 
@@ -108,16 +108,26 @@ const QueryDetailsDialog = ({ isOpen, onClose, selectedRow }) => {
             }}>
             {subqueriesArray.map((subquery, index) => (
               <div key={index}>
-                <div className='question-bubble'>
+                <Paper className='question-bubble' sx={{
+                    bgcolor: 'rgba(27, 94, 32, 0.1)',
+                    borderColor: 'primary.main',
+                    overflowWrap: 'break-word',
+                    borderRadius: '15px',
+                    borderBottomRightRadius: '0px'
+                    }} variant='outlined'>
                   <Typography variant='subtitle1'>
                     {subquery.question}
                   </Typography>
-                </div>
-                <div className='response-bubble'>
+                </Paper>
+                <Paper className='response-bubble' sx={{
+                  bgcolor: 'rgba(240, 240, 240, 0.1)',
+                  borderRadius: '15px',
+                  borderBottomLeftRadius: '0px'
+                }} variant='outlined'>
                   <Typography variant='subtitle1'>
                     {subquery.response}
                   </Typography>
-                </div>
+                </Paper>
               </div>
             ))}
           </div>
