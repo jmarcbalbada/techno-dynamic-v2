@@ -67,6 +67,7 @@ const ChatbotDialog = (props) => {
                     maxWidth: '60%',
                     alignSelf: 'flex-start',
                     overflowWrap: 'break-word',
+                    bgcolor: 'rgba(240, 240, 240, 0.1)',
                     borderRadius: '15px',
                     borderBottomLeftRadius: '0px'
                   }}>
@@ -86,7 +87,7 @@ const ChatbotDialog = (props) => {
                     mb: 1,
                     maxWidth: '60%',
                     alignSelf: 'flex-end',
-                    bgcolor: 'rgba(0, 0, 235, 0.1)',
+                    bgcolor: 'rgba(27, 94, 32, 0.1)',
                     borderColor: 'primary.main',
                     overflowWrap: 'break-word',
                     borderRadius: '15px',

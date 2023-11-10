@@ -16,11 +16,11 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 
 const columns = [
-  { field: 'createdAt', headerName: 'Created At', width: 170 },
-  { field: 'lessonInfo', headerName: 'Lesson', width: 210 },
-  { field: 'fullName', headerName: 'Name', width: 210 },
-  { field: 'courseYear', headerName: 'Course & Year', width: 250 },
-  { field: 'preview', headerName: 'Preview', width: 320 }
+  { field: 'createdAt', headerName: 'Created At', width: 170, headerClassName: 'super-app-theme--header' },
+  { field: 'lessonInfo', headerName: 'Lesson', width: 230, headerClassName: 'super-app-theme--header' },
+  { field: 'fullName', headerName: 'Name', width: 210, headerClassName: 'super-app-theme--header' },
+  { field: 'courseYear', headerName: 'Course & Year', width: 260, headerClassName: 'super-app-theme--header' },
+  { field: 'preview', headerName: 'Preview', width: 500, headerClassName: 'super-app-theme--header' }
 ];
 
 const QueriesTable = () => {
@@ -105,7 +105,11 @@ const QueriesTable = () => {
               Dashboard
             </Button>
           </Box>
-          <Box mt={4}>
+          <Box mt={4} sx={{
+              '& .super-app-theme--header': {
+                backgroundColor: 'rgba(27, 94, 32, 0.2)',
+              },
+            }}>
             <DataGrid
               rows={queries}
               columns={columns}

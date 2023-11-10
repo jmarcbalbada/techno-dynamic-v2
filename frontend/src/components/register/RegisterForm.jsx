@@ -19,11 +19,12 @@ import Link from '@mui/material/Link';
 import LoadingButton from '@mui/lab/LoadingButton';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+import { CustomTextField } from '../loginregister/CustomTextField';
 
 const RegisterForm = () => {
   const { login } = useAuth();
@@ -119,7 +120,7 @@ const RegisterForm = () => {
     <Box component='form' onSubmit={formik.handleSubmit} mt={4}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
-          <TextField
+          <CustomTextField
             fullWidth
             autoFocus
             autoComplete='off'
@@ -133,7 +134,7 @@ const RegisterForm = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField
+          <CustomTextField
             fullWidth
             autoComplete='off'
             id='lastName'
@@ -146,7 +147,7 @@ const RegisterForm = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
+          <CustomTextField
             fullWidth
             autoComplete='off'
             id='username'
@@ -159,7 +160,7 @@ const RegisterForm = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
+          <CustomTextField
             fullWidth
             autoComplete='off'
             id='email'
@@ -172,7 +173,7 @@ const RegisterForm = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
+          <CustomTextField
             fullWidth
             autoComplete='off'
             id='password'
@@ -199,7 +200,7 @@ const RegisterForm = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
+          <CustomTextField
             fullWidth
             autoComplete='off'
             id='confirmPassword'
@@ -231,7 +232,7 @@ const RegisterForm = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField
+          <CustomTextField
             select
             fullWidth
             autoComplete='off'
@@ -247,10 +248,10 @@ const RegisterForm = () => {
                 {option.label}
               </MenuItem>
             ))}
-          </TextField>
+          </CustomTextField>
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField
+          <CustomTextField
             select
             defaultValue='1'
             fullWidth
@@ -267,7 +268,7 @@ const RegisterForm = () => {
                 {option.label}
               </MenuItem>
             ))}
-          </TextField>
+          </CustomTextField>
         </Grid>
         <Grid item xs={12}>
           <LoadingButton

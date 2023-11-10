@@ -75,7 +75,7 @@ const Dashboard = () => {
                   //onClick={handleAddLesson}
                   onClick={handleViewQuery} // Call handleViewQueries function when the button is clicked
                   variant='contained'
-                  color='info'
+                  color='secondary'
                   size='large'
                   startIcon={<QueryStatsIcon />}
                   // TODO: add color from palette
