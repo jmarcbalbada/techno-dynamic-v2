@@ -8,11 +8,13 @@ import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Dialog from '@mui/material/Dialog';
+import Fab from '@mui/material/Fab';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import CloseIcon from '@mui/icons-material/Close';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface EditorRef {
   getHTMLContent: () => string;
@@ -77,6 +79,16 @@ const EditorModal = ({
             </FieldPaper>
           </Container>
         </Box>
+        <Fab
+          onClick={handleSave}
+          color='primary'
+          sx={{
+            position: 'fixed',
+            bottom: 32,
+            right: 32
+          }}>
+          <SaveIcon />
+        </Fab>
       </Dialog>
     </Box>
   );

@@ -98,6 +98,7 @@ const Dashboard = () => {
                 description={lesson.subtitle}
                 pageCount={lesson.pages.length}
                 image={lesson.coverImage}
+                fileCount={lesson.lesson_files.length}
               />
             </Grid>
           ))}

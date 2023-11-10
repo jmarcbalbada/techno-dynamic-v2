@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
-import { Button, ListItemIcon, useTheme } from '@mui/material';
 import lionLogo from 'assets/lionlogo.png';
 
 import { AppBar as MuiAppBar } from '@mui/material';
 import { Box } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import { Button, ListItemIcon, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
@@ -35,6 +35,11 @@ const Appbar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleProfile = () => {
+    navigate('/profile');
+    handleCloseUserMenu();
   };
 
   const handleLogout = () => {
@@ -103,7 +108,7 @@ const Appbar = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}>
             {/* TODO: Add Profile Navigation Handling  */}
-            <MenuItem onClick={handleCloseUserMenu}>
+            <MenuItem onClick={handleProfile}>
               <ListItemIcon>
                 <PersonIcon fontSize='small' />
               </ListItemIcon>

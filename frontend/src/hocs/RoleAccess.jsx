@@ -9,6 +9,6 @@ export const RoleAccess = ({ roles = [] }) => {
   return !roles.length || roles.includes(userRole) ? (
     <Outlet />
   ) : (
-    <Navigate to='/forbid' replace />
+    <Navigate to='/403' replace />
   );
 };

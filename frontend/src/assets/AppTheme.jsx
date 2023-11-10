@@ -4,6 +4,12 @@ import { responsiveFontSizes } from '@mui/material';
 const AppTheme = createTheme({
   // TODO: Add theme options here
   palette: {
+    primary: {
+      main: '#3362cc'
+    },
+    secondary: {
+      main: '#0174BE'
+    },
     white: {
       main: '#fff',
       contrastText: '#000'
