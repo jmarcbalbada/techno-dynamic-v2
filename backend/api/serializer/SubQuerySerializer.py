@@ -4,4 +4,4 @@ from api.model.SubQuery import SubQuery
 class SubQuerySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubQuery
-        fields = ('question', 'response')
+        fields = ('question', 'response', 'created_at' )

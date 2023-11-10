@@ -92,7 +92,7 @@ urlpatterns = [
     path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response'})),
 
     path('queries/', QueryController.as_view(query_actions)),
-    path('queries/<int:pk>', QueryController.as_view(query_detail_actions)),
+    path('queries/<int:pk>/', QueryController.as_view(query_detail_actions)),
 
     # ImageMedia
     path('media/', ImageMediaController.as_view(image_media_actions)),

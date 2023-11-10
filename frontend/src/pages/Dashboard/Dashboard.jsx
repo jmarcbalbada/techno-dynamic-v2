@@ -40,6 +40,10 @@ const Dashboard = () => {
     navigate('/create');
   };
 
+  const handleViewQuery = () => {
+    navigate('/queries'); // Navigate to the queries page when the button is clicked
+  };
+
   return (
     <Container>
       <h1>Dashboard</h1>
@@ -67,8 +71,9 @@ const Dashboard = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Button
-                  // TODO: add onClick for queries
+                  // TODO: add onClick for query
                   //onClick={handleAddLesson}
+                  onClick={handleViewQuery} // Call handleViewQueries function when the button is clicked
                   variant='contained'
                   color='info'
                   size='large'
