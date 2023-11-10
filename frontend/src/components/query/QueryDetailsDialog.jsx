@@ -36,10 +36,12 @@ const QueryDetailsDialog = ({ isOpen, onClose, selectedRow }) => {
     const isConfirmed = window.confirm(
       'Are you sure you want to edit this lesson?'
     );
+
+    console.log('selectedRow', selectedRow)
     
     if (isConfirmed) {
       // If user confirms, navigate to the edit page
-      navigate(`/lessons/${selectedRow.lessonId}/edit`);
+      navigate(`/lessons/${selectedRow.lessonNumber}/edit`);
     }
   };
 

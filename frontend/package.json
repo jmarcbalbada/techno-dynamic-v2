@@ -60,6 +60,7 @@
     "@tiptap/react": "^2.1.11",
     "@tiptap/starter-kit": "^2.1.11",
     "axios": "^1.5.0",
+    "date-fns": "^2.30.0",
     "formik": "^2.4.4",
     "mui-tiptap": "^1.8.3",
     "react": "^18.2.0",
