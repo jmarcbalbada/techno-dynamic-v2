@@ -13,6 +13,10 @@ import os.path
 from pathlib import Path
 from decouple import config
 import dj_database_url
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=m=*xj8xoy99#25^6_fl=4wkllzn48dsrp77q6+3-$69=y(z71'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', "False").lower() == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -80,20 +84,18 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('POSTGRES_DB'),
-#         'USER': config('POSTGRES_USER'),
-#         'PASSWORD': config('POSTGRES_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': config('POSTGRES_PORT', default='5432'),
-#     }
-# }
-
 DATABASES = {
-    "default": dj_database_url.parse(config("DATABASE_URL", default='YOUR_DEFAULT_DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': config('POSTGRES_PORT', default='5432'),
+    }
 }
+
+# DATABASES = dj_database_url.parse(config("DATABASE_URL", default="postgres"))
 
 
 # Password validation
@@ -116,9 +118,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Whitelist for react port
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:5173'
+    "http://localhost:3000",
+    "http://localhost:5173"
 ]
+
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='localhost:3000,localhost:5173').split(',')
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
