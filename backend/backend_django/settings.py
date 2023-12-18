@@ -13,6 +13,10 @@ import os.path
 from pathlib import Path
 from decouple import config
 import dj_database_url
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=m=*xj8xoy99#25^6_fl=4wkllzn48dsrp77q6+3-$69=y(z71'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', "False").lower() == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(",")
 
 
 # Application definition
@@ -91,9 +95,7 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    "default": dj_database_url.parse(config("DATABASE_URL", default='YOUR_DEFAULT_DATABASE_URL'))
-}
+DATABASES["default"] = dj_database_url.parse(os.environ.get("DATABASE_URL"))
 
 
 # Password validation
@@ -115,10 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Whitelist for react port
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://localhost:5173'
-]
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
