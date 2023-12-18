@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', "False").lower() == "True"
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -84,18 +84,18 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('POSTGRES_DB'),
-#         'USER': config('POSTGRES_USER'),
-#         'PASSWORD': config('POSTGRES_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': config('POSTGRES_PORT', default='5432'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': config('POSTGRES_PORT', default='5432'),
+    }
+}
 
-DATABASES["default"] = dj_database_url.parse(os.environ.get("DATABASE_URL"))
+# DATABASES = dj_database_url.parse(config("DATABASE_URL", default="postgres"))
 
 
 # Password validation
@@ -117,8 +117,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Whitelist for react port
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
-CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5173"
+]
+
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='localhost:3000,localhost:5173').split(',')
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
