@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # }
 
 DATABASES = {
-    "default": dj_database_url.parse(config("DATABASE_URL", default='YOUR_DEFAULT_API_KEY'))
+    "default": dj_database_url.parse(config("DATABASE_URL", default='YOUR_DEFAULT_DATABASE_URL'))
 }
 
 
