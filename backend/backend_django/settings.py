@@ -84,18 +84,20 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB'),
-        'USER': config('POSTGRES_USER'),
-        'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': config('POSTGRES_PORT', default='5432'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('POSTGRES_DB'),
+#         'USER': config('POSTGRES_USER'),
+#         'PASSWORD': config('POSTGRES_PASSWORD'),
+#         'HOST': 'localhost',
+#         'PORT': config('POSTGRES_PORT', default='5432'),
+#     }
+# }
 
-# DATABASES = dj_database_url.parse(config("DATABASE_URL", default="postgres"))
+DATABASES = {
+    'default': dj_database_url.parse(config("DATABASE_URL", default="postgres://username:password@localhost:5432/database_name"))
+}
 
 
 # Password validation
@@ -122,7 +124,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173"
 ]
 
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='localhost:3000,localhost:5173').split(',')
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://localhost:3000,http://localhost:5173').split(',')
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
