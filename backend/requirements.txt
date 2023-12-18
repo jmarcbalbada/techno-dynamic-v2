@@ -34,3 +34,4 @@ tiktoken==0.5.1
 beautifulsoup4==4.10.0
 gunicorn==21.2.0
 dj-database-url==2.1.0
+django-environ=0.11.2
