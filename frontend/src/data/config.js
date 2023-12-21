@@ -2,7 +2,7 @@ import { isLocal } from "../utils/destinations";
 
 let apiUrl = 'https://techno-learn.onrender.com/'
 
-if (!isLocal) {
+if (isLocal) {
   apiUrl = 'http://127.0.0.1:8000/'
 }
 
