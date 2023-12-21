@@ -18,7 +18,11 @@ import EditIcon from '@mui/icons-material/Edit';
 const LessonCard = (props) => {
   const { user } = useAuth();
   const { id, lessonNumber, title, description, pageCount, image, fileCount } =
-    props;
+  props;
+  const url = config.API_URL.endsWith('/')
+    ? config.API_URL.slice(0, -1)
+    : config.API_URL;
+  const imageUrl = `${url}`;
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
@@ -56,7 +60,7 @@ const LessonCard = (props) => {
             image
               ? image.includes('null')
                 ? 'https://source.unsplash.com/random/featured/?working,office'
-                : `${config.API_URL}${image}`
+                : `${imageUrl}${image}`
               : 'https://source.unsplash.com/random/featured/?working,office'
           }
         />
