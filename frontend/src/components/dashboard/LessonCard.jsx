@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
-import { config } from 'data/config'
+import config from 'data/config';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
