@@ -24,6 +24,10 @@ const FilesDialog = styled(Dialog)(({ theme }) => ({
 
 const FilesModal = (props) => {
   const { files, open, handleClose } = props;
+  const url = config.API_URL.endsWith('/')
+    ? config.API_URL.slice(0, -1)
+    : config.API_URL;
+  const fileUrl = `${url}`;
 
   return (
     <FilesDialog open={open} onClose={handleClose}>
@@ -55,7 +59,7 @@ const FilesModal = (props) => {
                 <Link
                   underline='hover'
                   target='_blank'
-                  href={`${config.API_URL}${file.file}`}>
+                  href={`${fileUrl}${file.file}`}>
                   {fileName}
                 </Link>
               </Paper>
