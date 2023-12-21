@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
+import config from 'data/config';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -55,7 +56,7 @@ const LessonCard = (props) => {
             image
               ? image.includes('null')
                 ? 'https://source.unsplash.com/random/featured/?working,office'
-                : `http://127.0.0.1:8000${image}`
+                : `${config.API_URL}${image}`
               : 'https://source.unsplash.com/random/featured/?working,office'
           }
         />

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import config from 'data/config';
+
 import {
   Dialog,
   DialogContent,
@@ -53,7 +55,7 @@ const FilesModal = (props) => {
                 <Link
                   underline='hover'
                   target='_blank'
-                  href={`http://127.0.0.1:8000${file.file}`}>
+                  href={`${config.API_URL}${file.file}`}>
                   {fileName}
                 </Link>
               </Paper>

@@ -1,7 +1,11 @@
-// TODO: add azure url here
-// TODO: check if in production or development environment
+import { isLocal } from "../utils/destinations";
 
-let apiUrl = 'http://127.0.0.1:8000/'
+let apiUrl = 'https://techno-learn.onrender.com'
+
+if (isLocal) {
+  apiUrl = 'http://127.0.0.1:8000/'
+}
+
 const config = {
   API_URL: apiUrl,
 };
