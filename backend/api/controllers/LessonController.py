@@ -1,4 +1,3 @@
-import json
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
@@ -11,6 +10,7 @@ import json
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
 from api.model.File import File
+from api.serializer import FileSerializer
 from api.serializer.LessonSerializer import LessonSerializer
 from api.serializer.LessonContentSerializer import LessonContentSerializer
 from api.controllers.permissions.permissions import IsTeacher
@@ -83,7 +83,17 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         newLesson.set_cover_image(data.get('coverImage', None))
         newLesson.save()
 
+        lesson_files_data = []
         lesson_contents = []
+
+        # Associate files with the lesson if available
+        if 'lesson_files' in request.FILES:
+            files_data = request.FILES.getlist('lesson_files')
+            for uploaded_file in files_data:
+                file_serializer = FileSerializer(data={'file': uploaded_file, 'lesson': newLesson.get_id()})
+                if file_serializer.is_valid():
+                    file_serializer.save()
+                    lesson_files_data.append(file_serializer.data)
 
         # Create LessonContents for each page
         if 'pages' in data:
@@ -100,13 +110,9 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                 new_page.save()
                 lesson_contents.append(new_page)
 
-                # Create and associate files with the lesson content
-                if 'files' in page_data:
-                    for file_data in page_data['files']:
-                        file_item = File.objects.create(file=file_data)
-                        new_page.files.add(file_item)
-
+        # Fetch associated files after they are added to the lesson
         lesson_data = LessonSerializer(newLesson).data
+        lesson_data['lesson_files'] = lesson_files_data
         lesson_data['pages'] = LessonContentSerializer(lesson_contents, many=True).data
 
         return Response(lesson_data)
@@ -167,6 +173,34 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                 if existing_page.id not in updated_page_ids:
                     existing_page.delete()
 
+        # Check if "lesson_files" is in the request data
+        if "lesson_files" in request.FILES:
+            try:
+                updated_files = request.FILES.getlist('lesson_files')
+            except:
+                return Response({"error": "Invalid files data"}, status=status.HTTP_400_BAD_REQUEST)
+
+            existing_files = File.objects.filter(lesson=instance)
+
+            # Update or create files in the request
+            updated_file_ids = set()
+            for uploaded_file in updated_files:
+                file_serializer = FileSerializer(data={'file': uploaded_file, 'lesson': instance.id})
+                if file_serializer.is_valid():
+                    file_serializer.save()
+                    updated_file_ids.add(file_serializer.data['id'])
+
+            # Delete files that are not in the updated request
+            for existing_file in existing_files:
+                if existing_file.id not in updated_file_ids:
+                    existing_file.delete()
+
+        # If no files are provided, delete all existing files associated with the lesson
+        elif "lesson_files" not in request.FILES:
+            existing_files = File.objects.filter(lesson=instance)
+            for existing_file in existing_files:
+                existing_file.delete()
+
         # Update other lesson fields if needed
         instance.set_lesson_number(lesson_data['lessonNumber'])
         instance.set_title(lesson_data['title'])
@@ -177,9 +211,13 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         # Retrieve the updated list of pages for the response
         updated_pages_data = LessonContentSerializer(LessonContent.objects.filter(lesson=instance), many=True).data
 
+        # Retrieve the updated list of files for the response
+        updated_files_data = FileSerializer(File.objects.filter(lesson=instance), many=True).data
+
         # Include the updated pages in the response
         response_data = LessonSerializer(instance).data
         response_data['pages'] = updated_pages_data
+        response_data['lesson_files'] = updated_files_data
 
         return Response(response_data)
 
