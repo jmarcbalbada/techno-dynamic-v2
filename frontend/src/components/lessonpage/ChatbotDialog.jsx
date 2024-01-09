@@ -1,10 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { LessonsService } from 'apis/LessonsService';
+import { suggestedQuestions } from 'data/suggestedQuestions';
 
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -17,9 +19,9 @@ import SendIcon from '@mui/icons-material/Send';
 
 const ChatbotDialog = (props) => {
   const { open, handleClose, lessonId, pageId } = props;
-  const messageInputRef = useRef();
-  const [isGettingResponse, setIsGettingResponse] = React.useState(false);
-  const [messages, setMessages] = React.useState([
+  const [isGettingResponse, setIsGettingResponse] = useState(false);
+  const [messageInput, setMessageInput] = useState('');
+  const [messages, setMessages] = useState([
     {
       message: 'Hi, I am the chatbot. How can I help you?',
       sender: 'bot'
@@ -28,8 +30,8 @@ const ChatbotDialog = (props) => {
 
   const handleSend = async () => {
     setIsGettingResponse(true);
-    const message = messageInputRef.current.value;
-    messageInputRef.current.value = ''; // Clear the message input immediately after getting its value
+    const message = messageInput;
+    setMessageInput(''); // Clear the message input immediately after getting its value
 
     // Add the user's message to the messages state
     setMessages((prevMessages) => [
@@ -69,7 +71,8 @@ const ChatbotDialog = (props) => {
                     overflowWrap: 'break-word',
                     bgcolor: 'rgba(240, 240, 240, 0.1)',
                     borderRadius: '15px',
-                    borderBottomLeftRadius: '0px'
+                    borderBottomLeftRadius: '0px',
+                    whiteSpace: 'pre-line'
                   }}>
                   <Typography variant='subtitle2' color='primary'>
                     {message.sender}
@@ -111,6 +114,21 @@ const ChatbotDialog = (props) => {
             </Typography>
           )}
         </Box>
+        <Box>
+          {messages.length === 1 && (
+            <Box display='flex' flexWrap='wrap' gap={1} mt={2}>
+              {suggestedQuestions.map((question, index) => (
+                <Chip
+                  key={index}
+                  label={question.placeholder}
+                  onClick={() => setMessageInput(question.question)}
+                  variant='outlined'
+                  color='primary'
+                />
+              ))}
+            </Box>
+          )}
+        </Box>
         <Box display='flex' gap={1}>
           <TextField
             variant='standard'
@@ -118,13 +136,14 @@ const ChatbotDialog = (props) => {
             label='Message'
             multiline
             maxRows={3}
-            inputRef={messageInputRef}
+            value={messageInput}
+            onChange={(e) => setMessageInput(e.target.value)}
           />
           <Button
             onClick={handleSend}
             variant='contained'
             color='primary'
-            disabled={isGettingResponse}
+            disabled={isGettingResponse || !messageInput.trim()}
             endIcon={<SendIcon />}>
             Send
           </Button>
