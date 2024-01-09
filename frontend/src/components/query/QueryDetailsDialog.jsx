@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './QueryConversation.css';
 
@@ -37,8 +37,8 @@ const QueryDetailsDialog = ({ isOpen, onClose, selectedRow }) => {
       'Are you sure you want to edit this lesson?'
     );
 
-    console.log('selectedRow', selectedRow)
-    
+    console.log('selectedRow', selectedRow);
+
     if (isConfirmed) {
       // If user confirms, navigate to the edit page
       navigate(`/lessons/${selectedRow.lessonNumber}/edit`);
@@ -108,23 +108,34 @@ const QueryDetailsDialog = ({ isOpen, onClose, selectedRow }) => {
             }}>
             {subqueriesArray.map((subquery, index) => (
               <div key={index}>
-                <Paper className='question-bubble' sx={{
+                <Paper
+                  className='question-bubble'
+                  sx={{
                     bgcolor: 'rgba(27, 94, 32, 0.1)',
                     borderColor: 'primary.main',
                     overflowWrap: 'break-word',
                     borderRadius: '15px',
                     borderBottomRightRadius: '0px'
-                    }} variant='outlined'>
+                  }}
+                  variant='outlined'>
                   <Typography variant='subtitle1'>
                     {subquery.question}
                   </Typography>
                 </Paper>
-                <Paper className='response-bubble' sx={{
-                  bgcolor: 'rgba(240, 240, 240, 0.1)',
-                  borderRadius: '15px',
-                  borderBottomLeftRadius: '0px'
-                }} variant='outlined'>
-                  <Typography variant='subtitle1'>
+                <Paper
+                  className='response-bubble'
+                  sx={{
+                    bgcolor: 'rgba(240, 240, 240, 0.1)',
+                    borderRadius: '15px',
+                    borderBottomLeftRadius: '0px'
+                  }}
+                  variant='outlined'>
+                  <Typography
+                    variant='subtitle1'
+                    sx={{
+                      whiteSpace: 'pre-line'
+                    }}
+                    >
                     {subquery.response}
                   </Typography>
                 </Paper>
@@ -137,10 +148,7 @@ const QueryDetailsDialog = ({ isOpen, onClose, selectedRow }) => {
       </DialogContent>
       <Divider />
       <DialogActions>
-        <Button
-          onClick={handleEditLesson}
-          startIcon={<EditIcon />}
-          fullWidth>
+        <Button onClick={handleEditLesson} startIcon={<EditIcon />} fullWidth>
           Edit Lesson
         </Button>
       </DialogActions>
