@@ -23,7 +23,7 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
   const [pages, setPages] = useState(
     lesson ? lesson.pages : [{ contents: '' }]
   );
-  const [files, setFiles] = useState(lesson.lesson_files || []);
+  const [files, setFiles] = useState(lesson ? lesson.lesson_files : []);
 
   useEffect(() => {
     console.log('files', files);
@@ -52,7 +52,7 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
   const handleUploadFiles = (event) => {
     const uploadedFiles = event.currentTarget.files;
     const uploadedFilesArray = Array.from(uploadedFiles).map((file) => ({
-      lesson: lesson.lessonNumber,
+      lesson: lesson?.lessonNumber || initialLessonNumber,
       file: file
     }));
   
