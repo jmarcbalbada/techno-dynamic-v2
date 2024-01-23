@@ -23,6 +23,11 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
   const [pages, setPages] = useState(
     lesson ? lesson.pages : [{ contents: '' }]
   );
+  const [files, setFiles] = useState(lesson.lesson_files || []);
+
+  useEffect(() => {
+    console.log('files', files);
+  }, [files]);
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 
@@ -44,6 +49,23 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
     };
   }, []);
 
+  const handleUploadFiles = (event) => {
+    const uploadedFiles = event.currentTarget.files;
+    const uploadedFilesArray = Array.from(uploadedFiles).map((file) => ({
+      lesson: lesson.lessonNumber,
+      file: file
+    }));
+  
+    // Check if the file has an id property to determine if it's an existing file or a new one
+    const newFiles = uploadedFilesArray.filter(fileObj => !fileObj.id);
+    setFiles((existingFiles) => [...existingFiles, ...newFiles]);
+  };
+  
+
+  const handleDeleteFile = (fileToDelete) => {
+    setFiles((files) => files.filter((file) => file !== fileToDelete));
+  };
+
   const formikBase = useFormik({
     initialValues: {
       lessonNumber: lesson ? lesson.lessonNumber : initialLessonNumber,
@@ -59,6 +81,9 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
         formData.append('subtitle', values.subtitle);
         formData.append('lessonNumber', values.lessonNumber);
         formData.append('pages', JSON.stringify(pages));
+        for (let file of files) {
+          formData.append('lesson_files', file.file);
+        }
 
         if (values.coverImage instanceof File) {
           formData.append('coverImage', values.coverImage);
@@ -121,7 +146,12 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
             </Button>
           </Box>
           <Box mt={4}>
-            <BaseDetailsForm formikBase={formikBase} />
+            <BaseDetailsForm
+              formikBase={formikBase}
+              files={files}
+              handleUploadFiles={handleUploadFiles}
+              handleDeleteFile={handleDeleteFile}
+            />
           </Box>
           <Box mt={4}>
             <PagesList pages={pages} setPages={setPages} />

@@ -11,6 +11,9 @@ class Lesson(models.Model):
     def __str__(self):
         return self.title + ' ' + self.subtitle
 
+    def get_id(self):
+        return self.id
+
     def get_lesson_number(self):
         return self.lessonNumber
 
@@ -35,3 +38,11 @@ class Lesson(models.Model):
     def set_cover_image(self, cover_image):
         self.coverImage = cover_image
 
+    def get_files(self):
+        return self.files.all()  # Returns all associated files for the lesson
+
+    def set_files(self, file_data):
+        # Add or associate files with the lesson
+        for file in file_data:
+            file_item, created = File.objects.get_or_create(file=file)
+            self.files.add(file_item)
