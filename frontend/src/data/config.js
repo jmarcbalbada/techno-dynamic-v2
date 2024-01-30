@@ -1,9 +1,9 @@
 import { isLocal } from "../utils/destinations";
 
-let apiUrl = 'https://techno-learn.onrender.com/'
+let apiUrl = 'http://172.16.103.217/'
 
 if (isLocal) {
-  apiUrl = 'http://127.0.0.1:8000/'
+  apiUrl = 'http://172.16.103.217/'
 }
 
 const config = {
