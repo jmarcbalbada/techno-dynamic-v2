@@ -14,6 +14,10 @@ from pathlib import Path
 from decouple import config
 import dj_database_url
 import environ
+from django.core.management.utils import get_random_secret_key
+
+# Generate a new secret key
+# secret_keys = get_random_secret_key()
 
 env = environ.Env()
 environ.Env.read_env()
@@ -23,15 +27,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/s
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = 'akya^e5k7t@0u+h9%#a)+$*gy2^^@63x#9x4l=$g$7spm0juv5'
+# SECRET_KEY = secret_keys
+print("Generated SECRET_KEY:", SECRET_KEY)
+# SECRET_KEY ="django-insecure-=m=*xj8xoy99#25^6_fl=4wkllzn48dsrp77q6+3-$69=y(z71"
+# SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+# DEBUG = os.environ.get('DEBUG')
+DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 
 # Application definition
@@ -84,20 +94,20 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('POSTGRES_DB'),
-#         'USER': config('POSTGRES_USER'),
-#         'PASSWORD': config('POSTGRES_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': config('POSTGRES_PORT', default='5432'),
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.parse(config("DATABASE_URL", default="postgres://username:password@localhost:5432/database_name"))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': config('POSTGRES_PORT', default='5432'),
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.parse(config("DATABASE_URL", default="postgres://username:password@localhost:5432/database_name"))
+# }
 
 
 # Password validation
