@@ -1,6 +1,15 @@
-# Techno-Dynamic-Learning
+# Techno-Dynamic-Learning V2 (TechnoDynamic V2)
 
-A user-friendly learning management system for Technopreneurship course with AI Chatbot as their assistant
+Techno-Dynamic-Learning V2 is an advanced learning management system designed specifically for technopreneurship courses. Building upon the foundation of Techno-Dynamic-Learning V1, this extended version incorporates dynamic content generation and insightful suggestions based on frequently asked questions (FAQ) from students.
+
+
+# Features
+
+- User-friendly interface
+- AI Chatbot assistant for personalized support
+- Dynamic content generation based on student inquiries
+- Insights and suggestions derived from FAQ data
+- Enhanced learning experience for both educators and students
 
 # Project Instructions
 
@@ -68,3 +77,14 @@ A user-friendly learning management system for Technopreneurship course with AI 
 ```bash
   npm run dev
 ```
+
+<h2> Copyright (c) [2024] <h2>
+
+This project includes contributions from the following contributors:
+- [raphaellaconsay](https://github.com/raphaellaconsay)
+- [sebastianyebes](https://github.com/sebastianyebes)
+- [kibyes123](https://github.com/kibyes123)
+- [Amadeo0312](https://github.com/Amadeo0312)
+- [Mauledby](https://github.com/Mauledby)
+
+All rights reserved.
