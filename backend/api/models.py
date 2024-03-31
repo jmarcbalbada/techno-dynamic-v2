@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+from .model.Lesson import Lesson  # Adjust the import path here
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
@@ -37,3 +38,20 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class Faq(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='faqs')
+    question = models.TextField()
+
+    def __str__(self):
+        return f"FAQ - Lesson {self.lesson.lessonNumber}: {self.question[:50]}"
+    
+    
+class Suggestion(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    insights = models.TextField()
+    content = models.TextField()
+    old_content = models.TextField()
+
+    def __str__(self):
+        return f"Suggestion for Lesson {self.lesson.lessonNumber}"
