@@ -8,6 +8,8 @@ from .controllers.QueryController import QueryController
 from .controllers.ImageController import ImageModelController
 from .controllers.ImageMediaController import ImageMediaController
 from .controllers.FileController import FileController
+from .controllers.FaqController import FaqController
+from .controllers.SuggestionController import SuggestionController
 
 
 lesson_actions = {
@@ -76,6 +78,18 @@ file_detail_actions = {
     'delete': 'deleteFile',
 }
 
+faq_detail_actions = {
+    'get': 'get_questions_by_lesson_id',
+    'post': 'create_faqs_from_subqueries',
+}
+
+# suggestion_detail_actions = {
+#     'get': 'get_suggestions_by_lesson_id',
+#     'post': 'createSuggestion',
+#     'put': 'updateSuggestion',
+#     'delete': 'deleteSuggestion',
+# }
+
 urlpatterns = [
     # Paths
     re_path('login', UserController.login),
@@ -116,4 +130,17 @@ urlpatterns = [
 
     # Queries
     path('lessons', LessonController.as_view({'get': 'findLessonbyLessonNumber'})),
+
+    # Faq
+    path('faq/<int:lesson_id>/', FaqController.as_view(faq_detail_actions)),
+
+
+    # Suggestions
+    path('suggestions/', SuggestionController.as_view({'get': 'list', 'post': 'create'})),
+
+    # Retrieve, update, and delete a specific suggestion
+    path('suggestions/<int:pk>/', SuggestionController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
+    
+    # Get suggestions by lesson ID
+    path('lessons/<int:lesson_id>/suggestions/', SuggestionController.as_view({'get': 'list'})),
 ]
