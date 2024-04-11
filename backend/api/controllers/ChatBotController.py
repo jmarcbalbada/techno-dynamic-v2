@@ -12,16 +12,31 @@ from api.model.SubQuery import SubQuery
 
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.viewsets import GenericViewSet
+from rest_framework import serializers
 
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationSummaryBufferMemory
 
+class DummySerializer(serializers.Serializer):
+    pass
+
 class ChatBotController(GenericViewSet):
+    serializer_class = DummySerializer
+
     openai_api_key = settings.OPENAI_API_KEY
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def chatbot_response(self, request, lesson_id, lesson_content_id):
+        print("request",request.data)
+        print("lesson id = ", lesson_id)
+        print("lesson content id = ", lesson_content_id)
+        if request.user.is_authenticated:
+            user_id = request.user.id
+            # Now you can use user_id in your code
+        else:
+            # Handle the case where the user is not authenticated
+            return JsonResponse({"error": "User is not authenticated"}, status=401)
 
         openai.api_key = self.openai_api_key
 
@@ -54,7 +69,13 @@ class ChatBotController(GenericViewSet):
         query, created = Query.objects.get_or_create(lesson=lesson, user=user)
 
         # Load the existing conversation context from the Query object, if any
-        conversation_context = json.loads(query.context) if query.context else []
+        if query.context:
+            try:
+                conversation_context = json.loads(query.context)
+            except json.JSONDecodeError:
+                return JsonResponse({"error": "Invalid conversation context data"}, status=400)
+        else:
+            conversation_context = []
 
         # Check if the conversation context has been created for the first time
         if created:

@@ -11,14 +11,15 @@ import LessonPage from 'components/lessonpage/LessonPage';
 import FooterControls from 'components/lessonpage/FooterControls';
 import FilesModal from 'components/lessonpage/FilesModal';
 import ChatbotDialog from 'components/lessonpage/ChatbotDialog';
-
 import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 
 import ChatIcon from '@mui/icons-material/Chat';
+import NotificationLayout from '../Notification/NotificationLayout';
 
-const Lesson = () => {
+const Lesson = ({ isFromNotification = false }) => {
+  const fromNotification = isFromNotification;
   const { lessonNumber, pageNumber } = useParams();
   const navigate = useNavigate();
   const [lesson, setLesson] = useState({});
@@ -31,6 +32,10 @@ const Lesson = () => {
   useEffect(() => {
     getLessonLessonNumber(lessonNumber);
   }, []);
+
+  const suggestClick = () => {
+    console.log("I am clicked");
+  }
 
   const getLessonLessonNumber = async (lessonNumber) => {
     try {
@@ -96,6 +101,7 @@ const Lesson = () => {
           <Navigate to='/404' replace />
         ) : (
           <>
+          <NotificationLayout handleSuggest={suggestClick}/>
             <LessonPage
               pageContent={lesson?.pages[currentPage - 1]?.contents}
             />
