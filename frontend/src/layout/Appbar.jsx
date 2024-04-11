@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { useAuth } from 'hooks/useAuth';
-import lionLogo from 'assets/lionlogo.png';
+import { useAuth } from "hooks/useAuth";
+import lionLogo from "assets/lionlogo.png";
 
-import { AppBar as MuiAppBar } from '@mui/material';
-import { Box } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import { Button, ListItemIcon, useTheme } from '@mui/material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
+import { AppBar as MuiAppBar } from "@mui/material";
+import { Box } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import { Button, ListItemIcon, useTheme } from "@mui/material";
+import Menu from "@mui/material/Menu";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import MenuItem from "@mui/material/MenuItem";
+import Toolbar from "@mui/material/Toolbar";
+import Badge from "@mui/material/Badge";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
-import LogoutIcon from '@mui/icons-material/Logout';
-import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
 
 const Appbar = () => {
   const { user, logout } = useAuth();
@@ -30,7 +33,7 @@ const Appbar = () => {
   };
 
   const handleNavigateToDashboard = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleCloseUserMenu = () => {
@@ -38,7 +41,7 @@ const Appbar = () => {
   };
 
   const handleProfile = () => {
-    navigate('/profile');
+    navigate("/profile");
     handleCloseUserMenu();
   };
 
@@ -50,73 +53,93 @@ const Appbar = () => {
   return (
     // TODO: change color to palette color
     <MuiAppBar
-      variant='outlined'
+      variant="outlined"
       elevation={0}
-      position='static'
+      position="static"
       sx={{
         background: theme.palette.white.main,
-        borderBottom: '1px dashed #e0e0e0'
-      }}>
+        borderBottom: "1px dashed #e0e0e0",
+      }}
+    >
       <Toolbar>
-        <Box display='flex' alignItems='center' flexGrow={1}>
+        <Box display="flex" alignItems="center" flexGrow={1}>
           <Box
             onClick={handleNavigateToDashboard}
-            display='flex'
-            alignItems='center'
+            display="flex"
+            alignItems="center"
             sx={{
-              cursor: 'pointer'
-            }}>
-            <img src={lionLogo} alt='lion logo' width='40' height='40' />
+              cursor: "pointer",
+            }}
+          >
+            <img src={lionLogo} alt="lion logo" width="40" height="40" />
             <Typography
-              display={{ xs: 'none', sm: 'flex' }}
-              variant='h6'
-              component='div'
+              display={{ xs: "none", sm: "flex" }}
+              variant="h6"
+              component="div"
               sx={{
                 ml: 2,
-                color: theme.palette.getContrastText(theme.palette.white.main)
-              }}>
+                color: theme.palette.getContrastText(theme.palette.white.main),
+              }}
+            >
               Technopreneurship
             </Typography>
           </Box>
         </Box>
+        <IconButton
+          sx={{
+            paddingRight: "60px",
+            display: "inline",
+            transition: "transform 0.3s ease", // Smooth transition
+            "&:hover": {
+              backgroundColor: "transparent",
+              transform: "scale(1.1)", // 10% larger
+            },
+          }}
+        >
+          <Badge badgeContent={4} color="error">
+            <NotificationsOutlinedIcon sx={{ fontSize: 28 }} />{" "}
+          </Badge>
+        </IconButton>
         <Box flexGrow={0}>
-          <Tooltip title='Open Settings'>
+          <Tooltip title="Open Settings">
             <Button
               onClick={handleOpenUserMenu}
-              size='large'
-              aria-controls={open ? 'account-menu' : undefined}
-              aria-haspopup='true'
-              aria-expanded={open ? 'true' : undefined}>
+              size="large"
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
               <Typography sx={{ mr: 1 }}>{user?.first_name}</Typography>
               <Avatar>{user?.first_name?.charAt(0).toUpperCase()}</Avatar>
             </Button>
           </Tooltip>
           <Menu
             sx={{
-              mt: 4.5
+              mt: 4.5,
             }}
             anchorEl={anchorElUser}
             anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
+              vertical: "top",
+              horizontal: "right",
             }}
             transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
+              vertical: "top",
+              horizontal: "right",
             }}
             keepMounted
             open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}>
+            onClose={handleCloseUserMenu}
+          >
             {/* TODO: Add Profile Navigation Handling  */}
             <MenuItem onClick={handleProfile}>
               <ListItemIcon>
-                <PersonIcon fontSize='small' />
+                <PersonIcon fontSize="small" />
               </ListItemIcon>
               Profile
             </MenuItem>
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>
-                <LogoutIcon fontSize='small' />
+                <LogoutIcon fontSize="small" />
               </ListItemIcon>
               Logout
             </MenuItem>
