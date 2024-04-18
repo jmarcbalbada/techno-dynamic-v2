@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useAuth } from "hooks/useAuth";
 import lionLogo from "assets/lionlogo.png";
-
 import { AppBar as MuiAppBar } from "@mui/material";
 import { Box } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
@@ -16,13 +14,14 @@ import Badge from "@mui/material/Badge";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
+import NotificationMessageLayout from "../pages/Notification/NotificationMessageLayout";
 
 const Appbar = () => {
   const { user, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -32,8 +31,8 @@ const Appbar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleNavigateToDashboard = () => {
-    navigate("/");
+  const notifIsFinallyClose = (isClosed) => {
+    setShowNotification(!isClosed);
   };
 
   const handleCloseUserMenu = () => {
@@ -50,8 +49,15 @@ const Appbar = () => {
     handleCloseUserMenu();
   };
 
+  const handleNotificationClick = () => {
+    setShowNotification(!showNotification);
+  };
+
+  const handleNavigateToDashboard = () => {
+    navigate("/");
+  };
+
   return (
-    // TODO: change color to palette color
     <MuiAppBar
       variant="outlined"
       elevation={0}
@@ -59,6 +65,7 @@ const Appbar = () => {
       sx={{
         background: theme.palette.white.main,
         borderBottom: "1px dashed #e0e0e0",
+        position: "relative", // Ensure relative positioning
       }}
     >
       <Toolbar>
@@ -85,21 +92,32 @@ const Appbar = () => {
             </Typography>
           </Box>
         </Box>
-        <IconButton
-          sx={{
-            paddingRight: "60px",
-            display: "inline",
-            transition: "transform 0.3s ease", // Smooth transition
-            "&:hover": {
-              backgroundColor: "transparent",
-              transform: "scale(1.1)", // 10% larger
-            },
-          }}
-        >
-          <Badge badgeContent={4} color="error">
-            <NotificationsOutlinedIcon sx={{ fontSize: 28 }} />{" "}
-          </Badge>
-        </IconButton>
+        {user.role === "teacher" && (
+          <div style={{ position: "relative" }}>
+            <IconButton
+              sx={{
+                paddingRight: "60px",
+                display: "inline",
+                transition: "transform 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "transparent",
+                  transform: "scale(1.1)",
+                },
+              }}
+              onClick={handleNotificationClick}
+            >
+              <Badge badgeContent={4} color="error">
+                <NotificationsOutlinedIcon sx={{ fontSize: 28 }} />
+              </Badge>
+            </IconButton>
+            {showNotification && (
+              <NotificationMessageLayout
+                onClick={handleNotificationClick} // Pass the onclick event
+                closedFinally={notifIsFinallyClose}
+              />
+            )}
+          </div>
+        )}
         <Box flexGrow={0}>
           <Tooltip title="Open Settings">
             <Button
@@ -130,7 +148,6 @@ const Appbar = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {/* TODO: Add Profile Navigation Handling  */}
             <MenuItem onClick={handleProfile}>
               <ListItemIcon>
                 <PersonIcon fontSize="small" />

@@ -28,6 +28,7 @@ class ChatBotController(GenericViewSet):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def chatbot_response(self, request, lesson_id, lesson_content_id):
+        print(self.openai_api_key)
         print("request",request.data)
         print("lesson id = ", lesson_id)
         print("lesson content id = ", lesson_content_id)

@@ -19,6 +19,7 @@ import Profile from 'pages/Profile/Profile';
 import Query from 'pages/Query/Query';
 import ProtectedLayout from 'hocs/ProtectedLayout';
 import Register from 'pages/Register/Register';
+import SuggestContent from './pages/SuggestedContent/SuggestContent';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,7 +29,8 @@ export const router = createBrowserRouter(
 
       <Route element={<ProtectedLayout />}>
         <Route index path='/' element={<Dashboard />} />
-        <Route path='/lessons/:lessonNumber/:pageNumber' element={<Lesson />} />
+        <Route path='/lessons/:lessonNumber/:pageNumber/:isNotif?/:isInsight?' element={<Lesson />} />
+        <Route path='/suggest/:lessonNumber/:pageNumber' element={<SuggestContent />} />
         <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/create' element={<Create />} />
