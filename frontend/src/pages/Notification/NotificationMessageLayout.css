@@ -1,0 +1,11 @@
+/* NotificationMessageLayout.css */
+
+.notification-popup {
+    position: absolute;
+    top: 40px; 
+    right: 10px; 
+    z-index: 1000; /* Ensure the popup appears above other content */
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+  }
+  

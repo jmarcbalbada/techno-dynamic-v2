@@ -3,10 +3,12 @@ import { Typography, Box, Button } from "@mui/material";
 import Diversity3OutlinedIcon from "@mui/icons-material/Diversity3Outlined";
 import ManageSearchOutlinedIcon from "@mui/icons-material/ManageSearchOutlined";
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
+import { useTheme } from "@mui/material";
 
-function NotificationLayout( { handleSuggest }) {
+function NotificationLayout( { handleSuggest, handleInsight }) {
   // Darken the color manually
   const darkerColor = "#e6b800"; // Adjust the color as needed
+  const theme = useTheme();
 
   return (
     <Box
@@ -20,7 +22,7 @@ function NotificationLayout( { handleSuggest }) {
         borderRadius: "5px",
         bgcolor: "#4c80d4",
         height: "fit-content",
-        marginBottom: "2%",
+        marginBottom: "3%",
       }}
     >
       <div
@@ -49,13 +51,14 @@ function NotificationLayout( { handleSuggest }) {
             variant="contained"
             color="primary"
             sx={{
-              backgroundColor: "#ffcc00",
+              backgroundColor: theme.palette.secondary.rusty,
               "&:hover": {
                 backgroundColor: darkerColor,
               },
               textTransform: "none", // Set text to normal case
               paddingRight: "10px", // Add padding to the right of the icon
             }}
+            onClick={handleInsight}
           >
             <ManageSearchOutlinedIcon sx={{ marginRight: "10px" }} />
             View Insights

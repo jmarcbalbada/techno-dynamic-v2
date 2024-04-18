@@ -8,14 +8,19 @@ const AppTheme = createTheme({
       main: '#1b5e20'
     },
     secondary: {
-      main: '#cfd8dc'
+      main: '#cfd8dc',
+      rusty: '#ffcc00',
     },
     white: {
       main: '#fff',
       contrastText: '#000'
     },
     background: {
-      default: '#f9fafb'
+      darker: "#cfd0d1",
+      default: '#f9fafb',
+      neutral: "#4c80d4",
+      lighterneutral: "#bfcfe9",
+      danger: "#961e1e",
     },
     textfield: {
       main: '#204045'
