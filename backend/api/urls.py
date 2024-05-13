@@ -104,7 +104,7 @@ urlpatterns = [
     path('lessons/<int:lesson_id>/pages/', LessonContentsController.as_view(lesson_contents_actions)),
     path('lessons/<int:lesson_id>/pages/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions)),
     # path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response', 'get': 'testing'})),
-    path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/chatbot/', ChatBotController.as_view({'post': 'testing'})),
+    path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response'})),
 
     path('queries/', QueryController.as_view(query_actions)),
     path('queries/<int:pk>/', QueryController.as_view(query_detail_actions)),
