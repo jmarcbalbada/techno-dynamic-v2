@@ -1,6 +1,6 @@
 import json
 import requests
-from litellm import completion
+# from litellm import completion
 # from openai import OpenAI
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.conf import settings
