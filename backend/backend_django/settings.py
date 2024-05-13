@@ -166,5 +166,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'api.CustomUser'
 
 # OpenAI API Key
-OPENAI_API_KEY = config('OPENAI_API_KEY', default='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')
+OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
 OLLAMA_API_KEY = config('OLLAMA_API_KEY', default='llama2')
