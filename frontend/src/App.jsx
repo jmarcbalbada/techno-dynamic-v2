@@ -12,6 +12,7 @@ import Dashboard from 'pages/Dashboard/Dashboard';
 import Edit from 'pages/Edit/Edit';
 import Forbid from 'pages/Forbid/Forbid';
 import Lesson from 'pages/Lesson/Lesson';
+import RevertContent from './pages/SuggestedContent/RevertContent';
 import LessonEnd from './pages/Lesson/LessonEnd';
 import Login from 'pages/Login/Login';
 import NotFound from 'pages/NotFound/NotFound';
@@ -34,6 +35,7 @@ export const router = createBrowserRouter(
         <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/create' element={<Create />} />
+          <Route path='/lessons/:lessonNumber/:pageNumber/rvContent' element={<RevertContent />} />
           <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
           <Route path='/queries' element={<Query />} />
         </Route>

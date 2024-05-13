@@ -106,7 +106,7 @@ const Appbar = () => {
               }}
               onClick={handleNotificationClick}
             >
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={1} color="error">
                 <NotificationsOutlinedIcon sx={{ fontSize: 28 }} />
               </Badge>
             </IconButton>

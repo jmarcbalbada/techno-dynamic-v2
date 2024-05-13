@@ -37,28 +37,37 @@ const SuggestContent = () => {
 <h2>Key Concepts:</h2>
 <ol>
   <li>
-    <h3>What is Market Segmentation?</h3>
+    <b><h3>What is Market Segmentation?</h3></b>
     <p>Market segmentation divides a market into distinct groups with different needs, preferences, or characteristics. Types include demographic, geographic, psychographic, and behavioral segmentation.</p>
   </li>
   <li>
-    <h3>Importance of Market Segmentation:</h3>
+  <b><h3>Importance of Market Segmentation:</h3></b>
     <p>It allows customization of products/services, efficient resource allocation, competitive advantage, and identifies new market opportunities.</p>
   </li>
   <li>
-    <h3>Process of Market Segmentation:</h3>
+  <b><h3>Process of Market Segmentation:</h3></b>
     <p>Research, segmentation, targeting, and positioning are key steps in market segmentation.</p>
   </li>
   <li>
-    <h3>Examples of Market Segmentation:</h3>
+  <b><h3>Examples of Market Segmentation:</h3></b>
     <p>E-commerce platforms, SaaS companies, and social media platforms utilize market segmentation for personalized experiences and targeted advertising.</p>
   </li>
   <li>
-    <h3>Challenges and Considerations:</h3>
+  <b><h3>Challenges and Considerations:</h3></b>
     <p>Data privacy, market dynamics, and over-segmentation are challenges to consider when implementing market segmentation strategies.</p>
   </li>
 </ol>
 <h2>Conclusion:</h2>
 <p>Market segmentation empowers technopreneurs to understand customers deeply and cater to their needs effectively, driving innovation and sustainable business growth in today's dynamic marketplace.</p>`;
+
+  const handleAccept = () => {
+    console.log("clicked accept");
+    navigate(`/lessons/${lessonNumber}/${pageNumber}/rvContent`);
+  };
+
+  const handleIgnore = () => {
+    console.log("clicked ignore");
+  };
 
   useEffect(() => {
     getLessonLessonNumber(lessonNumber);
@@ -145,7 +154,7 @@ const SuggestContent = () => {
             paddingRight: "10px", // Add padding to the right of the icon
             borderRadius: "20px",
           }}
-          // onClick={handleInsight}
+          onClick={handleIgnore}
         >
           <CloseIcon sx={{ marginRight: "10px" }} />
           Ignore
@@ -159,7 +168,7 @@ const SuggestContent = () => {
             paddingRight: "10px", // Add padding to the right of the icon
             borderRadius: "20px",
           }}
-          // onClick={handleSuggest}
+          onClick={handleAccept}
         >
           <CheckIcon sx={{ marginRight: "10px" }} />
           Accept
@@ -168,7 +177,9 @@ const SuggestContent = () => {
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box
           sx={{
-            height: "fit-content",
+            // height: "fit-content",
+            height: "800px",
+            overflowY: "auto",
             width: "49%",
             paddingLeft: "1%",
             paddingRight: "1%",
@@ -206,7 +217,9 @@ const SuggestContent = () => {
         </Box>
         <Box
           sx={{
-            height: "fit-content",
+            // height: "fit-content",
+            height: "800px",
+            overflowY: "auto",
             width: "49%",
             paddingLeft: "1%",
             paddingTop: "1%",
