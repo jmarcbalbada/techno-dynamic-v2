@@ -26,7 +26,7 @@ const LessonCard = (props) => {
   const navigate = useNavigate();
 
   const handleLessonClick = () => {
-    navigate(`/lessons/${lessonNumber}/1/false`);
+    navigate(`/lessons/${lessonNumber}/1/false/${id}`);
   };
 
   const handleEditClick = () => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LessonsService } from "apis/LessonsService";
+import { SuggestionService } from "apis/SuggestionService";
 import {
   useParams,
   useNavigate,
@@ -20,14 +21,19 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
 const SuggestContent = () => {
-  const { lessonNumber, pageNumber } = useParams();
+  const { lessonNumber, pageNumber, lessonID } = useParams();
   const navigate = useNavigate();
   const [lesson, setLesson] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [totalPage, setTotalPage] = useState(0);
   const [allContents, setAllContents] = useState("");
+  const [suggestedContents, setSuggestedContents] = useState([]);
   const theme = useTheme();
+  const currID = parseInt(lessonID)
+
+  const temp = String(suggestedContents);
+  const finalSuggestContent = temp.replace('2. ', '');
 
   const tempSuggestedContent = `<div data-youtube-video="">
   <iframe width="640" height="360" src="https://www.youtube.com/embed/wFxIzCtw8QU" frameborder="0" allowfullscreen></iframe>
@@ -71,6 +77,7 @@ const SuggestContent = () => {
 
   useEffect(() => {
     getLessonLessonNumber(lessonNumber);
+    getSuggestionContent();
   }, []);
 
   const getLessonLessonNumber = async (lessonNumber) => {
@@ -93,6 +100,18 @@ const SuggestContent = () => {
       setIsError(true);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const getSuggestionContent = async () => {
+    try {
+      const response = await SuggestionService.create_suggestion(currID);
+      setSuggestedContents(response.data.content);
+      console.log("response.data.content", response.data.content);
+    } catch (error) {
+      console.log("error", error);
+      setIsError(true);
+    } finally {
     }
   };
 
@@ -253,7 +272,8 @@ const SuggestContent = () => {
               Suggested Content
             </Typography>
           </Box>
-          <LessonPage pageContent={tempSuggestedContent} />
+          {/* <LessonPage pageContent={tempSuggestedContent} /> */}
+          <LessonPage pageContent={finalSuggestContent} />
         </Box>
       </Box>
     </Container>

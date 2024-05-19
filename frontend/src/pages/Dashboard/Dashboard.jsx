@@ -15,22 +15,46 @@ import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import NotificationMessageLayout from "../Notification/NotificationMessageLayout";
+import { FaqService } from "../../apis/FaqService";
 
 const Dashboard = () => {
   useTitle("Dashboard");
   const { user } = useAuth();
   const [lessons, setLessons] = useState([]);
+  const [faq, setFaq] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     getLessons();
+    // getFaq();
   }, []);
+
+  // useEffect(() => {
+  //   if (faq.length > 0) {
+  //     faq.forEach(f => {
+  //       console.log("id", f.faq_id);
+  //       console.log("questions", f.questions);
+  //       console.log("count", f.question_count);
+  //     });
+  //   }
+  // }, [faq]);
 
   const getLessons = async () => {
     try {
       const response = await LessonsService.list();
       if (response) {
         setLessons(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getFaq = async () => {
+    try {
+      const response = await FaqService.count_faq();
+      if (response) {
+        setFaq(response.data);
       }
     } catch (error) {
       console.log(error);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "hooks/useAuth";
 import lionLogo from "assets/lionlogo.png";
@@ -17,15 +17,36 @@ import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationMessageLayout from "../pages/Notification/NotificationMessageLayout";
+import { NotificationService } from "../apis/NotificationService";
 
 const Appbar = () => {
   const { user, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
+  const [unreadNotif, setUnreadNotif] = useState([]);
   const navigate = useNavigate();
   const theme = useTheme();
 
   const open = Boolean(anchorElUser);
+
+  useEffect(() => {
+    if (user.role === "teacher") {
+      getUnreadNotifications();
+    }
+  }, []);
+
+  const getUnreadNotifications = async () => {
+    try {
+      const response = await NotificationService.getUnreadNotif();
+      setUnreadNotif(response.data);
+      // console.log("response.data = ", response.data);
+      // console.log("unreadNotif = ", unreadNotif);
+    } catch (error) {
+      // console.log("error", error);
+    } finally {
+      // close
+    }
+  };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -114,6 +135,7 @@ const Appbar = () => {
               <NotificationMessageLayout
                 onClick={handleNotificationClick} // Pass the onclick event
                 closedFinally={notifIsFinallyClose}
+                unreadNotif={unreadNotif}
               />
             )}
           </div>

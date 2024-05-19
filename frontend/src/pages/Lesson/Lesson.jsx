@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import { LessonsService } from "apis/LessonsService";
+import { SuggestionService } from "apis/SuggestionService";
 import LessonPage from "components/lessonpage/LessonPage";
 import FooterControls from "components/lessonpage/FooterControls";
 import FilesModal from "components/lessonpage/FilesModal";
@@ -14,15 +15,17 @@ import ChatbotDialog from "components/lessonpage/ChatbotDialog";
 import { Box } from "@mui/material";
 import Container from "@mui/material/Container";
 import Fab from "@mui/material/Fab";
+import { useAuth } from "../../hooks/useAuth";
 
 import ChatIcon from "@mui/icons-material/Chat";
 import NotificationLayout from "../Notification/NotificationLayout";
 import InsightLayout from "../Insight/InsightLayout";
 
 const Lesson = () => {
-  const { lessonNumber, pageNumber, isNotif, isInsight } = useParams();
+  const { lessonNumber, pageNumber, isNotif, isInsight, lessonID } =
+    useParams();
   const convertInsight = isInsight === "true";
-  const [insight,setInsight] = useState(convertInsight)
+  const [insight, setInsight] = useState(convertInsight);
   const notif = isNotif === "true";
   const navigate = useNavigate();
   const [lesson, setLesson] = useState({});
@@ -31,11 +34,17 @@ const Lesson = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [lessonInsights, setLessonInsights] = useState([]);
+  const { user } = useAuth();
+  // const currID = parseInt(lessonID);
+  const currID = parseInt(lessonID);
+  // const [lessonId, setLessonId] = useState(lessonID);
 
   useEffect(() => {
-    console.log("isNotif", notif);
-    console.log("isInsight", isInsight);
+    // console.log("isNotif", notif);
+    // console.log("isInsight", isInsight);
     getLessonLessonNumber(lessonNumber);
+    console.log("LESSONID", currID);
   }, []);
 
   // useEffect(() => {
@@ -45,25 +54,41 @@ const Lesson = () => {
 
   const suggestClick = () => {
     console.log("suggest clicked");
-    navigate(`/suggest/${lessonNumber}/1/`);
+    navigate(`/suggest/${lessonNumber}/1/${currID}`);
   };
 
   const insightClicked = () => {
-    // console.log("insight clicked");
-    // console.log("insight before", insight);
+    console.log("insight clicked");
+    getSuggestionInsights(currID);
     setInsight(true);
-    // console.log("insight after", insight);
   };
 
   const getLessonLessonNumber = async (lessonNumber) => {
     try {
       const response = await LessonsService.getByLessonNumber(lessonNumber);
       setLesson(response.data);
+      // setLessonId(response.data.id);
+      console.log("lesson ids ", response.data.id);
       console.log("response.data", response.data);
+
+      console.log("lessonID", currID);
     } catch (error) {
+      console.log("error", error);
       setIsError(true);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const getSuggestionInsights = async () => {
+    try {
+      const response = await SuggestionService.create_suggestion(currID);
+      setLessonInsights(response.data.insights);
+      console.log("response.data", response.data);
+    } catch (error) {
+      console.log("error", error);
+      setIsError(true);
+    } finally {
     }
   };
 
@@ -117,18 +142,26 @@ const Lesson = () => {
         {isLoading ? (
           <div>Loading...</div>
         ) : isError ? (
-          <Navigate to="/404" replace />
+          <div>error</div>
         ) : (
+          // <Navigate to="/404" replace />
           <>
-            {(notif && !insight) && (
-              <NotificationLayout 
-              handleSuggest={suggestClick}
-              handleInsight={insightClicked}
-               />
+            {notif && !insight && user.role == "teacher" && (
+              <NotificationLayout
+                handleSuggest={suggestClick}
+                handleInsight={() => insightClicked(currID)}
+              />
             )}
-            { insight && ( <InsightLayout handleSuggest={suggestClick}/>)
-
-            }
+            {insight && (
+              <InsightLayout
+                handleSuggest={suggestClick}
+                sampleContentReal={
+                  lessonInsights.length > 0
+                    ? lessonInsights
+                    : "Loading please wait..."
+                }
+              />
+            )}
             <LessonPage
               pageContent={lesson?.pages[currentPage - 1]?.contents}
             />

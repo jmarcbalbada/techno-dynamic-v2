@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 # Load environment variables from .env file
 
+from api.models import Faq, Suggestion
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
 from api.model.Query import Query
@@ -148,9 +149,35 @@ class ChatBotController(GenericViewSet):
             new_query.save()
             new_query.add_subquery(subquery)
 
+        # try:
+        #     faq = Faq.objects.get(lesson=lesson)
+        #     print("query", faq)
+        #     # Append new question to the existing FAQ questions
+        #     updated_question = f"{faq.question}\n{user_message}"
+        #     faq.question = updated_question
+        #     faq.save()
+        #     print("newQuery", faq.question)
+        # except Faq.DoesNotExist:
+        #     # Handle the case where no FAQ exists for the lesson
+        #     print("No FAQ found for the lesson")
+
+        # Use get_or_create to either retrieve or create the FAQ
+        faq, created = Faq.objects.get_or_create(lesson=lesson, defaults={'question': ''})
+
+        if created:
+            print("FAQ created for the lesson")
+        else:
+            print("FAQ retrieved for the lesson")
+
+        # Append the new question to the existing FAQ questions
+        updated_question = f"{faq.question}\n{user_message}"
+        faq.question = updated_question
+        faq.save()
+        print("Updated FAQ:", faq.question)
+
         return JsonResponse({"response": ai_response})
     
-    def testing(self, request, lesson_id, lesson_content_id):
+    def llama_model(self, request, lesson_id, lesson_content_id):
         # Authenticate user
         # if not request.user.is_authenticated:
         #     return JsonResponse({"error": "User is not authenticated"}, status=401)
