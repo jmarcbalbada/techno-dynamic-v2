@@ -3,19 +3,38 @@ import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material";
 import BuildCircleIcon from "@mui/icons-material/BuildCircle";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import "./NotificationMessageLayout.css";
+import { LessonsService } from "../../apis/LessonsService";
+import { format } from "date-fns"; // Import date-fns for date formatting
 
-const NotificationMessageLayout = ({ closedFinally }) => {
+const NotificationMessageLayout = ({ closedFinally, unreadNotif }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const lessonNumber = 1; // temporary
 
-  const handleNotificationLessonClick = () => {
+  const handleNotificationLessonClick = (lessonNumber, lessonID) => {
+    console.log("lessonID notif", lessonID);
     console.log("Clicked here");
     closedFinally(true);
-    navigate(`/lessons/${lessonNumber}/1/true`);
-  }
+    navigate(`/lessons/${lessonNumber}/1/true/${lessonID}`);
+    window.location.reload();
+    // if (reloadPage) {
+    //   window.location.reload();
+    // }
+  };
+
+  const fetchLessonNumber = async (lessonId, event) => {
+    try {
+      const response = await LessonsService.getById(lessonId);
+      const lessonNum = response.data;
+      console.log("lesson num", lessonNum);
+      handleNotificationLessonClick(lessonNum.lessonNumber, lessonNum.id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log("unread", unreadNotif);
 
   return (
     <div className="notification-popup">
@@ -36,71 +55,70 @@ const NotificationMessageLayout = ({ closedFinally }) => {
             fontSize: "20px",
             fontWeight: "600",
             marginBottom: "8px",
-            color: theme.palette.textfield.main
+            color: theme.palette.textfield.main,
           }}
         >
           Notification
         </Typography>
-        <Box
-          sx={{
-            backgroundColor: theme.palette.white.main,
-            height: "40%",
-            marginTop: "5px",
-            width: "93%",
-            borderRadius: theme.spacing(1),
-            display: "flex",
-            position: "relative",
-            marginLeft: "15px",
-            cursor: "pointer",
-          }}
-          onClick={handleNotificationLessonClick}
-        >
-          <BuildCircleIcon
+        {unreadNotif.map((notif) => (
+          <Box
+            key={notif.notif_id}
             sx={{
-              color: theme.palette.background.neutral,
-              fontSize: "45px",
-              marginTop: "3%",
-              marginLeft: "1%",
-            }}
-          />
-          <Typography
-            sx={{
-              marginTop: "3%",
-              marginLeft: "2%",
-              //   width: "calc(80% - 30px)",
-              width: "80%",
-              height: "60%",
-              fontSize: "14px",
-              color: theme.palette.textfield.main,
-              // backgroundColor: "gray",
-            }}
-          >
-            Your <b>Introduction</b> lesson has an AI content suggestion based
-            on FAQ’s from students!
-          </Typography>
-          <MoreHorizIcon
-            sx={{
-              marginTop: "7%",
-              fontSize: "17px",
+              backgroundColor: theme.palette.white.main,
+              height: "50%",
+              marginTop: "5px",
+              width: "93%",
+              borderRadius: theme.spacing(1),
+              display: "flex",
+              position: "relative",
+              marginLeft: "15px",
               cursor: "pointer",
-              color: theme.palette.textfield.main,
             }}
-          />
-          <Typography
-            sx={{
-              position: "absolute",
-              bottom: "3px",
-              right: "12px",
-              fontSize: "9px",
-              fontWeight: "600",
-              color: theme.palette.primary.main,
-              // backgroundColor: "gray",
-            }}
+            // onClick={() => handleNotificationLessonClick(notif.lesson)}
+            onClick={() => fetchLessonNumber(notif.lesson)}
           >
-            March 10, 2024 at 5:30 PM
-          </Typography>
-        </Box>
-        
+            <BuildCircleIcon
+              sx={{
+                color: theme.palette.background.neutral,
+                fontSize: "45px",
+                marginTop: "3%",
+                marginLeft: "1%",
+              }}
+            />
+            <Typography
+              sx={{
+                marginTop: "3%",
+                marginLeft: "2%",
+                width: "80%",
+                height: "60%",
+                fontSize: "14px",
+                color: theme.palette.textfield.main,
+              }}
+            >
+              {notif.message}
+            </Typography>
+            {/* <MoreHorizIcon
+              sx={{
+                marginTop: "7%",
+                fontSize: "17px",
+                cursor: "pointer",
+                color: theme.palette.textfield.main,
+              }}
+            /> */}
+            <Typography
+              sx={{
+                position: "absolute",
+                bottom: "3px",
+                right: "12px",
+                fontSize: "9px",
+                fontWeight: "600",
+                color: theme.palette.primary.main,
+              }}
+            >
+              {format(new Date(notif.date_created), "MMMM d, yyyy 'at' h:mm a")}
+            </Typography>
+          </Box>
+        ))}
       </Box>
     </div>
   );
