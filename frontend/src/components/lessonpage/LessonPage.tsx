@@ -11,7 +11,7 @@ const LessonPage = (props) => {
 
   useEffect(() => {
     if (pageContent === null || pageContent === undefined) {
-      navigate('/404');
+      // navigate('/404');
     }
   }, []);
 
