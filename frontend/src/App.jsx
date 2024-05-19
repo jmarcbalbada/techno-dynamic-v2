@@ -30,11 +30,12 @@ export const router = createBrowserRouter(
 
       <Route element={<ProtectedLayout />}>
         <Route index path='/' element={<Dashboard />} />
-        <Route path='/lessons/:lessonNumber/:pageNumber/:isNotif?/:isInsight?' element={<Lesson />} />
-        <Route path='/suggest/:lessonNumber/:pageNumber' element={<SuggestContent />} />
+        <Route path='/lessons/:lessonNumber/:pageNumber/:isNotif?/:lessonID/:isInsight?' element={<Lesson />} />
+        {/* <Route path='/suggest/:lessonNumber/:pageNumber' element={<SuggestContent />} /> */}
         <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/create' element={<Create />} />
+          <Route path='/suggest/:lessonNumber/:pageNumber/:lessonID' element={<SuggestContent />} />
           <Route path='/lessons/:lessonNumber/:pageNumber/rvContent' element={<RevertContent />} />
           <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
           <Route path='/queries' element={<Query />} />

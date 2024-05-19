@@ -10,6 +10,7 @@ from .controllers.ImageMediaController import ImageMediaController
 from .controllers.FileController import FileController
 from .controllers.FaqController import FaqController
 from .controllers.SuggestionController import SuggestionController
+from .controllers.NotificationController import NotificationController
 
 
 lesson_actions = {
@@ -83,12 +84,12 @@ faq_detail_actions = {
     'post': 'create_faqs_from_subqueries',
 }
 
-# suggestion_detail_actions = {
-#     'get': 'get_suggestions_by_lesson_id',
-#     'post': 'createSuggestion',
-#     'put': 'updateSuggestion',
-#     'delete': 'deleteSuggestion',
-# }
+suggestion_detail_actions = {
+    # 'get': 'get_suggestions_by_lesson_id',
+    'post': 'createSuggestion',
+    # 'put': 'updateSuggestion',
+    # 'delete': 'deleteSuggestion',
+}
 
 urlpatterns = [
     # Paths
@@ -133,11 +134,15 @@ urlpatterns = [
     path('lessons', LessonController.as_view({'get': 'findLessonbyLessonNumber'})),
 
     # Faq
+    path('faq/count_faq', FaqController.as_view({'get': 'get_count_faq_questions_all'})),
     path('faq/<int:lesson_id>/', FaqController.as_view(faq_detail_actions)),
 
+    # Notification
+    path('notification/getUnread', NotificationController.as_view({'get': 'get_all_unread_notif'})),
 
     # Suggestions
-    path('suggestions/', SuggestionController.as_view({'get': 'list', 'post': 'create'})),
+    # path('suggestions/', SuggestionController.as_view({'get': 'list', 'post': 'create'})),
+    path('suggestions/', SuggestionController.as_view(suggestion_detail_actions)),
 
     # Retrieve, update, and delete a specific suggestion
     path('suggestions/<int:pk>/', SuggestionController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
