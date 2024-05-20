@@ -34,6 +34,7 @@ const SuggestContent = () => {
 
   const temp = String(suggestedContents);
   const finalSuggestContent = temp.replace('2. ', '');
+  // const finalSuggestContent2 = finalSuggestContent.replace('Enhanced Lesson Content:', '');
 
   const tempSuggestedContent = `<div data-youtube-video="">
   <iframe width="640" height="360" src="https://www.youtube.com/embed/wFxIzCtw8QU" frameborder="0" allowfullscreen></iframe>
@@ -67,12 +68,25 @@ const SuggestContent = () => {
 <p>Market segmentation empowers technopreneurs to understand customers deeply and cater to their needs effectively, driving innovation and sustainable business growth in today's dynamic marketplace.</p>`;
 
   const handleAccept = () => {
-    console.log("clicked accept");
-    navigate(`/lessons/${lessonNumber}/${pageNumber}/rvContent`);
+    // console.log("clicked accept");
+    handleNewContent();
+    navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`);
+  };
+
+  const handleNewContent = async ()  => {
+    try {
+      const response = await SuggestionService.accept_content(currID);
+      console.log("response", response.data)
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      // setIsLoading(false);
+    }
   };
 
   const handleIgnore = () => {
-    console.log("clicked ignore");
+    // console.log("clicked ignore");
+    navigate(`/`);
   };
 
   useEffect(() => {

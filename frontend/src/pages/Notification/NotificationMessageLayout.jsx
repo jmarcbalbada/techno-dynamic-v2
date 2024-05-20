@@ -13,28 +13,25 @@ const NotificationMessageLayout = ({ closedFinally, unreadNotif }) => {
   const navigate = useNavigate();
 
   const handleNotificationLessonClick = (lessonNumber, lessonID) => {
-    console.log("lessonID notif", lessonID);
-    console.log("Clicked here");
+    // console.log("lessonID notif", lessonID);
+    // console.log("Clicked here");
     closedFinally(true);
     navigate(`/lessons/${lessonNumber}/1/true/${lessonID}`);
     window.location.reload();
-    // if (reloadPage) {
-    //   window.location.reload();
-    // }
   };
 
   const fetchLessonNumber = async (lessonId, event) => {
     try {
       const response = await LessonsService.getById(lessonId);
       const lessonNum = response.data;
-      console.log("lesson num", lessonNum);
+      // console.log("lesson num", lessonNum);
       handleNotificationLessonClick(lessonNum.lessonNumber, lessonNum.id);
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log("unread", unreadNotif);
+  // console.log("unread", unreadNotif);
 
   return (
     <div className="notification-popup">
@@ -60,65 +57,70 @@ const NotificationMessageLayout = ({ closedFinally, unreadNotif }) => {
         >
           Notification
         </Typography>
-        {unreadNotif.map((notif) => (
-          <Box
-            key={notif.notif_id}
+        {unreadNotif.length === 0 ? (
+          <Typography
             sx={{
-              backgroundColor: theme.palette.white.main,
-              height: "50%",
-              marginTop: "5px",
-              width: "93%",
-              borderRadius: theme.spacing(1),
-              display: "flex",
-              position: "relative",
-              marginLeft: "15px",
-              cursor: "pointer",
+              paddingTop: "10px",
+              paddingLeft: "15px",
+              fontSize: "16px",
+              fontWeight: "500",
+              color: theme.palette.textfield.main,
             }}
-            // onClick={() => handleNotificationLessonClick(notif.lesson)}
-            onClick={() => fetchLessonNumber(notif.lesson)}
           >
-            <BuildCircleIcon
+            No notifications for now.
+          </Typography>
+        ) : (
+          unreadNotif.map((notif) => (
+            <Box
+              key={notif.notif_id}
               sx={{
-                color: theme.palette.background.neutral,
-                fontSize: "45px",
-                marginTop: "3%",
-                marginLeft: "1%",
-              }}
-            />
-            <Typography
-              sx={{
-                marginTop: "3%",
-                marginLeft: "2%",
-                width: "80%",
-                height: "60%",
-                fontSize: "14px",
-                color: theme.palette.textfield.main,
-              }}
-            >
-              {notif.message}
-            </Typography>
-            {/* <MoreHorizIcon
-              sx={{
-                marginTop: "7%",
-                fontSize: "17px",
+                backgroundColor: theme.palette.white.main,
+                height: "50%",
+                marginTop: "5px",
+                width: "93%",
+                borderRadius: theme.spacing(1),
+                display: "flex",
+                position: "relative",
+                marginLeft: "15px",
                 cursor: "pointer",
-                color: theme.palette.textfield.main,
               }}
-            /> */}
-            <Typography
-              sx={{
-                position: "absolute",
-                bottom: "3px",
-                right: "12px",
-                fontSize: "9px",
-                fontWeight: "600",
-                color: theme.palette.primary.main,
-              }}
+              onClick={() => fetchLessonNumber(notif.lesson)}
             >
-              {format(new Date(notif.date_created), "MMMM d, yyyy 'at' h:mm a")}
-            </Typography>
-          </Box>
-        ))}
+              <BuildCircleIcon
+                sx={{
+                  color: theme.palette.background.neutral,
+                  fontSize: "45px",
+                  marginTop: "3%",
+                  marginLeft: "1%",
+                }}
+              />
+              <Typography
+                sx={{
+                  marginTop: "3%",
+                  marginLeft: "2%",
+                  width: "80%",
+                  height: "60%",
+                  fontSize: "14px",
+                  color: theme.palette.textfield.main,
+                }}
+              >
+                {notif.message}
+              </Typography>
+              <Typography
+                sx={{
+                  position: "absolute",
+                  bottom: "3px",
+                  right: "12px",
+                  fontSize: "9px",
+                  fontWeight: "600",
+                  color: theme.palette.primary.main,
+                }}
+              >
+                {format(new Date(notif.date_created), "MMMM d, yyyy 'at' h:mm a")}
+              </Typography>
+            </Box>
+          ))
+        )}
       </Box>
     </div>
   );
