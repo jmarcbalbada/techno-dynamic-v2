@@ -69,9 +69,10 @@ const Appbar = () => {
   useEffect(() => {
     if (user.role === "teacher") {
       // Call getUnreadNotifications only when countNotif changes
-      if (countNotif > 0) {
-        getUnreadNotifications();
-      }
+      // if (countNotif > 0) {
+      //   getUnreadNotifications();
+      // }
+      getUnreadNotifications();
     }
   }, [countNotif]);
 
@@ -93,6 +94,7 @@ const Appbar = () => {
   const setAllToReadNotifications = async () => {
     try {
       const response = await NotificationService.markAllAsRead();
+      setCountNotif(0);
     } catch (error) {
       // console.log("error", error);
     } finally {
