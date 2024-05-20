@@ -7,4 +7,5 @@ const BASE_URL = `${config.API_URL}api/`;
 export const UsersService = {
   login: (credentials) => axios.post(`${BASE_URL}login/`, credentials),
   register: (registerDetails) => axios.post(`${BASE_URL}register/`, registerDetails),
+  getUserbyID: (user_id) => axios.get(`${BASE_URL}users/${user_id}`),
 };

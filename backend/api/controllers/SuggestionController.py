@@ -143,8 +143,86 @@ class SuggestionController(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def updateContent(self, request):
+        lesson_id = request.data.get('lesson_id')
+        print("lesson id = ", lesson_id)
+        if not lesson_id:
+            return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Fetch the Suggestion content based on the lesson_id
+            suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
+            if not suggestion:
+                return Response({"error": "No suggestion found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
+
+            new_content = suggestion.content
+            print("new content", new_content)
+
+            # Update the lesson with the new content
+            lesson = LessonContent.objects.get(lesson_id=lesson_id)
+            lesson.contents = new_content
+            lesson.save()
+            
+            return Response({"message": "Lesson content updated successfully"}, status=status.HTTP_200_OK)
+        except Lesson.DoesNotExist:
+            return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    # revert content
+    def updateRevertContent(self, request):
+        lesson_id = request.data.get('lesson_id')
+        print("lesson id = ", lesson_id)
+        if not lesson_id:
+            return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Fetch the Suggestion content based on the lesson_id
+            suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
+            if not suggestion:
+                return Response({"error": "No suggestion found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
+
+            old_content = suggestion.old_content
+            if not old_content:
+                return Response({"error": "No old content found in the suggestion"}, status=status.HTTP_404_NOT_FOUND)
+            print("old content", old_content)
+
+            # Update the LessonContent with the old content
+            lesson_content = LessonContent.objects.filter(lesson_id=lesson_id).first()
+            if not lesson_content:
+                return Response({"error": "Lesson content not found"}, status=status.HTTP_404_NOT_FOUND)
+            lesson_content.contents = old_content
+            lesson_content.save()
+            
+            return Response({"message": "Lesson content reverted successfully"}, status=status.HTTP_200_OK)
+        except LessonContent.DoesNotExist:
+            return Response({"error": "Lesson content not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
         instance = self.get_object()
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    # delete suggestion and faq related
+    def deleteSuggestionByLessonId(self, request):
+        lesson_id = request.data.get('lesson_id')
+        if not lesson_id:
+            return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Delete the Suggestion based on the lesson_id
+            suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
+            if not suggestion:
+                return Response({"error": "No suggestion found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
+            suggestion.delete()
+
+            # Delete the FAQs based on the lesson_id
+            faqs = Faq.objects.filter(lesson_id=lesson_id)
+            faqs.delete()
+            
+            return Response({"message": "Suggestion and FAQs deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

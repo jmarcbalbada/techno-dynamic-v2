@@ -18,27 +18,93 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import NotificationMessageLayout from "../pages/Notification/NotificationMessageLayout";
 import { NotificationService } from "../apis/NotificationService";
+import { UsersService } from "../apis/UsersService";
 
 const Appbar = () => {
   const { user, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   const [unreadNotif, setUnreadNotif] = useState([]);
+  const [countNotif, setCountNotif] = useState(0);
   const navigate = useNavigate();
   const theme = useTheme();
+  const [u_user, setU_user] = useState([]);
+  const opt_in = user.opt_in
 
   const open = Boolean(anchorElUser);
 
+  // useEffect(() => {
+  //   if (user.role === "teacher") {
+  //     getUnreadNotifications();
+  //     getCountUnreadNotifications();
+  //   }
+  // }, [countNotif, unreadNotif]);
+
   useEffect(() => {
     if (user.role === "teacher") {
-      getUnreadNotifications();
+      getCountUnreadNotifications();
     }
+    // console.log("userid", user.id)
   }, []);
+
+  useEffect(() => {
+    getUserViaId();
+    // console.log("u_user",u_user)
+  }, []);
+
+  const getUserViaId = async () => {
+    try {
+      const response = await UsersService.getUserbyID(user.id);
+      setU_user(response.data);
+      console.log("u_user",u_user)
+      // console.log("response.data = ", response.data);
+      // console.log("unreadNotif = ", unreadNotif);
+    } catch (error) {
+      // console.log("error", error);
+    } finally {
+      // close
+    }
+  };
+
+  useEffect(() => {
+    if (user.role === "teacher") {
+      // Call getUnreadNotifications only when countNotif changes
+      if (countNotif > 0) {
+        getUnreadNotifications();
+      }
+    }
+  }, [countNotif]);
+
+  
 
   const getUnreadNotifications = async () => {
     try {
       const response = await NotificationService.getUnreadNotif();
       setUnreadNotif(response.data);
+      // console.log("response.data = ", response.data);
+      // console.log("unreadNotif = ", unreadNotif);
+    } catch (error) {
+      // console.log("error", error);
+    } finally {
+      // close
+    }
+  };
+
+  const setAllToReadNotifications = async () => {
+    try {
+      const response = await NotificationService.markAllAsRead();
+    } catch (error) {
+      // console.log("error", error);
+    } finally {
+      // close
+    }
+  };
+
+  const getCountUnreadNotifications = async () => {
+    try {
+      const response = await NotificationService.getCountUnreadNotif();
+      setCountNotif(response.data.unread_count);
+      // console.log("Rresponse", response.data.unread_count)
       // console.log("response.data = ", response.data);
       // console.log("unreadNotif = ", unreadNotif);
     } catch (error) {
@@ -71,6 +137,7 @@ const Appbar = () => {
   };
 
   const handleNotificationClick = () => {
+    setAllToReadNotifications();
     setShowNotification(!showNotification);
   };
 
@@ -127,11 +194,11 @@ const Appbar = () => {
               }}
               onClick={handleNotificationClick}
             >
-              <Badge badgeContent={1} color="error">
+              <Badge badgeContent={countNotif} color="error">
                 <NotificationsOutlinedIcon sx={{ fontSize: 28 }} />
               </Badge>
             </IconButton>
-            {showNotification && (
+            {(showNotification) && (
               <NotificationMessageLayout
                 onClick={handleNotificationClick} // Pass the onclick event
                 closedFinally={notifIsFinallyClose}

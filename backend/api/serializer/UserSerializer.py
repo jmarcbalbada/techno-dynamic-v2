@@ -4,7 +4,7 @@ from ..models import CustomUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'role']
+        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'role', 'opt_in']
         extra_kwargs = {
             'password': {'write_only': True},
             'role': {'allow_blank': False}

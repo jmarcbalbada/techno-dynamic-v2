@@ -25,6 +25,7 @@ class CustomUser(AbstractUser):
     ]
 
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=STUDENT)
+    opt_in = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'user'
@@ -35,6 +36,13 @@ class CustomUser(AbstractUser):
 
     def get_short_name(self):
         return self.first_name
+    
+    def get_opt_in(self):
+        return self.opt_in
+    
+    def set_opt_in(self, new_opt_in):
+        self.opt_in = new_opt_in
+        self.save()  # Save the instance to update the database
 
     def __str__(self):
         return self.username
