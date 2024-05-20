@@ -84,10 +84,23 @@ faq_detail_actions = {
     'post': 'create_faqs_from_subqueries',
 }
 
+notification_detail_actions = {
+    'get': 'get_all_count_unread_notif',
+    'delete': 'deleteNotification',
+    'put': 'mark_all_as_read',
+}
+
 suggestion_detail_actions = {
     # 'get': 'get_suggestions_by_lesson_id',
     'post': 'createSuggestion',
-    # 'put': 'updateSuggestion',
+    'put': 'updateContent',
+    'delete': 'deleteSuggestionByLessonId',
+}
+
+suggestion_revert_actions = {
+    # 'get': 'get_suggestions_by_lesson_id',
+    # 'post': 'createSuggestion',
+    'put': 'updateRevertContent',
     # 'delete': 'deleteSuggestion',
 }
 
@@ -138,11 +151,13 @@ urlpatterns = [
     path('faq/<int:lesson_id>/', FaqController.as_view(faq_detail_actions)),
 
     # Notification
-    path('notification/getUnread', NotificationController.as_view({'get': 'get_all_unread_notif'})),
+    path('notification/getUnread', NotificationController.as_view({'get': 'get_all_notification'})),
+    path('notification/', NotificationController.as_view(notification_detail_actions)),
 
     # Suggestions
     # path('suggestions/', SuggestionController.as_view({'get': 'list', 'post': 'create'})),
     path('suggestions/', SuggestionController.as_view(suggestion_detail_actions)),
+    path('suggestions/revert/', SuggestionController.as_view(suggestion_revert_actions)),
 
     # Retrieve, update, and delete a specific suggestion
     path('suggestions/<int:pk>/', SuggestionController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),

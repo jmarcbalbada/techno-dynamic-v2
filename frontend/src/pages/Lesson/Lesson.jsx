@@ -68,10 +68,10 @@ const Lesson = () => {
       const response = await LessonsService.getByLessonNumber(lessonNumber);
       setLesson(response.data);
       // setLessonId(response.data.id);
-      console.log("lesson ids ", response.data.id);
-      console.log("response.data", response.data);
+      // console.log("lesson ids ", response.data.id);
+      // console.log("response.data", response.data);
 
-      console.log("lessonID", currID);
+      // console.log("lessonID", currID);
     } catch (error) {
       console.log("error", error);
       setIsError(true);

@@ -21,9 +21,11 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import ChatIcon from "@mui/icons-material/Chat";
 import NotificationLayout from "../Notification/NotificationLayout";
 import InsightLayout from "../Insight/InsightLayout";
+import { SuggestionService } from "apis/SuggestionService";
+import { NotificationService } from "../../apis/NotificationService";
 
 const RevertContent = () => {
-  const { lessonNumber, pageNumber } = useParams();
+  const { lessonNumber, pageNumber, lessonID } = useParams();
   const navigate = useNavigate();
   const [lesson, setLesson] = useState({});
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber));
@@ -33,6 +35,7 @@ const RevertContent = () => {
   const [isError, setIsError] = useState(false);
   const [isReverted, setReverted] = useState(false);
   const theme = useTheme();
+  const currID = parseInt(lessonID);
 
   const tempSuggestedContent = `<div data-youtube-video="">
   <iframe width="640" height="360" src="https://www.youtube.com/embed/wFxIzCtw8QU" frameborder="0" allowfullscreen></iframe>
@@ -73,11 +76,51 @@ const RevertContent = () => {
     console.log("suggest clicked");
     navigate(`/suggest/${lessonNumber}/1/`);
   };
+  
+  const handleClearCallbackSuggestionAndNotification = async () => {
+    await handleClearNotif();
+    await handleClearSuggestionAndFaq();
+    navigate(`/`)
+  };
 
-  const handleRevert = () => {
-    console.log("revert clicked");
+  const handleClearNotif = async () => {
+    try {
+      const response = await NotificationService.deleteNotifByLessonId(currID);
+      // setLesson(response.data);
+      console.log("response.data", response.data);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+    }
+  };
+
+  const handleClearSuggestionAndFaq = async () => {
+    try {
+      const response = await SuggestionService.delete_suggestion(currID);
+      // setLesson(response.data);
+      console.log("response.data", response.data);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+    }
+  };
+
+  const handleRevert = async () => {
+    // console.log("revert clicked");
     setReverted(true);
-    getLessonLessonNumber(lessonNumber);
+    await revertContentService();
+    await getLessonLessonNumber(lessonNumber);
+  };
+
+  const revertContentService = async () => {
+    try {
+      const response = await SuggestionService.revert_content(currID);
+      // setLesson(response.data);
+      console.log("response.data", response.data);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+    }
   };
 
   const getLessonLessonNumber = async (lessonNumber) => {
@@ -199,6 +242,24 @@ const RevertContent = () => {
                       <HistoryIcon sx={{ marginRight: "10px" }} />
                       Revert Changes
                     </Button>
+                    <Box sx={{ display: "flex", marginLeft: "10px" }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                          backgroundColor: "#3a66a8",
+                          "&:hover": {
+                            backgroundColor: "#4c80d4",
+                          },
+                          textTransform: "none", // Set text to normal case
+                          paddingRight: "10px", // Add padding to the right of the icon
+                        }}
+                        onClick={handleClearCallbackSuggestionAndNotification}
+                      >
+                        <HistoryIcon sx={{ marginRight: "10px" }} />
+                        Return to Dashboard
+                      </Button>
+                    </Box>
                   </Box>
                 </div>
               </Box>
@@ -241,15 +302,33 @@ const RevertContent = () => {
                   >
                     We've managed to revert your previous content!
                   </Typography>
+                  <Box sx={{ display: "flex", marginLeft: "10px" }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                          backgroundColor: "#3a66a8",
+                          "&:hover": {
+                            backgroundColor: "#4c80d4",
+                          },
+                          textTransform: "none", // Set text to normal case
+                          paddingRight: "10px", // Add padding to the right of the icon
+                        }}
+                        onClick={handleClearCallbackSuggestionAndNotification}
+                      >
+                        <HistoryIcon sx={{ marginRight: "10px" }} />
+                        Return to Dashboard
+                      </Button>
+                    </Box>
                   <Box sx={{ display: "flex" }}></Box>
                 </div>
               </Box>
             )}
 
             <LessonPage
-                pageContent={!isReverted ? (lesson?.pages[currentPage - 1]?.contents) : (tempSuggestedContent)}
-                // pageContent={lesson?.pages[currentPage - 1]?.contents}
-                //  pageContent={tempSuggestedContent}
+              // pageContent={!isReverted ? (lesson?.pages[currentPage - 1]?.contents) : (tempSuggestedContent)}
+              pageContent={lesson?.pages[currentPage - 1]?.contents}
+              //  pageContent={tempSuggestedContent}
             />
             <FilesModal
               files={lesson?.lesson_files}
