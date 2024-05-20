@@ -12,6 +12,7 @@ class NotificationController(ModelViewSet):
         try:
             all_notifications = self.queryset.all()  # Fetch all notifications
             serializer = self.get_serializer(all_notifications, many=True)
+            # print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
