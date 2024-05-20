@@ -19,6 +19,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import ManageSearchOutlinedIcon from "@mui/icons-material/ManageSearchOutlined";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { NotificationService } from "../../apis/NotificationService";
 
 const SuggestContent = () => {
   const { lessonNumber, pageNumber, lessonID } = useParams();
@@ -86,7 +87,36 @@ const SuggestContent = () => {
 
   const handleIgnore = () => {
     // console.log("clicked ignore");
+    handleClearCallbackSuggestionAndNotification();
     navigate(`/`);
+  };
+
+  const handleClearCallbackSuggestionAndNotification = async () => {
+    await handleClearNotif();
+    await handleClearSuggestionAndFaq();
+    navigate(`/`)
+  };
+
+  const handleClearNotif = async () => {
+    try {
+      const response = await NotificationService.deleteNotifByLessonId(currID);
+      // setLesson(response.data);
+      console.log("response.data", response.data);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+    }
+  };
+
+  const handleClearSuggestionAndFaq = async () => {
+    try {
+      const response = await SuggestionService.delete_suggestion(currID);
+      // setLesson(response.data);
+      console.log("response.data", response.data);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+    }
   };
 
   useEffect(() => {
