@@ -1,6 +1,6 @@
 # Techno-Dynamic-Learning V2 (TechnoDynamic V2)
 
-Techno-Dynamic-Learning V2 is an advanced learning management system designed specifically for technopreneurship courses. Building upon the foundation of Techno-Dynamic-Learning V1, this extended version incorporates dynamic content generation and insightful suggestions based on frequently asked questions (FAQ) from students.
+Techno-Dynamic-Learning V2 is an advanced learning management system designed specifically for technopreneurship courses. Building upon the foundation of [Techno-Dynamic-Learning V1](https://github.com/sebastianyebes/Techno-Dynamic-Learning), this extended version incorporates dynamic content generation and insightful suggestions based on frequently asked questions (FAQ) from students.
 
 
 # Features
