@@ -1,5 +1,7 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -11,11 +13,11 @@ from ..model.Student import Student
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.viewsets import GenericViewSet
 from ..models import CustomUser
 
 
-class UserController():
+class UserController(GenericViewSet):
     @api_view(['POST'])
     def login(request):
         username = request.data.get('username', None)
@@ -115,3 +117,34 @@ class UserController():
             return Response(serializer.data, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+    def setOptInUserById(self, request):
+        try:
+            # Get user_id from the request data
+            user_id = request.data.get('user_id')
+
+            # Retrieve the user instance
+            user = CustomUser.objects.get(id=user_id)
+            
+            # Toggle the opt_in value
+            user.opt_in = not user.opt_in
+            user.save()
+            
+            return JsonResponse({'opt_in': user.opt_in}, status=200)
+        except CustomUser.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+        
+    def getOptInUserById(self, request, user_id):
+
+        try:
+
+            # Retrieve the user instance
+            user = CustomUser.objects.get(id=user_id)
+
+            # Get the current opt_in value
+            opt_in = user.opt_in
+
+            return JsonResponse({'opt_in': opt_in}, status=200)
+        except CustomUser.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
