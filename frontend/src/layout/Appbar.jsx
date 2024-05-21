@@ -26,10 +26,10 @@ const Appbar = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [unreadNotif, setUnreadNotif] = useState([]);
   const [countNotif, setCountNotif] = useState(0);
+  const [opt_in, setOptIn] = useState(user.opt_in);
   const navigate = useNavigate();
   const theme = useTheme();
   const [u_user, setU_user] = useState([]);
-  const opt_in = user.opt_in
 
   const open = Boolean(anchorElUser);
 
@@ -48,15 +48,34 @@ const Appbar = () => {
   }, []);
 
   useEffect(() => {
+    if (user.role === "teacher") {
+      getOptInById();
+    }
+    // console.log("userid", user.id)
+  }, [opt_in]);
+
+  useEffect(() => {
     getUserViaId();
     // console.log("u_user",u_user)
   }, []);
+
+  const getOptInById = async () => {
+    try {
+      const response = await UsersService.getOptIn(user.id);
+      // console.log("OPT IN? = ", response.data.opt_in);
+      setOptIn(response.data.opt_in);
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      // close
+    }
+  };
 
   const getUserViaId = async () => {
     try {
       const response = await UsersService.getUserbyID(user.id);
       setU_user(response.data);
-      console.log("u_user",u_user)
+      // console.log("u_user", u_user);
       // console.log("response.data = ", response.data);
       // console.log("unreadNotif = ", unreadNotif);
     } catch (error) {
@@ -75,8 +94,6 @@ const Appbar = () => {
       getUnreadNotifications();
     }
   }, [countNotif]);
-
-  
 
   const getUnreadNotifications = async () => {
     try {
@@ -182,7 +199,7 @@ const Appbar = () => {
             </Typography>
           </Box>
         </Box>
-        {user.role === "teacher" && (
+        {(user.role === "teacher" && opt_in) && (
           <div style={{ position: "relative" }}>
             <IconButton
               sx={{
@@ -200,7 +217,7 @@ const Appbar = () => {
                 <NotificationsOutlinedIcon sx={{ fontSize: 28 }} />
               </Badge>
             </IconButton>
-            {(showNotification) && (
+            {showNotification && (
               <NotificationMessageLayout
                 onClick={handleNotificationClick} // Pass the onclick event
                 closedFinally={notifIsFinallyClose}
