@@ -16,40 +16,43 @@ import {
 
 import CheckIcon from "@mui/icons-material/Check";
 import { UsersService } from "../../apis/UsersService";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import Tooltip from "@mui/material/Tooltip";
 
 const Profile = () => {
   const { user } = useAuth();
-  console.log(user);
-  const [u_user, setU_user] = useState([]);
-  // const [opt_in_state, setOpt_in_state] = useState(
-  //   u_user.opt_in ? u_user.opt_in : user.opt_in
-  // );
-  const [opt_in_state, setOpt_in_state] = useState(false);
-  // console.log("opt", user.opt_in)
+  // console.log("user", user);
+  const [opt_in_state, setOpt_in_state] = useState(user.opt_in);
 
   useEffect(() => {
     getUserViaId();
-    // console.log("u_user",u_user)
   }, []);
-
-  console.log("u_user", u_user);
 
   const handleSwitchChange = () => {
     setOpt_in_state(!opt_in_state);
+    setAiRecommendation();
+    window.location.reload();
+  };
+
+  const setAiRecommendation = async () => {
+    try {
+      const response = await UsersService.setOptIn(user.id);
+      // console.log("response_data AI = ", response.data);
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      // close
+    }
   };
 
   const getUserViaId = async () => {
     try {
+      // console.log("was here");
       const response = await UsersService.getUserbyID(user.id);
-      setU_user(response.data);
-      // console.log("u_user", u_user);
-      console.log("before", opt_in_state);
-      setOpt_in_state(u_user.opt_in);
-      console.log("after", opt_in_state);
-      // console.log("response.data = ", response.data);
-      // console.log("unreadNotif = ", unreadNotif);
+      // console.log("response_data", response.data.opt_in);
+      setOpt_in_state(response.data.opt_in);
     } catch (error) {
-      // console.log("error", error);
+      console.log("error", error);
     } finally {
       // close
     }
@@ -122,14 +125,18 @@ const Profile = () => {
             <Typography variant="h5" gutterBottom>
               Instructor Account
             </Typography>
-            <CheckIcon sx={{ color: "green", fontSize: "1.7rem" }} />
+            <Tooltip title="Verified">
+              <CheckIcon sx={{ color: "green", fontSize: "1.7rem" }} />
+            </Tooltip>
           </Box>
           <Box display="flex" gap={1}>
-            <Typography variant="h5" gutterBottom>
-              Allow AI Recommendation
+            <Typography variant="h6" gutterBottom>
+              Allow AI Insights and Content Suggestions
             </Typography>
+            <Tooltip title="Recommended">
+              <AutoAwesomeIcon sx={{ color: "#4c80d4", fontSize: "1.0rem" }} />
+            </Tooltip>
             <Switch checked={opt_in_state} onChange={handleSwitchChange} />
-            {/* <CheckIcon sx={{ color: 'green', fontSize: '1.7rem' }} /> */}
           </Box>
         </>
       );
