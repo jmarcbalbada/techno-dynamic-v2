@@ -110,7 +110,10 @@ urlpatterns = [
     re_path('register', UserController.register),
     re_path('test-token', UserController.test_token),
 
+    # Users
     path('users/', UserController.get_all_users),
+    path('users/setOpt/', UserController.as_view({'put': 'setOptInUserById'})),
+    path('users/getOpt/<int:user_id>/', UserController.as_view({'get': 'getOptInUserById'})),
     path('users/<int:user_id>/', UserController.get_user),
 
     path('lessons/', LessonController.as_view(lesson_actions)),

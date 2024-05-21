@@ -19,8 +19,8 @@ const columns = [
   { field: 'createdAt', headerName: 'Created At', width: 170, headerClassName: 'super-app-theme--header' },
   { field: 'lessonInfo', headerName: 'Lesson', width: 230, headerClassName: 'super-app-theme--header' },
   { field: 'fullName', headerName: 'Name', width: 210, headerClassName: 'super-app-theme--header' },
-  { field: 'courseYear', headerName: 'Course & Year', width: 260, headerClassName: 'super-app-theme--header' },
-  { field: 'preview', headerName: 'Preview', width: 500, headerClassName: 'super-app-theme--header' }
+  { field: 'preview', headerName: 'Preview', width: 500, headerClassName: 'super-app-theme--header' },
+  // { field: 'courseYear', headerName: 'Course & Year', width: 260, headerClassName: 'super-app-theme--header' },
 ];
 
 const QueriesTable = () => {
@@ -54,6 +54,7 @@ const QueriesTable = () => {
       if (queryResponse) {
         // Transform the response data into rows for the DataGrid
         const formattedQueries = queryResponse.data.map((query) => {
+          // console.log("query", query);
           const createdAt = query.subqueries[0]
             ? new Date(query.subqueries[0].created_at)
             : null;
@@ -68,15 +69,15 @@ const QueriesTable = () => {
             title: query.lesson.title,
             firstName: query.user.first_name,
             lastName: query.user.last_name,
-            preview: query.subqueries.question,
+            // preview: query.subqueries.question,
             course: query.user.course,
             year: query.user.year,
             lessonInfo: `${query.lesson.lessonNumber} - ${query.lesson.title}`,
             fullName: `${query.user.first_name} ${query.user.last_name}`,
-            courseYear:
-              query.user.course && query.user.year
-                ? `${query.user.year} - ${query.user.course}`
-                : 'Teacher',
+            // courseYear:
+            //   query.user.course && query.user.year
+            //     ? `${query.user.year} - ${query.user.course}`
+            //     : '',
             preview: query.subqueries[0]
               ? query.subqueries[0].question
               : 'No question available',

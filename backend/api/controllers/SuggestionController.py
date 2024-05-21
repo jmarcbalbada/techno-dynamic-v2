@@ -85,17 +85,19 @@ class SuggestionController(ModelViewSet):
 
             NOTE: PLEASE DO NOT USE \\n IF YOU NEED TO BREAK A LINE USE <br> INSTEAD AND IF YOU WANT TO BOLD A TITLE OR WORD USE <strong>TITLE HERE</strong>. RETURN IN HTML MARKUP, I DON'T WANT TO SEE NEWLINES USE <br> .
             NOTE VERY IMPORTANT: IF THERE IS A VIDEO LINK IN THE CONTENT YOU MUST RETAIN IT
-            NOTE VERY IMPORTANT: FOR HEADERS OR TITLE USE <h1> UNTIL <h3> DONT USE **TITLE** SINCE YOU NEED TO RETURN MARKUP
+            NOTE VERY IMPORTANT: FOR HEADERS OR TITLE USE <h1> UNTIL <h3> DONT USE **TITLE** SINCE YOU NEED TO RETURN HTML MARKUP
 
             Based on these FAQs and original lesson contents, provide:
-            1. Insights in bullet form similar to the following examples, return in HTML MARKUP: DONT ANSWER STARTING WITH \"Insights:\", just go directly with answers DO NOT MENTION ENHANCED INSIGHTS OR ETC
+            1. Insights in bullet form similar to the following examples this is insight based on the faq from students so most likely you will tell the user (teacher) that Students are most likely eager to learn etc etc.., return in HTML MARKUP: DONT ANSWER STARTING WITH \"Insights:\", just go directly with answers DO NOT MENTION ENHANCED INSIGHTS OR ETC
             - <strong>Entrepreneurship's Impact:</strong> Students are keen to explore entrepreneurship's role in driving economic growth and innovation, especially in identifying opportunities and fostering competition.<br>
             - <strong>Qualities of Success:</strong> There's strong interest in the qualities defining successful entrepreneurs, emphasizing creativity, determination, and resilience.<br>
             - <strong>Technological Influence:</strong> Students recognize the importance of technology in entrepreneurship, highlighting the need to leverage advancements for innovation and competitiveness.<br>
             - <strong>Areas for Improvement:</strong> To enhance learning, deeper insights into specific strategies for opportunity identification, risk management, and technological integration could be provided.<br>
             - <strong>Unlock the full potential of your lesson materials:</strong> By addressing student curiosity and strengthening key concepts.<br>
+            Limit to these 5 bullets just focus on painpointing what might wrong in the lesson and how to address them.
 
-            2. An enhanced version of the lesson content based on the FAQs and original content, making it richer and more informative return in HTML MARKUP PLEASE DO NOT USE \\n IF YOU NEED TO BREAK A LINE USE <br> INSTEAD. Based on these FAQs and original lesson contents. DONT ANSWER STARTING WITH \"Enhanced Lesson Content:\", just go directly with answers DO NOT MENTION ENHANCED LESSON CONTENT, IF THERE IS A YOUTUBE VIDEO LINK IN THE CONTENT YOU MUST RETAIN IT
+            2. An enhanced version of the lesson content based on the FAQs and original content, making it richer and more informative, USE MORE SCHOOL APPROPRIATE WORDS PARAPHRASE SOME OF THEM. Cite some short examples if possible for each scenarios make it detailed, Paraphrase the title of 2. make it more understandable. If you can, provide a youtube video links embedded that would be highly appreciated, return in HTML MARKUP PLEASE DO NOT USE \\n IF YOU NEED TO BREAK A LINE USE <br> INSTEAD. Based on these FAQs and original lesson contents. DONT ANSWER STARTING WITH \"Enhanced Lesson Content:\", just go directly with answers DO NOT MENTION ENHANCED LESSON CONTENT, IF THERE IS A YOUTUBE VIDEO LINK IN THE CONTENT YOU MUST RETAIN IT
+            You must have a summary at the bottom part of the lesson content so that you will leave a good impression and detailed explanation to users.
             NOTE: PLEASE DO NOT USE \\n IF YOU NEED TO BREAK A LINE USE <br> INSTEAD AND IF YOU WANT TO BOLD A TITLE OR WORD USE <strong>TITLE HERE</strong>. RETURN IN HTML MARKUP, I DON'T WANT TO SEE NEWLINES USE <br> .
             NOTE: IF THERE IS A YOUTUBE VIDEO LINK IN THE CONTENT YOU MUST RETAIN IT
             """
@@ -107,7 +109,7 @@ class SuggestionController(ModelViewSet):
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "system", "content": "You are a helpful assistant. ALWAYS RESPOND IN HTML MARKUP, USE <br> for newlines instead of \\n, if there is a video link in the input_text you must retain it, dont state the title like \" Insights, Enhanced Lesson Content\" instead go directly to your answer and use <h1> up to <h3> for titles, not **, also you dont have to say 1. or 2. when you answer those numbers just go directly"},
                     {"role": "user", "content": input_text}
                 ],
                 max_tokens=1500,
