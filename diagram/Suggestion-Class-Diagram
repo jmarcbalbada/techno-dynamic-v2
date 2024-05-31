@@ -1,0 +1,29 @@
+@startuml
+
+class SuggestionModel {
+  - lesson: ForeignKey(lessons)
+  - insights: String
+  - content: String
+  - old_content: String
+  + toString()
+}
+
+class SuggestionController {
+  - queryset: QuerySet
+  - serializer_class: SuggestionSerializer
+  + get_queryset(self) : Suggestion
+  + list(request: Request, int: lesson_id) : Response
+  + createSuggestion(request: Request) : Response
+  + updateContent(request: Request) : Response
+  + updateRevertContent(request: Request) : Response
+  + deleteSuggestionByLessonId(request: Request) : Response
+}
+
+class SuggestionView {
+  <<React Component>>
+}
+
+SuggestionController --> SuggestionModel
+SuggestionView --> SuggestionController
+
+@enduml

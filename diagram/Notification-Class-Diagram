@@ -1,0 +1,29 @@
+@startuml
+
+class NotificationModel {
+  - notif_id: int
+  - lesson: ForeignKey(lessons)
+  - message: String
+  - is_read: Boolean
+  - date_created: DateTime
+  + toString()
+}
+
+class NotificationController {
+  - queryset: QuerySet
+  - serializer_class: NotificationSerializer
+  + get_all_notification(request: Request): Response
+  + get_all_count_unread_notif(request: Request): Response
+  + mark_all_as_read(request: Request): Response
+  + create(request: Request): Response
+  + deleteNotification(request: Request): Response
+}
+
+class NotificationView {
+  <<React Component>>
+}
+
+NotificationController --> NotificationModel
+NotificationView --> NotificationController
+
+@enduml

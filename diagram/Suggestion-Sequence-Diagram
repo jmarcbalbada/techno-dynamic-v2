@@ -1,0 +1,40 @@
+@startuml
+
+actor User
+
+User -> SuggestionView : Request to list suggestions
+SuggestionView -> SuggestionController : list(request, lesson_id)
+SuggestionController -> SuggestionModel : Retrieve suggestions by lesson_id
+SuggestionModel --> SuggestionController : Return suggestions
+SuggestionController --> SuggestionView : Return suggestions
+SuggestionView --> User : Display suggestions
+
+User -> SuggestionView : Request to create a suggestion
+SuggestionView -> SuggestionController : createSuggestion(request)
+SuggestionController -> SuggestionModel : Create new suggestion
+SuggestionModel --> SuggestionController : Confirmation of creation
+SuggestionController --> SuggestionView : Confirmation of creation
+SuggestionView --> User : Display confirmation
+
+User -> SuggestionView : Request to update content
+SuggestionView -> SuggestionController : updateContent(request)
+SuggestionController -> SuggestionModel : Update suggestion content
+SuggestionModel --> SuggestionController : Confirmation of update
+SuggestionController --> SuggestionView : Confirmation of update
+SuggestionView --> User : Display confirmation
+
+User -> SuggestionView : Request to revert content
+SuggestionView -> SuggestionController : updateRevertContent(request)
+SuggestionController -> SuggestionModel : Revert suggestion content
+SuggestionModel --> SuggestionController : Confirmation of revert
+SuggestionController --> SuggestionView : Confirmation of revert
+SuggestionView --> User : Display confirmation
+
+User -> SuggestionView : Request to delete suggestion
+SuggestionView -> SuggestionController : deleteSuggestionByLessonId(request)
+SuggestionController -> SuggestionModel : Delete suggestion by lesson_id
+SuggestionModel --> SuggestionController : Confirmation of deletion
+SuggestionController --> SuggestionView : Confirmation of deletion
+SuggestionView --> User : Display confirmation
+
+@enduml
