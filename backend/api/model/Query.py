@@ -1,7 +1,7 @@
 from django.db import models
-from api.models import CustomUser
-from .Lesson import Lesson
-from .SubQuery import SubQuery
+from ..models import CustomUser
+from api.model.Lesson import Lesson
+from api.model.SubQuery import SubQuery
 
 class Query(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)

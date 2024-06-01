@@ -19,6 +19,7 @@ from api.model.LessonContent import LessonContent
 from api.model.Query import Query
 from api.model.SubQuery import SubQuery
 import openai
+
 import os
 
 class SuggestionController(ModelViewSet):

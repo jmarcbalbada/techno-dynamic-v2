@@ -1,0 +1,44 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+__pycache__
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore development settings
+.env
+
+# Ignore local database files
+*.sqlite3
+
+# Ignore IDE/editor config files
+.vscode/
+.idea/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore unnecessary files from builds
+build/
+dist/
+*.egg-info/
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore static files if they are built during the Docker image build process
+staticfiles/
+
+# Ignore media files if not needed
+media/
+
+# Ignore migrations if you regenerate them
+migrations/
+
+# Ignore the Dockerfile and .dockerignore itself
+Dockerfile
+.dockerignore

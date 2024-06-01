@@ -6,3 +6,4 @@ class RelatedContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = RelatedContent
         fields = '__all__'
+

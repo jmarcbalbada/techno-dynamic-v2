@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
-from api.model.Lesson import Lesson 
+# from api.model.Lesson import Lesson 
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)

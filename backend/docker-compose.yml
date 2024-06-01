@@ -1,4 +1,3 @@
-
 version: '3.7'
 
 services:
@@ -15,5 +14,35 @@ services:
       - postgres:/var/lib/postgresql/data
     restart: always
 
+  # web:
+  #   build: .
+  #   container_name: backend
+  #   command: python manage.py runserver 0.0.0.0:8000
+  #   volumes:
+  #     - .:/code
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - db
+  #   env_file:
+  #     - .env
+
 volumes:
   postgres:
+
+# services:
+#   db:
+#     image: postgres
+#     container_name: mydb
+#     environment:
+#       POSTGRES_DB: ${POSTGRES_DB}
+#       POSTGRES_USER: ${POSTGRES_USER}
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#     ports:
+#       - '5432:5432'
+#     volumes:
+#       - postgres:/var/lib/postgresql/data
+#     restart: always
+
+# volumes:
+#   postgres:
