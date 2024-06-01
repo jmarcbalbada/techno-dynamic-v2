@@ -1,0 +1,88 @@
+@startuml
+
+entity "File" as File {
+  * file: FileField
+  * lesson: ForeignKey(Lesson) [0..1]
+}
+
+entity "ImageMedia" as ImageMedia {
+  * image_link: ImageField
+}
+
+entity "ImageModel" as ImageModel {
+  * lesson_content: ForeignKey(LessonContent)
+  * image_link: ImageField
+}
+
+entity "Lesson" as Lesson {
+  * lessonNumber: Integer [unique]
+  * title: CharField
+  * subtitle: CharField
+  * coverImage: ImageField [0..1]
+  * files: ManyToManyField(File) [0..*]
+}
+
+entity "LessonContent" as LessonContent {
+  * lesson: ForeignKey(Lesson)
+  * contents: TextField
+  * url: URLField [0..1]
+  * files: FileField [0..1]
+  * images: ManyToManyField(ImageModel) [0..*]
+}
+
+entity "Faq" as Faq {
+  * lesson: ForeignKey(Lesson)
+  * question: TextField
+}
+
+entity "Notification" as Notification {
+  * notif_id: AutoField [PK]
+  * lesson: ForeignKey(Lesson)
+  * message: TextField
+  * is_read: Boolean
+  * date_created: DateTimeField
+}
+
+entity "Query" as Query {
+  * lesson: ForeignKey(Lesson)
+  * user: ForeignKey(CustomUser)
+  * subqueries: ManyToManyField(SubQuery) [0..*]
+  * context: TextField
+}
+
+entity "Student" as Student {
+  * user: OneToOneField(CustomUser)
+  * course: CharField
+  * year: CharField
+}
+
+entity "SubQuery" as SubQuery {
+  * question: TextField
+  * response: TextField
+  * created_at: DateTimeField
+}
+
+entity "Suggestion" as Suggestion {
+  * lesson: ForeignKey(Lesson)
+  * insights: TextField
+  * content: TextField
+  * old_content: TextField
+}
+
+entity "CustomUser" as CustomUser {
+  * id: Integer
+  * username: CharField
+}
+
+File }|..|{ Lesson : "lesson_files"
+LessonContent }|..|| Lesson : "lesson"
+ImageModel }|..|| LessonContent : "lesson_content"
+Faq }|..|| Lesson : "lesson"
+Notification }|..|| Lesson : "lesson"
+Query }|..|| Lesson : "lesson"
+Query }|..|| CustomUser : "user"
+Query }|..|{ SubQuery : "subqueries"
+Student }|..|| CustomUser : "student_profile"
+Suggestion }|..|| Lesson : "lesson"
+
+@enduml

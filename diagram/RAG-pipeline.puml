@@ -1,0 +1,31 @@
+@startuml
+!theme cerulean-outline
+
+actor Student
+
+rectangle "RAG Pipeline" {
+    node "Input Question" as IQ {
+        artifact "Question" as Q
+    }
+
+    node "Category Retrieval" as CR {
+        artifact "Existing Question Tables" as EQT
+        artifact "Similarity Measure" as SM
+        artifact "Similar Question Table" as SQT
+        artifact "Add to existing table" as SQT
+        artifact "Create New Table" as NQT
+    }
+
+
+}
+
+Student --> Q : Ask Question
+Q --> CR : Pass Question
+CR --> EQT : Retrieve Existing Questions
+EQT --> SM : Compare Similarity
+SM --> SQT : Similar Questions Found
+SM --> NQT : First Question Created
+SM --> NQT : No Similar Questions Found
+
+
+@enduml

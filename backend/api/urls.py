@@ -11,7 +11,27 @@ from .controllers.FileController import FileController
 from .controllers.FaqController import FaqController
 from .controllers.SuggestionController import SuggestionController
 from .controllers.NotificationController import NotificationController
+from .controllers.RelatedContentController import RelatedContentController
+from .controllers.ContentController import ContentController
+from .controllers.NotificationController import NotificationController
 
+faq_detail_actions = {
+    'post': 'create',
+    'put': 'update',
+    'delete': 'destroy',
+}
+
+related_content_detail_actions = {
+    'post': 'create',
+    'put': 'update',
+    'delete': 'destroy',
+}
+
+content_detail_actions = {
+    'post': 'create',
+    'put': 'update',
+    'delete': 'destroy',
+}
 
 lesson_actions = {
     'get': 'getAllLessons',
@@ -145,6 +165,8 @@ urlpatterns = [
     path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/images/', ImageModelController.as_view(image_actions)),
     path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/images/', ImageModelController.as_view(image_detail_actions)),
     
+    # RelatedContents
+    path('test/related/', RelatedContentController.as_view({'post': 'process_message_and_add_to_faq'})),
 
     # Queries
     path('lessons', LessonController.as_view({'get': 'findLessonbyLessonNumber'})),
@@ -152,6 +174,9 @@ urlpatterns = [
     # Faq
     path('faq/count_faq', FaqController.as_view({'get': 'get_count_faq_questions_all'})),
     path('faq/<int:lesson_id>/', FaqController.as_view(faq_detail_actions)),
+
+    path('faqs/', FaqController.as_view(faq_detail_actions)),
+    path('faqs/<int:lesson_id>/', FaqController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
 
     # Notification
     path('notification/getUnread', NotificationController.as_view({'get': 'get_all_notification'})),
@@ -167,4 +192,12 @@ urlpatterns = [
     
     # Get suggestions by lesson ID
     path('lessons/<int:lesson_id>/suggestions/', SuggestionController.as_view({'get': 'list'})),
+
+
+    path('related_contents/', RelatedContentController.as_view(related_content_detail_actions)),
+    path('related_contents/<int:pk>/', RelatedContentController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
+
+    path('contents/', ContentController.as_view(content_detail_actions)),
+    path('contents/<int:pk>/', ContentController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
+
 ]

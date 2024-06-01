@@ -2,6 +2,7 @@ from django.db import models
 from api.model.File import File
 
 class Lesson(models.Model):
+    
     lessonNumber = models.IntegerField(unique=True, null=False)
     title = models.CharField(max_length=100, default="", null=False)
     subtitle = models.CharField(max_length=300, default="", null=False)
