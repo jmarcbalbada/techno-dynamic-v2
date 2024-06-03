@@ -1,7 +1,7 @@
 
 from django.urls import path, re_path
 
-from .controllers.TeacherProfileController import TeacherProfileController
+from .controllers.TeacherController import TeacherController
 from .controllers.UserController import UserController
 from .controllers.LessonController import LessonController
 from .controllers.LessonContentController import LessonContentsController
@@ -202,5 +202,5 @@ urlpatterns = [
     path('contents/', ContentController.as_view(content_detail_actions)),
     path('contents/<int:pk>/', ContentController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
 
-    path('teacherprofile/<int:teacher_id>', TeacherProfileController.as_view(content_detail_actions)),
+    path('teacherprofile/<int:teacher_id>', TeacherController.as_view(content_detail_actions)),
 ]

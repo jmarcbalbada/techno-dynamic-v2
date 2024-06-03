@@ -3,12 +3,12 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from api.model.TeacherProfile import TeacherProfile
-from api.serializer.TeacherProfileSerializer import TeacherProfileSerializer
+from api.model.Teacher import Teacher
+from api.serializer.TeacherSerializer import TeacherSerializer
 
-class TeacherProfileController(ModelViewSet):
-    queryset = TeacherProfile.objects.all()
-    serializer_class = TeacherProfileSerializer
+class TeacherController(ModelViewSet):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
 
     @action(detail=False, methods=['get'], url_path='get-threshold')
     def get_threshold(self, request):
@@ -19,5 +19,5 @@ class TeacherProfileController(ModelViewSet):
         try:
             teacher_profile = TeacherProfile.objects.get(user_id=user_id)
             return Response({"user_id": user_id, "similiarity_threshold": teacher_profile.similiarity_threshold})
-        except TeacherProfile.DoesNotExist:
+        except Teacher.DoesNotExist:
             return Response({"error": "TeacherProfile not found"}, status=status.HTTP_404_NOT_FOUND)

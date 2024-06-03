@@ -13,7 +13,7 @@ from .RelatedContent import RelatedContent
 from .Student import Student
 from .SubQuery import SubQuery
 from .Suggestion import Suggestion
-from .TeacherProfile import TeacherProfile
+from .Teacher import Teacher
 
 
 __all__ = [
@@ -30,5 +30,5 @@ __all__ = [
     'Student',
     'SubQuery',
     'Suggestion',
-    'TeacherProfile',
+    'Teacher',
 ]

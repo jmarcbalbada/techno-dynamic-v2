@@ -5,7 +5,7 @@ from api.model.Faq import Faq
 from api.model.Lesson import Lesson
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from api.model.TeacherProfile import TeacherProfile 
+from api.model.Teacher import Teacher
 from rest_framework.response import Response
 from sentence_transformers import SentenceTransformer, util
 import warnings
