@@ -1,5 +1,5 @@
 
-from django.urls import path, re_path
+from django.urls import path, re_path,include
 
 from .controllers.TeacherController import TeacherController
 from .controllers.UserController import UserController
@@ -16,6 +16,7 @@ from .controllers.NotificationController import NotificationController
 from .controllers.RelatedContentController import RelatedContentController
 from .controllers.ContentController import ContentController
 from .controllers.NotificationController import NotificationController
+from rest_framework.routers import SimpleRouter
 
 faq_detail_actions = {
     'post': 'create',
@@ -125,8 +126,10 @@ suggestion_revert_actions = {
     'put': 'updateRevertContent',
     # 'delete': 'deleteSuggestion',
 }
-
+routes = SimpleRouter()
+routes.register('teacher',TeacherController)
 urlpatterns = [
+    path('', include(routes.urls)),
     # Paths
     re_path('login', UserController.login),
     re_path('register', UserController.register),
@@ -202,5 +205,5 @@ urlpatterns = [
     path('contents/', ContentController.as_view(content_detail_actions)),
     path('contents/<int:pk>/', ContentController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
 
-    path('teacherprofile/<int:teacher_id>', TeacherController.as_view(content_detail_actions)),
+    # path('teacherprofile/<int:teacher_id>', TeacherController.as_view(content_detail_actions)),
 ]

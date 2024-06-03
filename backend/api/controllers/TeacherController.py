@@ -13,57 +13,55 @@ from api.serializer.TeacherSerializer import TeacherSerializer
 class TeacherController(ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
-
     permission_classes = [AllowAny]
 
-    @action(detail=False, methods=['get'],url_path='getthreshold')
-    def get_similarity_threshold(self, request):
-        teacher_id = request.query_params.get('teacher_id')
-        if not teacher_id:
-            return Response({"error": "teacher_id parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny], url_path='getthreshold')
+    def get_threshold(self, request):
         try:
-            teacher_profile = Teacher.objects.get(user_id=teacher_id)
-            return Response({"similarity_threshold": teacher_profile.similarity_threshold})
+            teacher_profile = Teacher.objects.get(id=1)
+            return Response({"similarity_threshold": teacher_profile.threshold})
         except Teacher.DoesNotExist:
             return Response({"error": "TeacherProfile not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(detail=False, methods=['post'])
-    def set_similarity_threshold(self, request):
-        teacher_id = request.query_params.get('teacher_id')
-        threshold = request.query_params.get('threshold')
+    @action(detail=False, methods=['patch'], url_path='setthreshold')
+    def set_threshold(self, request):
+        threshold = request.data.get('threshold')  # Get the parameter from request.data
+
         if threshold is None:
             return Response({"error": "threshold parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
-            teacher_profile = Teacher.objects.get(user=request.user)
-            teacher_profile.similarity_threshold = threshold
+            threshold_value = float(threshold)  # Convert to float after checking for None
+        except ValueError:
+            return Response({"error": "threshold parameter must be a float"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            teacher_profile = Teacher.objects.get(id=1)
+            teacher_profile.threshold = threshold_value  # Correct field name
             teacher_profile.save()
-            return Response({"success": "Threshold updated successfully"})
+            print("succesfully updated threshold",teacher_profile.threshold)
+            return Response({"success": f"Threshold updated successfully to value: {threshold_value}"})
         except Teacher.DoesNotExist:
             return Response({"error": "TeacherProfile not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(detail=False, methods=['get'])
-    def get_teacher_suggestion_similarity(self, request, teacher_id=None):
-        if teacher_id is None:
-            return Response({"error": "teacher_id parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+    @action(detail=False, methods=['get'],url_path='getsuggestion')
+    def get_suggestion(self, request):
         try:
-            teacher_profile = Teacher.objects.get(user_id=teacher_id)
-            return Response({"teacher_suggestion_similarity": teacher_profile.teacher_suggestion_similarity})
+            teacher_profile = Teacher.objects.get(id=1)
+            return Response({"teacher_allow_suggestion": teacher_profile.suggestion})
         except Teacher.DoesNotExist:
             return Response({"error": "TeacherProfile not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(detail=False, methods=['get'])
-    def set_teacher_suggestion_similarity(self, request):
-        similarity = request.query_params.get('similarity')
+    @action(detail=False, methods=['patch'], url_path='setsuggestion')
+    def set_suggestion(self, request):
+        similarity = request.data.get('suggestion')  # Access from request data
         if similarity is None:
             return Response({"error": "similarity parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
         try:
-            teacher_profile = Teacher.objects.get(user=request.user)
-            teacher_profile.teacher_suggestion_similarity = similarity
+            teacher_profile = Teacher.objects.get(id=1)  # Example fixed id
+            teacher_profile.suggestion = similarity
             teacher_profile.save()
-            return Response({"success": "Similarity updated successfully"})
+            print("Successfully set")
+            return Response({"success": "Suggestion updated successfully the value is ${similarity}}"})
         except Teacher.DoesNotExist:
-            return Response({"error": "TeacherProfile not found"}, status=status.HTTP_404_NOT_FOUND)         
+            return Response({"error": "TeacherProfile not found"}, status=status.HTTP_404_NOT_FOUND)

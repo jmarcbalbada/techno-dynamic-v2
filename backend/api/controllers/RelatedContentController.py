@@ -20,7 +20,7 @@ class RelatedContentController(ModelViewSet):
     queryset = RelatedContent.objects.all()
     serializer_class = RelatedContentSerializer
 
-    def process_message_and_add_to_faq( lesson_id, message,threshold):
+    def process_message_and_add_to_faq( lesson_id, message):
         # Retrieve related content for the specific lesson
         related_contents = RelatedContent.objects.filter(lesson_id=lesson_id)
         lesson = Lesson.objects.get(id=lesson_id)
@@ -54,6 +54,10 @@ class RelatedContentController(ModelViewSet):
 
         # Threshold for similarity
 
+
+        #TODO tobe updated not good practice
+        threshold = Teacher.objects.filter(id=1).first().similiarity_threshold
+        print("Threshold for similarity",threshold)
         SIMILARITY_THRESHOLD = threshold
 
         if max_sim_value >= SIMILARITY_THRESHOLD:
