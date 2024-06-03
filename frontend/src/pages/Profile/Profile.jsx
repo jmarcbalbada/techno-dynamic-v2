@@ -193,7 +193,7 @@ const Profile = () => {
             <Tooltip title="Recommended">
               <AutoAwesomeIcon sx={{ color: '#4c80d4', fontSize: '1.0rem' }} />
             </Tooltip>
-            <input
+            <Input
             step="0.01" 
             type="number"
             value={thresholds}
