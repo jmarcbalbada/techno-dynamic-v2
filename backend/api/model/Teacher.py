@@ -7,7 +7,7 @@ class Teacher(models.Model):
   # allow to teacher to receive a insights and suggestions
   # the backend will make a processes for (Chatbot COntroller)
   allow_insight_suggestion = models.BooleanField(default=True,null=False)
-  similiarity_threshold =models.IntegerField(default=0.7, null=False)
+  similiarity_threshold =models.FloatField(default=0.7, null=False)
 
   def __str__(self):
     return self.user.username  # You can customize this as needed.
