@@ -56,7 +56,7 @@ class RelatedContentController(ModelViewSet):
 
 
         #TODO tobe updated not good practice
-        threshold = Teacher.objects.filter(id=1).first().similiarity_threshold
+        threshold = Teacher.objects.filter(id=1).first().threshold
         print("Threshold for similarity",threshold)
         SIMILARITY_THRESHOLD = threshold
 
