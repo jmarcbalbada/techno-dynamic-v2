@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
         password: data.password
       }
       response = await UsersService.login(data)
+      console.log('user: ',response.data);
       suggestion_return = await TeacherService.getTeacherSuggestion()
       threshold_return = await TeacherService.getTeacherThreshold()
     } catch (error) {
@@ -35,6 +36,7 @@ export const AuthProvider = ({ children }) => {
     setSuggestion(suggestion_return.data.teacher_allow_suggestion);
     console.log("suggestion: ",suggestion_return.data.teacher_allow_suggestion);
     console.log('threshold: ',threshold_return.data.similarity_threshold);
+    console.log('user: ',user);
 
     if (response.data.student_data) {
       setUser({
