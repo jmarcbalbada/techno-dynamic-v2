@@ -1,0 +1,25 @@
+@startuml
+
+class FaqModel {
+  - lesson: ForeignKey(lessons)
+  - question: String
+  + save()
+  + toString()
+}
+
+class FaqController {
+  - queryset: QuerySet
+  - serializer_class: FaqSerializer
+  + get_count_faq_questions_all(request: Request): Response
+  + get_question_by_lesson_id(request: Request, int: lesson_id): Response
+  + create_faqs_from_subqueries(request: Request, int: lesson_id): Response
+}
+
+class FaqView {
+  <<React Component>>
+}
+
+FaqController --> FaqModel
+FaqView --> FaqController
+
+@enduml

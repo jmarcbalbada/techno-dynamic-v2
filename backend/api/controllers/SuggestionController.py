@@ -1,23 +1,25 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from ..models import Suggestion
+from api.model.Suggestion import Suggestion
 from api.serializer.SuggestionSerializer import SuggestionSerializer  # Adjust the import path as needed
 from api.serializer.FaqSerializer import FaqSerializer
 from api.serializer.LessonContentSerializer import LessonContentSerializer
-from ..models import Notification
+from api.model.Notification import Notification
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.conf import settings
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationSummaryBufferMemory
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from api.models import Faq, Suggestion
+from api.model.Faq import Faq
+from api.model.Suggestion import Suggestion
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
 from api.model.Query import Query
 from api.model.SubQuery import SubQuery
 import openai
+
 import os
 
 class SuggestionController(ModelViewSet):

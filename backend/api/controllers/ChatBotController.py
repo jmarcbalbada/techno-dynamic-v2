@@ -5,12 +5,15 @@ from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFou
 from django.conf import settings
 from bs4 import BeautifulSoup
 from django.utils import timezone
+from .RelatedContentController import RelatedContentController
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 
-from api.models import Faq, Suggestion
+from api.model.Faq import Faq
+from api.model.Suggestion import Suggestion
 from api.model.Lesson import Lesson
+from api.model.RelatedContent import RelatedContent
 from api.model.LessonContent import LessonContent
 from api.model.Query import Query
 from api.model.SubQuery import SubQuery
@@ -133,7 +136,8 @@ class ChatBotController(GenericViewSet):
         subquery = SubQuery(question=user_message, response=ai_response)
         subquery.save()
 
-        # Get the user from the request
+        # Get the user from the reques
+        
         user = request.user
 
         # Check if there's an existing query for this lesson and user combination
@@ -146,34 +150,32 @@ class ChatBotController(GenericViewSet):
             new_query = Query()
             new_query.set_lesson(lesson)
             new_query.set_user(user)
-            new_query.save()
             new_query.add_subquery(subquery)
+            new_query.save()
 
-        # try:
-        #     faq = Faq.objects.get(lesson=lesson)
-        #     print("query", faq)
-        #     # Append new question to the existing FAQ questions
-        #     updated_question = f"{faq.question}\n{user_message}"
-        #     faq.question = updated_question
-        #     faq.save()
-        #     print("newQuery", faq.question)
-        # except Faq.DoesNotExist:
-        #     # Handle the case where no FAQ exists for the lesson
-        #     print("No FAQ found for the lesson")
+        
+        #check if the question is related to any questions of the students by this topic
 
-        # Use get_or_create to either retrieve or create the FAQ
-        faq, created = Faq.objects.get_or_create(lesson=lesson, defaults={'question': ''})
+        # will check if the user_message is frequently asked
+        # if the user_messagee is frequently asked it will create a FAQ and related-content row
+        # the FAQ will also have the related-content-id (note: its possible to implement a multi relatinoal frequently asked question)
+        
+        RelatedContentController.process_message_and_add_to_faq(lesson_id,user_message)
 
-        if created:
-            print("FAQ created for the lesson")
-        else:
-            print("FAQ retrieved for the lesson")
 
-        # Append the new question to the existing FAQ questions
-        updated_question = f"{faq.question}\n{user_message}"
-        faq.question = updated_question
-        faq.save()
-        print("Updated FAQ:", faq.question)
+        #check
+        # faq, created = Faq.objects.get_or_create(lesson=lesson,related_content=related_content_id, question=user_message)
+
+        # if created:
+        #     print("FAQ created for the lesson")
+        # else:
+        #     print("FAQ retrieved for the lesson")
+
+        # # Append the new question to the existing FAQ questions
+        # updated_question = f"{faq.question}\n{user_message}"
+        # faq.question = updated_question
+        # faq.save()
+        # print("Updated FAQ:", faq.question)
 
         return JsonResponse({"response": ai_response})
     

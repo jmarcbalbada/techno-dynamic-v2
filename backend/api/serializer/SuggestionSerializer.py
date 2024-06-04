@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Suggestion
+from api.model.Suggestion import Suggestion
 
 class SuggestionSerializer(serializers.ModelSerializer):
     class Meta:

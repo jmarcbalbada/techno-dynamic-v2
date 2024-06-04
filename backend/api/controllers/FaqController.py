@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 
-from ..models import Faq
+from api.model.Faq import Faq
 from api.model.SubQuery import SubQuery
 from api.model.Lesson import Lesson
 from api.model.Query import Query
