@@ -402,3 +402,4 @@ backend/api/migrations/0001_initial.py
 backend/media
 backend/api/test.rest
 backend/.env
+backend/.env
