@@ -11,8 +11,8 @@ from api.serializer.ImageModelSerializer import ImageModelSerializer
 class ImageModelController(GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, DestroyModelMixin):
     queryset = ImageModel.objects.all()
     serializer_class = ImageModelSerializer
-    authentication_classes = [SessionAuthentication, TokenAuthentication]
     
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def createImage(self, request, lesson_id, lesson_content_id):
