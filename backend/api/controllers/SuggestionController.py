@@ -8,7 +8,7 @@ from api.serializer.LessonContentSerializer import LessonContentSerializer
 from api.model.Notification import Notification
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.conf import settings
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationSummaryBufferMemory
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
