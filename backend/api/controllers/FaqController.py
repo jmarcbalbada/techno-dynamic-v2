@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
@@ -9,10 +10,17 @@ from api.model.Lesson import Lesson
 from api.model.Query import Query
 from api.serializer.FaqSerializer import FaqSerializer
 
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 10
+
 class FaqController(ModelViewSet):
     queryset = Faq.objects.all()
     serializer_class = FaqSerializer
+
     authentication_classes = [SessionAuthentication, TokenAuthentication]
+    pagination_class = PageNumberPagination
 
     def get_count_faq_questions_all(self, request):
         faq_data = []

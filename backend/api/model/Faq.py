@@ -1,4 +1,6 @@
 from django.db import models
+from rest_framework.pagination import PageNumberPagination
+
 from api.model.Lesson import Lesson
 from api.model.Notification import Notification
 from api.model.RelatedContent import RelatedContent
