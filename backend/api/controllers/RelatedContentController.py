@@ -1,4 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
+
+from .NoticeNotifierController import NoticeNotifierController
 from api.model.RelatedContent import  RelatedContent
 from api.serializer.RelatedContentSerializer import  RelatedContentSerializer
 from api.model.Faq import Faq
@@ -69,6 +71,7 @@ class RelatedContentController(ModelViewSet):
                 question=message
             )
             faq.save()
+            NoticeNotifierController.create_notice(lesson_id, related_contents[max_sim_index].related_content_id)
             # return f"Message added to FAQ under related content ID {matching_related_content.id}"
         else:
             # If no similar content is found, create a new RelatedContent
@@ -82,4 +85,5 @@ class RelatedContentController(ModelViewSet):
                 question=message
             )
             faq.save()
+            NoticeNotifierController.create_notice(lesson_id, related_contents[max_sim_index].related_content_id)
             # return f"New related content created and message added to FAQ under related content ID {new_related_content.id}"

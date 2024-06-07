@@ -2,6 +2,7 @@
 from django.urls import path, re_path,include
 
 from .controllers.TeacherController import TeacherController
+from .controllers.NoticeNotifierController import NoticeNotifierController
 from .controllers.UserController import UserController
 from .controllers.LessonController import LessonController
 from .controllers.LessonContentController import LessonContentsController
@@ -130,7 +131,9 @@ APPEND_SLASH = True
 routes = SimpleRouter()
 routes.register('faqs', FaqController)
 routes.register('teacher', TeacherController)
+routes.register('notices', NoticeNotifierController)
 urlpatterns = [
+
     path('', include(routes.urls)),
     # Paths
     re_path('login', UserController.login),

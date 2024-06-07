@@ -166,28 +166,7 @@ class ChatBotController(GenericViewSet):
         # if the user_messagee is frequently asked it will create a FAQ and related-content row
         # the FAQ will also have the related-content-id (note: its possible to implement a multi relatinoal frequently asked question)
 
-        #TODO Notify when FAQ reached specified amount
-        faqs = Faq.objects.filter(lesson__id=lesson_id).values(
-            'related_content__related_content_id',
-            'related_content__general_context'
-        ).annotate(count=Count('related_content__related_content_id')).order_by('-count')
 
-        # Get the latest notification for this lesson
-        latest_notification = Notification.objects.filter(lesson_id=lesson_id).order_by('-date_created').first()
-        last_notified_count = latest_notification.last_notified_count if latest_notification else 0
-
-        # Check if any count is a multiple of 10 and greater than last_notified_count
-        for faq in faqs:
-            if faq['count'] % 10 == 0 and faq['count'] > last_notified_count:
-                lesson = Lesson.objects.get(id=lesson_id)
-                Notification.objects.create(
-                    lesson=lesson,
-                    message=f"FAQ for lesson {lesson_id} has reached {faq['count']} related contents.",
-                    is_read=False,
-                    date_created=timezone.now(),
-                    last_notified_count=faq['count']
-                )
-                break
 
         RelatedContentController.process_message_and_add_to_faq(lesson_id,user_message)
 

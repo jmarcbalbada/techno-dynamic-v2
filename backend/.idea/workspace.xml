@@ -8,9 +8,9 @@
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/controllers/ChatBotController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/ChatBotController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/controllers/FaqController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/FaqController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/model/Notification.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/model/Notification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/model/RelatedContent.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/model/RelatedContent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/controllers/RelatedContentController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/RelatedContentController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/model/Teacher.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/model/Teacher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +121,8 @@
       <workItem from="1717690325988" duration="945000" />
       <workItem from="1717707558599" duration="17403000" />
       <workItem from="1717730724736" duration="594000" />
-      <workItem from="1717766880412" duration="1145000" />
+      <workItem from="1717766880412" duration="9725000" />
+      <workItem from="1717781336597" duration="3385000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>
