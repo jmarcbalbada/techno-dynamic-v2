@@ -8,6 +8,7 @@ class Notification(models.Model):
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
+    last_notified_count = models.IntegerField(default=0)
 
     def __str__(self):
         return f"Notification for Lesson {self.lesson.lessonNumber}: {self.message[:50]}"

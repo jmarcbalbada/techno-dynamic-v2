@@ -7,7 +7,10 @@
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/controllers/ChatBotController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/ChatBotController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/controllers/FaqController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/FaqController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/model/Notification.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/model/Notification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/model/RelatedContent.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/model/RelatedContent.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,8 +102,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.17011.127" />
+        <option value="bundled-python-sdk-48aec45f0201-7e9c3bbb6e34-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.17011.127" />
       </set>
     </attachedChunks>
   </component>
@@ -118,6 +121,7 @@
       <workItem from="1717690325988" duration="945000" />
       <workItem from="1717707558599" duration="17403000" />
       <workItem from="1717730724736" duration="594000" />
+      <workItem from="1717766880412" duration="1145000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>
