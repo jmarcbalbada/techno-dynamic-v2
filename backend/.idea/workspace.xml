@@ -4,13 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="">
+    <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
+      <change afterPath="$PROJECT_DIR$/../frontend/src/components/faq/GeneralContextList.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../frontend/src/components/faq/LessonList.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../frontend/src/components/faq/QuestionList.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../frontend/src/pages/Faq/FrequentlyAskedQuestions.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/backend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/controllers/ChatBotController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/ChatBotController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/controllers/SuggestionController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/SuggestionController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/controllers/FaqController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/FaqController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/serializer/FaqSerializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/serializer/FaqSerializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend_django/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend_django/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/apis/FaqService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/apis/FaqService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/query/QueriesTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/query/QueriesTable.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +51,14 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/backend_django/settings.py" root0="SKIP_INSPECTION" />
   </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MigrationScriptOptions">
+    <option name="ignoreImplicitObjects" value="true" />
+    <option name="ignoreSourceCode" value="false" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -58,25 +74,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/SOC/Class/3rd Year/2nd Sem/5 Software Engineering - Laviste/Techno-Dynamic-Learning/backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/SOC/Class/3rd Year/2nd Sem/5 Software Engineering - Laviste/Techno-Dynamic-Learning/backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\winso\Documents\GitHub\techno-dynamic-v2\backend\api\controllers" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -95,6 +125,9 @@
       <updated>1685123019095</updated>
       <workItem from="1717627638630" duration="1011000" />
       <workItem from="1717630880566" duration="1507000" />
+      <workItem from="1717686185051" duration="3228000" />
+      <workItem from="1717690325988" duration="945000" />
+      <workItem from="1717707558599" duration="14824000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>
@@ -278,7 +311,15 @@
       <option name="project" value="LOCAL" />
       <updated>1685212746814</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="[Winson] Making Dependencies Unlabeled">
+      <option name="closed" value="true" />
+      <created>1717686269383</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1717686269383</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -297,7 +338,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Modify workspace.xml" />
     <MESSAGE value="Modify workspace.xml v2" />
     <MESSAGE value="Create Lesson Model" />
     <MESSAGE value="Migrate Lesson Model" />
@@ -322,6 +362,7 @@
     <MESSAGE value="Add method DELETE" />
     <MESSAGE value="Improve CRUD for Lessons" />
     <MESSAGE value="Remove Code Smell" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove Code Smell" />
+    <MESSAGE value="[Winson] Making Dependencies Unlabeled" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Winson] Making Dependencies Unlabeled" />
   </component>
 </project>

@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { QueriesService } from 'apis/QueriesService';
 import QueryDetailsDialog from './QueryDetailsDialog';
 
-import { Box } from '@mui/material';
+import {Box, Breadcrumbs} from '@mui/material';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
@@ -14,6 +14,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import CloseIcon from '@mui/icons-material/Close';
+import Link from "@mui/material/Link";
 
 const columns = [
   { field: 'createdAt', headerName: 'Created At', width: 170, headerClassName: 'super-app-theme--header' },
@@ -101,10 +102,19 @@ const QueriesTable = () => {
       <Box mt={4}>
         <Stack divider={<Divider flexItem />} spacing={2}>
           <Box display='flex' justifyContent='space-between'>
-            <Typography variant='h4'>Student's Queries</Typography>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link underline="hover" color="inherit" href="/faq">
+                Frequently ask
+              </Link>
+              <Link underline="hover" color="inherit" href="/queries">
+                Student Queries
+              </Link>
+            </Breadcrumbs>
+            {/*<Typography variant='h4'>Student's Queries</Typography>*/}
             <Button onClick={handleClose} endIcon={<CloseIcon />}>
               Dashboard
             </Button>
+
           </Box>
           <Box mt={4} sx={{
               '& .super-app-theme--header': {
