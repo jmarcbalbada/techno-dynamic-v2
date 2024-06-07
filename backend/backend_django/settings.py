@@ -40,6 +40,11 @@ print("Generated SECRET_KEY:", SECRET_KEY)
 # DEBUG = os.environ.get('DEBUG')
 DEBUG = True
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # Adjust this value as needed
+}
+
 # ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
@@ -57,6 +62,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

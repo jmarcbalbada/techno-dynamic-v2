@@ -125,8 +125,11 @@ suggestion_revert_actions = {
     'put': 'updateRevertContent',
     # 'delete': 'deleteSuggestion',
 }
+APPEND_SLASH = True
+
 routes = SimpleRouter()
-routes.register('teacher',TeacherController)
+routes.register('faqs', FaqController)
+routes.register('teacher', TeacherController)
 urlpatterns = [
     path('', include(routes.urls)),
     # Paths

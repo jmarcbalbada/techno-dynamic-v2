@@ -1,0 +1,1 @@
+select a.related_content_id, a.question from api_faq a left join api_relatedcontent r on a.id=r.lesson_id order by a.related_content_id

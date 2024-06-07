@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="Remove Code Smell">
+    <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/0002_alter_lesson_id.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/0003_lesson_url.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/0004_remove_lesson_content_lesson_file_alter_lesson_url_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/0004_remove_lesson_content_lesson_subtitle_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/0005_alter_lesson_title.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/0005_remove_lesson_file_lesson_subtitle_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,9 +40,21 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/backend_django/settings.py" root0="SKIP_INSPECTION" />
   </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MigrationScriptOptions">
+    <option name="ignoreImplicitObjects" value="true" />
+    <option name="ignoreSourceCode" value="false" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2QLBXHHbTPDDjmLWKAhUZSFQ0aB" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -62,11 +69,41 @@
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Laconsay-Frontend1&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/SOC/Class/3rd Year/2nd Sem/5 Software Engineering - Laviste/Techno-Dynamic-Learning/backend&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\winso\Documents\GitHub\techno-dynamic-v2\backend\api\controllers" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -75,6 +112,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685123019095</updated>
+      <workItem from="1717627638630" duration="1011000" />
+      <workItem from="1717630880566" duration="1507000" />
+      <workItem from="1717686185051" duration="3228000" />
+      <workItem from="1717690325988" duration="945000" />
+      <workItem from="1717707558599" duration="17403000" />
+      <workItem from="1717730724736" duration="594000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>
@@ -258,8 +301,19 @@
       <option name="project" value="LOCAL" />
       <updated>1685212746814</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="[Winson] Making Dependencies Unlabeled">
+      <option name="closed" value="true" />
+      <created>1717686269383</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1717686269383</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -274,7 +328,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Modify workspace.xml" />
     <MESSAGE value="Modify workspace.xml v2" />
     <MESSAGE value="Create Lesson Model" />
     <MESSAGE value="Migrate Lesson Model" />
@@ -299,6 +352,7 @@
     <MESSAGE value="Add method DELETE" />
     <MESSAGE value="Improve CRUD for Lessons" />
     <MESSAGE value="Remove Code Smell" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove Code Smell" />
+    <MESSAGE value="[Winson] Making Dependencies Unlabeled" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Winson] Making Dependencies Unlabeled" />
   </component>
 </project>
