@@ -403,3 +403,5 @@ backend/media
 backend/api/test.rest
 backend/.env
 backend/.env
+backend/.env
+/backend

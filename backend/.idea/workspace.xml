@@ -5,20 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
-      <change afterPath="$PROJECT_DIR$/../frontend/src/components/faq/GeneralContextList.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../frontend/src/components/faq/LessonList.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../frontend/src/components/faq/QuestionList.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../frontend/src/pages/Faq/FrequentlyAskedQuestions.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/controllers/FaqController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/FaqController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/serializer/FaqSerializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/serializer/FaqSerializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend_django/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend_django/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/apis/FaqService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/apis/FaqService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/components/query/QueriesTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/query/QueriesTable.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +116,7 @@
       <workItem from="1717630880566" duration="1507000" />
       <workItem from="1717686185051" duration="3228000" />
       <workItem from="1717690325988" duration="945000" />
-      <workItem from="1717707558599" duration="14824000" />
+      <workItem from="1717707558599" duration="16040000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>

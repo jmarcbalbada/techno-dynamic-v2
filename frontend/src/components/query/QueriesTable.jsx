@@ -104,7 +104,7 @@ const QueriesTable = () => {
           <Box display='flex' justifyContent='space-between'>
             <Breadcrumbs aria-label="breadcrumb">
               <Link underline="hover" color="inherit" href="/faq">
-                Frequently ask
+                Frequently Asked
               </Link>
               <Link underline="hover" color="inherit" href="/queries">
                 Student Queries
