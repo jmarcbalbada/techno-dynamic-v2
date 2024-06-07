@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -116,7 +115,7 @@
       <workItem from="1717630880566" duration="1507000" />
       <workItem from="1717686185051" duration="3228000" />
       <workItem from="1717690325988" duration="945000" />
-      <workItem from="1717707558599" duration="16040000" />
+      <workItem from="1717707558599" duration="17403000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>
