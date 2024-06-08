@@ -1,6 +1,7 @@
 
 from django.urls import path, re_path,include
 
+from .controllers.GroupedQuestionsController import GroupedQuestionsController
 from .controllers.TeacherController import TeacherController
 from .controllers.NoticeNotifierController import NoticeNotifierController
 from .controllers.UserController import UserController
@@ -132,6 +133,7 @@ routes = SimpleRouter()
 routes.register('faqs', FaqController)
 routes.register('teacher', TeacherController)
 routes.register('notices', NoticeNotifierController)
+routes.register('questions', GroupedQuestionsController)
 urlpatterns = [
 
     path('', include(routes.urls)),

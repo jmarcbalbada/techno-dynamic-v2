@@ -7,9 +7,8 @@
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/controllers/ChatBotController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/ChatBotController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/controllers/RelatedContentController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/RelatedContentController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/model/Teacher.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/model/Teacher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/model/Faq.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/model/Faq.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -123,6 +122,7 @@
       <workItem from="1717730724736" duration="594000" />
       <workItem from="1717766880412" duration="9725000" />
       <workItem from="1717781336597" duration="3385000" />
+      <workItem from="1717803359512" duration="4887000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>
