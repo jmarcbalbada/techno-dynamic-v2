@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
-      <change afterPath="$PROJECT_DIR$/api/controllers/GroupedQuestionsController.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/controllers/NoticeNotifierController.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/model/GroupedQuestions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/model/NoticeNotifier.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements2.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements3.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +123,7 @@
       <workItem from="1717781336597" duration="3385000" />
       <workItem from="1717803359512" duration="6976000" />
       <workItem from="1717818834219" duration="2428000" />
-      <workItem from="1717870878489" duration="2350000" />
+      <workItem from="1717870878489" duration="2680000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>
