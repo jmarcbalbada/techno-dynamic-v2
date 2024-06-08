@@ -1,6 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
 
-from .NoticeNotifierController import NoticeNotifierController
 from .FaqController import FaqController
 from api.model.RelatedContent import  RelatedContent
 from api.serializer.RelatedContentSerializer import  RelatedContentSerializer
