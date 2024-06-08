@@ -43,6 +43,7 @@ const Dashboard = () => {
     try {
       const response = await LessonsService.list();
       if (response) {
+        console.log(response.data)
         setLessons(response.data);
       }
     } catch (error) {
@@ -119,7 +120,10 @@ const Dashboard = () => {
           )}
           {lessons.map((lesson, index) => (
             <Grid item xs={12} md={6} lg={4} key={index}>
+              {/*{lesson.coverImage}*/}
+
               <LessonCard
+
                 id={lesson.id}
                 lessonNumber={lesson.lessonNumber}
                 title={lesson.title}
