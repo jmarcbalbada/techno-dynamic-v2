@@ -4,4 +4,4 @@ from api.model.Notification import Notification
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['notif_id', 'lesson', 'message', 'date_created']
+        fields = '__all__'

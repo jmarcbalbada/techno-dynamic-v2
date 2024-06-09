@@ -1,278 +1,61 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { useAuth } from "hooks/useAuth";
-import lionLogo from "assets/lionlogo.png";
-import { AppBar as MuiAppBar } from "@mui/material";
-import { Box } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import { Button, ListItemIcon, useTheme } from "@mui/material";
-import Menu from "@mui/material/Menu";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import MenuItem from "@mui/material/MenuItem";
-import Toolbar from "@mui/material/Toolbar";
-import Badge from "@mui/material/Badge";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
-import NotificationMessageLayout from "../pages/Notification/NotificationMessageLayout";
-import { NotificationService } from "../apis/NotificationService";
-import { UsersService } from "../apis/UsersService";
+import { AppBar as MuiAppBar, Box, Toolbar, useTheme } from "@mui/material";
+import useUser from "../hooks/useUser";
+import useNotifications from "../hooks/useNotifications";
+import UserMenu from "../components/appbar/UserMenu.jsx";
+import Logo from "../components/appbar/Logo";
+import NotificationIcon from "../components/appbar/NotificationIcon";
 
 const Appbar = () => {
-  const { user, logout } = useAuth();
-  const [anchorElUser, setAnchorElUser] = useState(null);
-  const [showNotification, setShowNotification] = useState(false);
-  const [unreadNotif, setUnreadNotif] = useState([]);
-  const [countNotif, setCountNotif] = useState(0);
-  const [opt_in, setOptIn] = useState(user.opt_in);
-  const navigate = useNavigate();
-  const theme = useTheme();
-  const [u_user, setU_user] = useState([]);
+    const { user } = useAuth();
+    const [anchorElUser, setAnchorElUser] = useState(null);
+    const theme = useTheme();
 
-  const open = Boolean(anchorElUser);
+    const { opt_in } = useUser(user);
+    const { unreadNotif, countNotif, setAllToReadNotifications,deleteNotificationById,setOpenedNotificationById } = useNotifications(user);
 
-  // useEffect(() => {
-  //   if (user.role === "teacher") {
-  //     getUnreadNotifications();
-  //     getCountUnreadNotifications();
-  //   }
-  // }, [countNotif, unreadNotif]);
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
 
-  useEffect(() => {
-    if (user.role === "teacher") {
-      getCountUnreadNotifications();
-    }
-    // console.log("userid", user.id)
-  }, []);
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
 
-  useEffect(() => {
-    if (user.role === "teacher") {
-      getOptInById();
-    }
-    // console.log("userid", user.id)
-  }, [opt_in]);
-
-  useEffect(() => {
-    getUserViaId();
-    // console.log("u_user",u_user)
-  }, []);
-
-  const getOptInById = async () => {
-    try {
-      const response = await UsersService.getOptIn(user.id);
-      // console.log("OPT IN? = ", response.data.opt_in);
-      setOptIn(response.data.opt_in);
-    } catch (error) {
-      console.log("error", error);
-    } finally {
-      // close
-    }
-  };
-
-  const getUserViaId = async () => {
-    try {
-      const response = await UsersService.getUserbyID(user.id);
-      setU_user(response.data);
-      // console.log("u_user", u_user);
-      // console.log("response.data = ", response.data);
-      // console.log("unreadNotif = ", unreadNotif);
-    } catch (error) {
-      // console.log("error", error);
-    } finally {
-      // close
-    }
-  };
-
-  useEffect(() => {
-    if (user.role === "teacher") {
-      // Call getUnreadNotifications only when countNotif changes
-      // if (countNotif > 0) {
-      //   getUnreadNotifications();
-      // }
-      getUnreadNotifications();
-    }
-  }, [countNotif]);
-
-  const getUnreadNotifications = async () => {
-    try {
-      const response = await NotificationService.getUnreadNotif();
-      setUnreadNotif(response.data);
-      // console.log("response.data = ", response.data);
-      // console.log("unreadNotif = ", unreadNotif);
-    } catch (error) {
-      // console.log("error", error);
-    } finally {
-      // close
-    }
-  };
-
-  const setAllToReadNotifications = async () => {
-    try {
-      const response = await NotificationService.markAllAsRead();
-      setCountNotif(0);
-    } catch (error) {
-      // console.log("error", error);
-    } finally {
-      // close
-    }
-  };
-
-  const getCountUnreadNotifications = async () => {
-    try {
-      const response = await NotificationService.getCountUnreadNotif();
-      setCountNotif(response.data.unread_count);
-      // console.log("Rresponse", response.data.unread_count)
-      // console.log("response.data = ", response.data);
-      // console.log("unreadNotif = ", unreadNotif);
-    } catch (error) {
-      // console.log("error", error);
-    } finally {
-      // close
-    }
-  };
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const notifIsFinallyClose = (isClosed) => {
-    setShowNotification(!isClosed);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const handleProfile = () => {
-    navigate("/profile");
-    handleCloseUserMenu();
-  };
-
-  const handleLogout = () => {
-    logout();
-    handleCloseUserMenu();
-  };
-
-  const handleNotificationClick = () => {
-    setAllToReadNotifications();
-    setShowNotification(!showNotification);
-  };
-
-  const handleNavigateToDashboard = () => {
-    navigate("/");
-  };
-
-  return (
-    <MuiAppBar
-      variant="outlined"
-      elevation={0}
-      position="static"
-      sx={{
-        background: theme.palette.white.main,
-        borderBottom: "1px dashed #e0e0e0",
-        position: "relative", // Ensure relative positioning
-      }}
-    >
-      <Toolbar>
-        <Box display="flex" alignItems="center" flexGrow={1}>
-          <Box
-            onClick={handleNavigateToDashboard}
-            display="flex"
-            alignItems="center"
+    return (
+        <MuiAppBar
+            variant="outlined"
+            elevation={0}
+            position="static"
             sx={{
-              cursor: "pointer",
+                background: theme.palette.white.main,
+                borderBottom: "1px dashed #e0e0e0",
+                position: "relative",
             }}
-          >
-            <img src={lionLogo} alt="lion logo" width="40" height="40" />
-            <Typography
-              display={{ xs: "none", sm: "flex" }}
-              variant="h6"
-              component="div"
-              sx={{
-                ml: 2,
-                color: theme.palette.getContrastText(theme.palette.white.main),
-              }}
-            >
-              Technopreneurship
-            </Typography>
-          </Box>
-        </Box>
-        {(user.role === "teacher" && opt_in) && (
-          <div style={{ position: "relative" }}>
-            <IconButton
-              sx={{
-                paddingRight: "60px",
-                display: "inline",
-                transition: "transform 0.3s ease",
-                "&:hover": {
-                  backgroundColor: "transparent",
-                  transform: "scale(1.1)",
-                },
-              }}
-              onClick={handleNotificationClick}
-            >
-              <Badge badgeContent={countNotif} color="error">
-                <NotificationsOutlinedIcon sx={{ fontSize: 28 }} />
-              </Badge>
-            </IconButton>
-            {showNotification && (
-              <NotificationMessageLayout
-                onClick={handleNotificationClick} // Pass the onclick event
-                closedFinally={notifIsFinallyClose}
-                unreadNotif={unreadNotif}
-              />
-            )}
-          </div>
-        )}
-        <Box flexGrow={0}>
-          <Tooltip title="Open Settings">
-            <Button
-              onClick={handleOpenUserMenu}
-              size="large"
-              aria-controls={open ? "account-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-            >
-              <Typography sx={{ mr: 1 }}>{user?.first_name}</Typography>
-              <Avatar>{user?.first_name?.charAt(0).toUpperCase()}</Avatar>
-            </Button>
-          </Tooltip>
-          <Menu
-            sx={{
-              mt: 4.5,
-            }}
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            <MenuItem onClick={handleProfile}>
-              <ListItemIcon>
-                <PersonIcon fontSize="small" />
-              </ListItemIcon>
-              Profile
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>
-              <ListItemIcon>
-                <LogoutIcon fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
-        </Box>
-      </Toolbar>
-    </MuiAppBar>
-  );
+        >
+            <Toolbar>
+                <Logo />
+                {user.role === "teacher" && opt_in && (
+                    <NotificationIcon
+                        countNotif={countNotif}
+                        unreadNotif={unreadNotif}
+                        handleNotificationClick={setAllToReadNotifications}
+                        deleteNotificationById={deleteNotificationById}
+                        setOpenedNotificationById={setOpenedNotificationById}
+
+                    />
+                )}
+                <Box flexGrow={0}>
+                    <UserMenu
+                        anchorElUser={anchorElUser}
+                        handleOpenUserMenu={handleOpenUserMenu}
+                        handleCloseUserMenu={handleCloseUserMenu}
+                    />
+                </Box>
+            </Toolbar>
+        </MuiAppBar>
+    );
 };
 
 export default Appbar;

@@ -13,7 +13,7 @@ from .controllers.ImageMediaController import ImageMediaController
 from .controllers.FileController import FileController
 from .controllers.FaqController import FaqController
 from .controllers.SuggestionController import SuggestionController
-from .controllers.NotificationController import NotificationController
+# from .controllers.NotificationController import NotificationController
 from .controllers.RelatedContentController import RelatedContentController
 from .controllers.NotificationController import NotificationController
 from rest_framework.routers import SimpleRouter
@@ -132,6 +132,7 @@ routes = SimpleRouter()
 routes.register('faqs', FaqController)
 routes.register('teacher', TeacherController)
 routes.register('questions', GroupedQuestionsController)
+routes.register('notification', NotificationController)
 urlpatterns = [
 
     path('', include(routes.urls)),
