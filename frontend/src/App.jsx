@@ -37,8 +37,9 @@ export const router = createBrowserRouter(
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/create' element={<Create />} />
           <Route path='/suggest/:lessonNumber/:pageNumber/:lessonID' element={<SuggestContent />} />
-          <Route path='/lessons/:lessonNumber/:pageNumber/:lessonID/rvContent' element={<RevertContent />} />
-          <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
+            <Route path='/lessons/:lessonNumber/:pageNumber/:lessonID/rvContent' element={<RevertContent />} />
+            <Route path='suggestcontent' element={<SuggestContent/>} />
+            <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
             <Route path='/queries' element={<Query />} />
             <Route path='/faq' element={<FrequentlyAskedQuestions/>} />
         </Route>

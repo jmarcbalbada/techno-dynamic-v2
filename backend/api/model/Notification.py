@@ -7,6 +7,7 @@ class Notification(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     message = models.TextField()
     is_read = models.BooleanField(default=False)
+    is_open = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

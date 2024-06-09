@@ -1,4 +1,5 @@
 from django.db.models import Count
+from django.utils import timezone
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
@@ -8,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 
+from api.model import Notification
 from api.model.Faq import Faq
 from api.model.SubQuery import SubQuery
 from api.model.Lesson import Lesson
@@ -41,7 +43,20 @@ class FaqController(ModelViewSet):
             'related_content__related_content_id',
             'related_content__general_context'
         ).annotate(count=Count('related_content__related_content_id')).order_by('-count')
+        #this part
+        # # Check if any count is 10 and send a notification
+        # for faq in faqs:
+        #     if faq['count'] == 10:
+        #         lesson = Lesson.objects.get(id=lesson_id)
+        #         Notification.objects.create(
+        #             lesson=lesson,
+        #             message=f"FAQ for lesson {lesson_id} has reached 10 related contents.",
+        #             is_read=False,
+        #             date_created=timezone.now()
+        #         )
+        #         break
         page = self.paginate_queryset(faqs)
+
 
         if page is not None:
             return self.get_paginated_response(page)

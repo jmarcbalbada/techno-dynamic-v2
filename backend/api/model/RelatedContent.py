@@ -8,7 +8,6 @@ from django.db import models
 
 class RelatedContent(models.Model):
     related_content_id = models.AutoField(primary_key=True)
-    isgenerated = models.BooleanField(default=False)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE,related_name='lesson')
     general_context = models.TextField(default="", null=False)
 

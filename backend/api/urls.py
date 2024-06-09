@@ -1,6 +1,7 @@
 
 from django.urls import path, re_path,include
 
+from .controllers.GroupedQuestionsController import GroupedQuestionsController
 from .controllers.TeacherController import TeacherController
 from .controllers.UserController import UserController
 from .controllers.LessonController import LessonController
@@ -12,7 +13,7 @@ from .controllers.ImageMediaController import ImageMediaController
 from .controllers.FileController import FileController
 from .controllers.FaqController import FaqController
 from .controllers.SuggestionController import SuggestionController
-from .controllers.NotificationController import NotificationController
+# from .controllers.NotificationController import NotificationController
 from .controllers.RelatedContentController import RelatedContentController
 from .controllers.NotificationController import NotificationController
 from rest_framework.routers import SimpleRouter
@@ -126,11 +127,14 @@ suggestion_revert_actions = {
     # 'delete': 'deleteSuggestion',
 }
 APPEND_SLASH = True
-
+#
 routes = SimpleRouter()
 routes.register('faqs', FaqController)
 routes.register('teacher', TeacherController)
+routes.register('questions', GroupedQuestionsController)
+routes.register('notification', NotificationController)
 urlpatterns = [
+
     path('', include(routes.urls)),
     # Paths
     re_path('login', UserController.login),

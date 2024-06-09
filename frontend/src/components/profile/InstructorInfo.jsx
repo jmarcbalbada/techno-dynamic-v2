@@ -2,8 +2,9 @@ import React from 'react';
 import { Divider, Chip, Box, Typography, Tooltip } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import SuggestionButton from './SuggestionButton'; // Adjust the import path
-import ThresholdInputButton from './ThresholdInputButton'; // Adjust the import path
 
+import ThresholdInputButton from './ThresholdInputButton'; // Adjust the import path
+import NotificationThresholdInputButton from './NotificationThresholdInputButton'; // Adjust the import path
 const InstructorInfo = () => {
   return (
     <>
@@ -33,7 +34,8 @@ const InstructorInfo = () => {
 
       <SuggestionButton />
 
-      <ThresholdInputButton />
+        <ThresholdInputButton />
+        <NotificationThresholdInputButton />
     </>
   );
 };

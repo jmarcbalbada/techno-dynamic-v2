@@ -13,19 +13,19 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage('user', null);
   const [threshold, setThreshold] = useState(null);
   const [suggestion, setSuggestion] = useState(null);
+  const [notificationId, setNotificationId] = useState(null);
   const navigate = useNavigate();
 
   const login = async (data) => {
-    let response,suggestion_return,threshold_return;
+    let response, suggestion_return, threshold_return;
     try {
-      data ={
+      data = {
         username: data.username,
         password: data.password
       }
-      response = await UsersService.login(data)
-      console.log('user: ',response.data);
-      suggestion_return = await TeacherService.getTeacherSuggestion()
-      threshold_return = await TeacherService.getTeacherThreshold()
+      response = await UsersService.login(data);
+      suggestion_return = await TeacherService.getTeacherSuggestion();
+      threshold_return = await TeacherService.getTeacherThreshold();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response.status);
@@ -34,9 +34,6 @@ export const AuthProvider = ({ children }) => {
     setToken(response.data.token);
     setThreshold(threshold_return.data.similarity_threshold);
     setSuggestion(suggestion_return.data.teacher_allow_suggestion);
-    console.log("suggestion: ",suggestion_return.data.teacher_allow_suggestion);
-    console.log('threshold: ',threshold_return.data.similarity_threshold);
-    console.log('user: ',user);
 
     if (response.data.student_data) {
       setUser({
@@ -56,7 +53,16 @@ export const AuthProvider = ({ children }) => {
     navigate('/login', { replace: true });
   };
 
-  const value = useMemo(() => ({threshold,suggestion, token, user, login, logout }), [token, user]);
+  const value = useMemo(() => ({
+    threshold,
+    suggestion,
+    token,
+    user,
+    login,
+    logout,
+    notificationId,
+    setNotificationId
+  }), [token, user, threshold, suggestion, notificationId]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

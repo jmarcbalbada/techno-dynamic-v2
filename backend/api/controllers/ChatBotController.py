@@ -1,11 +1,14 @@
 import json
 # import openai
 import os
+
+from django.db.models import Count
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
 from django.conf import settings
 from bs4 import BeautifulSoup
 from django.utils import timezone
 from .RelatedContentController import RelatedContentController
+from api.model.Faq import Faq
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -24,6 +27,9 @@ from rest_framework.viewsets import GenericViewSet
 from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationSummaryBufferMemory
+
+from ..model import Notification
+
 
 class ChatBotController(GenericViewSet):
     load_dotenv()
@@ -159,7 +165,9 @@ class ChatBotController(GenericViewSet):
         # will check if the user_message is frequently asked
         # if the user_messagee is frequently asked it will create a FAQ and related-content row
         # the FAQ will also have the related-content-id (note: its possible to implement a multi relatinoal frequently asked question)
-        
+
+
+
         RelatedContentController.process_message_and_add_to_faq(lesson_id,user_message)
 
 
