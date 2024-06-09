@@ -127,7 +127,7 @@ suggestion_revert_actions = {
     # 'delete': 'deleteSuggestion',
 }
 APPEND_SLASH = True
-
+#
 routes = SimpleRouter()
 routes.register('faqs', FaqController)
 routes.register('teacher', TeacherController)

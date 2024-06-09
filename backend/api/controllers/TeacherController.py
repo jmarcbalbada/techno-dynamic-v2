@@ -54,7 +54,7 @@ class TeacherController(ModelViewSet):
 
     @action(detail=False, methods=['patch'], url_path='setsuggestion')
     def set_suggestion(self, request):
-        similarity = request.data.get('notfication')  # Access from request data
+        similarity = request.data.get('suggestion')  # Access from request data
         if similarity is None:
             return Response({"error": "similarity parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
         try:

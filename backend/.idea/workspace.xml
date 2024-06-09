@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
-      <change afterPath="$PROJECT_DIR$/../frontend/src/components/appbar/NotificationItem.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/controllers/NotificationController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/NotificationController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/model/Notification.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/model/Notification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/serializer/NotificationSerializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/serializer/NotificationSerializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/controllers/TeacherController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/TeacherController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/apis/NotificationService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/apis/NotificationService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/layout/Appbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/layout/Appbar.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

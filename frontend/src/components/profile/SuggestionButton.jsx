@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Box, Typography, Tooltip, Switch } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useAuth } from '../../hooks/useAuth';
@@ -7,6 +7,18 @@ import { TeacherService } from '../../apis/TeacherService';
 const SuggestionButton = () => {
   const { suggestion } = useAuth();
   const [suggestions, setSuggestions] = useState(suggestion);
+
+    useEffect(() => {
+        const fetchSuggestions = async () => {
+            try {
+                const response = await TeacherService.getTeacherSuggestion();
+                setSuggestions(response.data.teacher_allow_suggestion);
+            } catch (error) {
+                console.error('Failed to fetch suggestions', error);
+            }
+        };
+        fetchSuggestions();
+    }, []); // Empty dependency array ensures this runs only once
 
   const handleSuggestion = async (event) => {
     const similarity = event.target.checked;
