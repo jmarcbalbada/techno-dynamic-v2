@@ -10,7 +10,7 @@ const fileNames = [
   'hooks',
   'layout',
   'pages',
-  'src',
+  'src'
 ];
 
 // this will generate aliases for fileNames
@@ -31,6 +31,9 @@ export default defineConfig({
     }
   },
   server: {
+    hmr: {
+      overlay: true
+    },
     watch: {
       usePolling: true
     },

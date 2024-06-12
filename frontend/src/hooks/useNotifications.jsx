@@ -29,6 +29,7 @@ const useNotifications = (user) => {
     const setAllToReadNotifications = async () => {
         try {
             await NotificationService.markAllAsRead();
+            console.log("marked read");
             setCountNotif(0);
         } catch (error) {
             console.log("error", error);

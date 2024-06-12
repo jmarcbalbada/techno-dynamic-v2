@@ -17,6 +17,7 @@ from api.model.Suggestion import Suggestion
 from api.model.Lesson import Lesson
 from api.model.LessonContent import LessonContent
 from api.model.Query import Query
+from api.model.GroupedQuestions import GroupedQuestions
 from api.model.SubQuery import SubQuery
 import openai
 
@@ -43,6 +44,100 @@ class SuggestionController(ModelViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def createInsight(self, request):
+        lesson_id = request.data.get('lesson_id')
+        notification_id = request.data.get('notification_id')
+        
+        if not lesson_id or not notification_id:
+            return Response({"error": "lesson_id or notification_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # guard lesson and notification check if exists
+        existing_lesson = Lesson.objects.filter(id=lesson_id).first()
+        existing_notification = Notification.objects.filter(notif_id=notification_id).first()
+
+        if not existing_lesson or not existing_notification:
+            return Response({"error": "Lesson or Notification does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if a suggestion already exists for the lesson
+        existing_suggestion, IsCreated = Suggestion.objects.get_or_create(lesson_id=lesson_id)
+
+        # Check if existing_suggestion has insight value early return
+        # if existing_suggestion and existing_suggestion.insights:
+        #     return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
+
+        # Fetch lesson contents
+        lesson_contents = LessonContent.objects.filter(lesson_id=lesson_id)
+        
+        # Serialize and clean lesson content data
+        lesson_content_serializer = LessonContentSerializer(lesson_contents, many=True)
+        lesson_content_data = lesson_content_serializer.data
+
+        # Ensure the content field exists in lesson content data
+        lesson_content_text = "\n".join([content['contents'] for content in lesson_content_data if 'contents' in content])
+        print("content: ", lesson_content_text)
+
+        # Get grouped questions related to the given notification_id
+        grouped_questions = GroupedQuestions.objects.filter(notification_id=notification_id, lesson_id=lesson_id)
+        
+        # Get FAQs related to these grouped questions
+        faqs = Faq.objects.filter(grouped_questions__in=grouped_questions).select_related('grouped_questions__notification')
+
+        # Prepare the response data with only questions
+        faq_questions = [faq.question for faq in faqs if faq.grouped_questions and faq.grouped_questions.notification]
+
+        # print("FAQs Questions:", faq_questions)
+
+        input_text = f"""
+            Here is the FAQ from students:
+            ${faq_questions}
+
+            Here are the original lesson contents:
+            {lesson_content_text}
+
+            NOTE: YOU ARE REQUIRED TO CREATE AN INSIGHT GIVEN THE FAQ AND ORIGINAL LESSON CONTENTS:
+            NOTE: YOU MUST RETURN AN HTML MARKUP NOT AN HTML FILE AND IT SHOULD BE RICH INSIGHTS.
+            NOTE: YOU MUST SAY IN EVERY BULLET THAT STUDENTS ARE MORELIKELY WANT TO LEARN ABOUT ETC ETC
+            Insights in bullet form similar to the following examples this is insight based on the faq from students so most likely you will tell the user (teacher) that Students are most likely eager to learn etc etc.., return in HTML MARKUP: DONT ANSWER STARTING WITH \"Insights:\", just go directly with answers DO NOT MENTION ENHANCED INSIGHTS OR ETC
+            - <strong>Entrepreneurship's Impact:</strong> Students are keen to explore entrepreneurship's role in driving economic growth and innovation, especially in identifying opportunities and fostering competition.<br>
+            - <strong>Qualities of Success:</strong> There's strong interest in the qualities defining successful entrepreneurs, emphasizing creativity, determination, and resilience.<br>
+            - <strong>Technological Influence:</strong> Students recognize the importance of technology in entrepreneurship, highlighting the need to leverage advancements for innovation and competitiveness.<br>
+            - <strong>Areas for Improvement:</strong> To enhance learning, deeper insights into specific strategies for opportunity identification, risk management, and technological integration could be provided.<br>
+            - <strong>Unlock the full potential of your lesson materials:</strong> By addressing student curiosity and strengthening key concepts.<br>
+            Limit to these 5 bullets just focus on painpointing what might wrong in the lesson and how to address them.
+            NOTE: IT IS A MUST THAT YOU INCLUDE THESE 5 BULLETS MENTIONED IN YOUR RESPONSE AND HIGHLY ENCOURAGE TO USE <br> rather than "\n
+            """
+        
+        try:
+            # Call OpenAI API to get the suggestion
+            openai.api_key = os.environ.get("OPENAI_API_KEY")
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant. ALWAYS RESPOND IN HTML MARKUP, USE <br> for newlines instead of \\n, dont state the title like \" Insights\" instead go directly to your answer and use <h1> up to <h3> for titles, not **"},
+                    {"role": "user", "content": input_text}
+                ],
+                max_tokens=1500,
+                temperature=0.7,
+            )
+            ai_response = response['choices'][0]['message']['content'].strip()
+            print("AI RESPONSE:", ai_response)
+
+            # Update the existing suggestion with the new insights and old content
+            existing_suggestion.insights = ai_response
+            # existing_suggestion.content = None
+            if not existing_suggestion.old_content:
+                existing_suggestion.old_content = lesson_content_text
+            existing_suggestion.save()
+
+            if IsCreated:
+                return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_201_CREATED)
+            
+            return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     
     def createSuggestion(self, request):
         lesson_id = request.data.get('lesson_id')

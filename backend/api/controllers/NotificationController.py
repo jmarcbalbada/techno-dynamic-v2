@@ -37,20 +37,12 @@ class NotificationController(ModelViewSet):
             return Response(notifications_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
     @action(detail=False, methods=['get'])
     def getCountUnread(self, request):
         try:
             unread_notifs_count = self.queryset.filter(is_read=False).count()
             return Response({"unread_count": unread_notifs_count}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    @action(detail=False, methods=['put'])
-    def markAllAsRead(self, request):
-        try:
-            unread_notifs = self.queryset.filter(is_read=False)
-            unread_notifs.update(is_read=True)
-            return Response({"message": "All notifications marked as read"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -68,6 +60,7 @@ class NotificationController(ModelViewSet):
             return Response({"error": "Notification not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
     @action(detail=False, methods=['patch'])
     def setOpenedNotificationById(self, request):
         notification_id = request.data.get('notification_id')
@@ -83,8 +76,9 @@ class NotificationController(ModelViewSet):
             return Response({"error": "Notification not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
     @action(detail=False, methods=['delete'])
-    def deleteNotificatio(self, request):
+    def deleteNotification(self, request):
         lesson_id = request.data.get('lesson_id')
         if not lesson_id:
             return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -117,7 +111,9 @@ class NotificationController(ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    @action(detail=False, methods=['put'])
     def mark_all_as_read(self, request):
+        print("mark read was called")
         try:
             unread_notifs = self.queryset.filter(is_read=False)
             unread_notifs.update(is_read=True)
@@ -144,22 +140,3 @@ class NotificationController(ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    def deleteNotification(self, request):
-        lesson_id = request.data.get('lesson_id')
-        if not lesson_id:
-            return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            # Fetch the Notification based on the lesson_id
-            notification = Notification.objects.filter(lesson_id=lesson_id).first()
-            if not notification:
-                return Response({"error": "No notification found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
-
-            # Delete the notification
-            notification.delete()
-            
-            return Response({"message": "Notification deleted successfully"}, status=status.HTTP_200_OK)
-        except Notification.DoesNotExist:
-            return Response({"error": "Notification not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
