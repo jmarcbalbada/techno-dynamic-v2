@@ -16,6 +16,11 @@ export const SuggestionService = {
         },
       }
     ),
+  create_insights: (lesson_id, notification_id) =>
+    axios.post(
+      `${BASE_URL}/insights/`,
+      { lesson_id, notification_id },
+    ),
   accept_content: (lesson_id) =>
     axios.put(
       `${BASE_URL}/`,

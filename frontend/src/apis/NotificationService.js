@@ -12,7 +12,7 @@ export const NotificationService = {
         }),
     markAllAsRead: () =>
         axios.put(
-            `${BASE_URL}/markAllAsRead/`,
+            `${BASE_URL}/mark_all_as_read/`,
             {},
             {
                 headers: {

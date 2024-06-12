@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { QueriesService } from 'apis/QueriesService';
 import QueryDetailsDialog from './QueryDetailsDialog';
 
-import {Box, Breadcrumbs} from '@mui/material';
+import { Box, Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
@@ -14,13 +14,33 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import CloseIcon from '@mui/icons-material/Close';
-import Link from "@mui/material/Link";
+import Link from '@mui/material/Link';
 
 const columns = [
-  { field: 'createdAt', headerName: 'Created At', width: 170, headerClassName: 'super-app-theme--header' },
-  { field: 'lessonInfo', headerName: 'Lesson', width: 230, headerClassName: 'super-app-theme--header' },
-  { field: 'fullName', headerName: 'Name', width: 210, headerClassName: 'super-app-theme--header' },
-  { field: 'preview', headerName: 'Preview', width: 500, headerClassName: 'super-app-theme--header' },
+  {
+    field: 'createdAt',
+    headerName: 'Created At',
+    width: 170,
+    headerClassName: 'super-app-theme--header'
+  },
+  {
+    field: 'lessonInfo',
+    headerName: 'Lesson',
+    width: 230,
+    headerClassName: 'super-app-theme--header'
+  },
+  {
+    field: 'fullName',
+    headerName: 'Name',
+    width: 210,
+    headerClassName: 'super-app-theme--header'
+  },
+  {
+    field: 'preview',
+    headerName: 'Preview',
+    width: 500,
+    headerClassName: 'super-app-theme--header'
+  }
   // { field: 'courseYear', headerName: 'Course & Year', width: 260, headerClassName: 'super-app-theme--header' },
 ];
 
@@ -102,11 +122,11 @@ const QueriesTable = () => {
       <Box mt={4}>
         <Stack divider={<Divider flexItem />} spacing={2}>
           <Box display='flex' justifyContent='space-between'>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Link underline="hover" color="inherit" href="/faq">
+            <Breadcrumbs aria-label='breadcrumb'>
+              <Link underline='hover' color='#1b5e20' href='/faq'>
                 Frequently Asked
               </Link>
-              <Link underline="hover" color="inherit" href="/queries">
+              <Link underline='hover' color='inherit' href='/queries'>
                 Student Queries
               </Link>
             </Breadcrumbs>
@@ -114,12 +134,13 @@ const QueriesTable = () => {
             <Button onClick={handleClose} endIcon={<CloseIcon />}>
               Dashboard
             </Button>
-
           </Box>
-          <Box mt={4} sx={{
+          <Box
+            mt={4}
+            sx={{
               '& .super-app-theme--header': {
-                backgroundColor: 'rgba(27, 94, 32, 0.2)',
-              },
+                backgroundColor: 'rgba(27, 94, 32, 0.2)'
+              }
             }}>
             <DataGrid
               rows={queries}

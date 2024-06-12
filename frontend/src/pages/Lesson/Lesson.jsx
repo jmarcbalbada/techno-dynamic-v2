@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   useParams,
   useNavigate,
   useLocation,
-  Navigate,
-} from "react-router-dom";
+  Navigate
+} from 'react-router-dom';
 
-import { LessonsService } from "apis/LessonsService";
-import { SuggestionService } from "apis/SuggestionService";
-import LessonPage from "components/lessonpage/LessonPage";
-import FooterControls from "components/lessonpage/FooterControls";
-import FilesModal from "components/lessonpage/FilesModal";
-import ChatbotDialog from "components/lessonpage/ChatbotDialog";
-import { Box } from "@mui/material";
-import Container from "@mui/material/Container";
-import Fab from "@mui/material/Fab";
-import { useAuth } from "../../hooks/useAuth";
+import { LessonsService } from 'apis/LessonsService';
+import { SuggestionService } from 'apis/SuggestionService';
+import LessonPage from 'components/lessonpage/LessonPage';
+import FooterControls from 'components/lessonpage/FooterControls';
+import FilesModal from 'components/lessonpage/FilesModal';
+import ChatbotDialog from 'components/lessonpage/ChatbotDialog';
+import { Box } from '@mui/material';
+import Container from '@mui/material/Container';
+import Fab from '@mui/material/Fab';
+import { useAuth } from '../../hooks/useAuth';
 
-import ChatIcon from "@mui/icons-material/Chat";
-import NotificationLayout from "../Notification/NotificationLayout";
-import InsightLayout from "../Insight/InsightLayout";
+import ChatIcon from '@mui/icons-material/Chat';
+import NotificationLayout from '../Notification/NotificationLayout';
+import InsightLayout from '../Insight/InsightLayout';
 
 const Lesson = () => {
   const { lessonNumber, pageNumber, isNotif, isInsight, lessonID } =
     useParams();
-  const convertInsight = isInsight === "true";
+  const convertInsight = isInsight === 'true';
   const [insight, setInsight] = useState(convertInsight);
-  const notif = isNotif === "true";
+  const notif = isNotif === 'true';
   const navigate = useNavigate();
   const [lesson, setLesson] = useState({});
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber));
@@ -44,7 +44,7 @@ const Lesson = () => {
     // console.log("isNotif", notif);
     // console.log("isInsight", isInsight);
     getLessonLessonNumber(lessonNumber);
-    console.log("LESSONID", currID);
+    console.log('LESSONID', currID);
   }, []);
 
   // useEffect(() => {
@@ -53,12 +53,12 @@ const Lesson = () => {
   // }, [insight]);
 
   const suggestClick = () => {
-    console.log("suggest clicked");
+    console.log('suggest clicked');
     navigate(`/suggest/${lessonNumber}/1/${currID}`);
   };
 
   const insightClicked = () => {
-    console.log("insight clicked");
+    console.log('insight clicked');
     getSuggestionInsights(currID);
     setInsight(true);
   };
@@ -73,7 +73,7 @@ const Lesson = () => {
 
       // console.log("lessonID", currID);
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
       setIsError(true);
     } finally {
       setIsLoading(false);
@@ -82,11 +82,18 @@ const Lesson = () => {
 
   const getSuggestionInsights = async () => {
     try {
-      const response = await SuggestionService.create_suggestion(currID);
-      setLessonInsights(response.data.insights);
-      console.log("response.data", response.data);
+      const notif_id = localStorage.getItem('notification_id');
+      console.log('notif id', notif_id);
+      if (notif_id) {
+        const response = await SuggestionService.create_insights(
+          currID,
+          notif_id
+        );
+        setLessonInsights(response.data.insights);
+        console.log('response.data', response.data);
+      }
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
       setIsError(true);
     } finally {
     }
@@ -133,12 +140,11 @@ const Lesson = () => {
   return (
     <Box>
       <Container
-        component="main"
+        component='main'
         sx={{
           mt: 2,
-          mb: 12,
-        }}
-      >
+          mb: 12
+        }}>
         {isLoading ? (
           <div>Loading...</div>
         ) : isError ? (
@@ -146,7 +152,7 @@ const Lesson = () => {
         ) : (
           // <Navigate to="/404" replace />
           <>
-            {notif && !insight && user.role == "teacher" && (
+            {notif && !insight && user.role == 'teacher' && (
               <NotificationLayout
                 handleSuggest={suggestClick}
                 handleInsight={() => insightClicked(currID)}
@@ -158,7 +164,7 @@ const Lesson = () => {
                 sampleContentReal={
                   lessonInsights.length > 0
                     ? lessonInsights
-                    : "Loading please wait..."
+                    : 'Loading please wait...'
                 }
               />
             )}
@@ -171,14 +177,13 @@ const Lesson = () => {
               handleClose={handleCloseFiles}
             />
             <Fab
-              color="primary"
+              color='primary'
               onClick={handleOpenChat}
               sx={{
-                position: "fixed",
-                bottom: "100px",
-                right: "50px",
-              }}
-            >
+                position: 'fixed',
+                bottom: '100px',
+                right: '50px'
+              }}>
               <ChatIcon />
             </Fab>
             <ChatbotDialog
