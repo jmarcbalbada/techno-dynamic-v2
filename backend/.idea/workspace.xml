@@ -7,8 +7,7 @@
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/controllers/TeacherController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/TeacherController.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/controllers/RelatedContentController.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/controllers/RelatedContentController.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,6 +127,8 @@
       <workItem from="1717818834219" duration="2428000" />
       <workItem from="1717870878489" duration="14926000" />
       <workItem from="1717892470947" duration="8359000" />
+      <workItem from="1718156100999" duration="1950000" />
+      <workItem from="1718266987787" duration="2357000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>

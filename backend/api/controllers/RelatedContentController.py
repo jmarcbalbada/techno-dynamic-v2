@@ -29,68 +29,37 @@ class RelatedContentController(ModelViewSet):
 
     @staticmethod
     def process_message_and_add_to_faq(lesson_id, message):
+        # Convert message to lowercase for consistency
+        message = message.lower()
+
         related_contents = RelatedContent.objects.filter(lesson_id=lesson_id)
         lesson = Lesson.objects.get(id=lesson_id)
 
-        # Check if there are any related contents
-        if not related_contents.exists():
-            # If no related contents exist, create a new related content and FAQ entry
-            new_related_content = RelatedContent.objects.create(
-                lesson=lesson,
-                general_context=message
-            )
-            grouped_questions = GroupedQuestions.objects.create(
-                related_content=new_related_content,
-                lesson=lesson,
-            )
-            Faq.objects.create(
-                lesson=lesson,
-                related_content=new_related_content,
-                grouped_questions=grouped_questions,
-                question=message
-            )
-            return
+        faqlist = Faq.objects.filter(lesson_id=lesson_id)
+        max_sim_value = -1  # Initialize max similarity value
+        most_similar_faq = None
 
-        contexts = [rc.general_context for rc in related_contents]
-        contexts.append(message)
+        # Find the FAQ with the highest similarity to the new message
+        for faq in faqlist:
+            # Compute embeddings
+            faq_embedding = model.encode(faq.question.lower())
+            new_message_embedding = model.encode(message)
+            cosine_sim = util.pytorch_cos_sim(new_message_embedding, faq_embedding).numpy()[0][0]
 
-        # Compute embeddings
-        message_embeddings = model.encode(contexts)
-        new_message_embedding = message_embeddings[-1]
-        existing_message_embeddings = message_embeddings[:-1]
-
-        # Calculate cosine similarity between the new message and each existing message
-        cosine_sim = util.pytorch_cos_sim(new_message_embedding, existing_message_embeddings).numpy()
-
-        if cosine_sim.size == 0:
-            # Handle the case when there are no embeddings to compare
-            new_related_content = RelatedContent.objects.create(
-                lesson=lesson,
-                general_context=message
-            )
-            grouped_questions = GroupedQuestions.objects.create(
-                related_content=new_related_content,
-                lesson=lesson,
-            )
-            Faq.objects.create(
-                lesson=lesson,
-                related_content=new_related_content,
-                grouped_questions=grouped_questions,
-                question=message
-            )
-            return
-
-        max_sim_index = int(np.argmax(cosine_sim))
-        max_sim_value = np.max(cosine_sim)
+            if cosine_sim > max_sim_value:
+                max_sim_value = cosine_sim
+                most_similar_faq = faq
 
         # Threshold for similarity
         SIMILARITY_THRESHOLD = Teacher.objects.filter(id=1).first().threshold
         NOTIFICATION_THRESHOLD = Teacher.objects.filter(id=1).first().notification_threshold
 
+        # Process based on similarity
         if max_sim_value >= SIMILARITY_THRESHOLD:
-            matching_related_content = related_contents[max_sim_index]
-            grouped_questions = GroupedQuestions.objects.filter(lesson=lesson, related_content=matching_related_content,
-                                                                notified=False).first()
+            matching_related_content = most_similar_faq.related_content if most_similar_faq else related_contents.first()
+            grouped_questions = GroupedQuestions.objects.filter(
+                lesson=lesson, related_content=matching_related_content, notified=False
+            ).first()
 
             if not grouped_questions:
                 grouped_questions = GroupedQuestions.objects.create(
@@ -98,13 +67,14 @@ class RelatedContentController(ModelViewSet):
                     lesson=lesson,
                 )
 
-            faq_count = Faq.objects.filter(related_content=matching_related_content, lesson=lesson,
-                                           grouped_questions=grouped_questions).count() + 1
+            faq_count = Faq.objects.filter(
+                related_content=matching_related_content, lesson=lesson, grouped_questions=grouped_questions
+            ).count() + 1
 
             if faq_count >= NOTIFICATION_THRESHOLD:
                 create_notification = Notification.objects.create(
                     lesson=lesson,
-                    message="Message: "+lesson.title+" needs an update"
+                    message="Message: " + lesson.title + " needs an update"
                 )
                 grouped_questions.notification = create_notification
                 grouped_questions.notified = True
