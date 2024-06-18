@@ -20,6 +20,7 @@ import { useAuth } from '../../hooks/useAuth';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationLayout from '../Notification/NotificationLayout';
 import InsightLayout from '../Insight/InsightLayout';
+import Skeleton from '@mui/material/Skeleton';
 
 const Lesson = () => {
   const { lessonNumber, pageNumber, isNotif, isInsight, lessonID } =
@@ -164,7 +165,7 @@ const Lesson = () => {
                 sampleContentReal={
                   lessonInsights.length > 0
                     ? lessonInsights
-                    : 'Loading please wait...'
+                    : '<h4><i>Please wait...<i/><h4/>'
                 }
               />
             )}

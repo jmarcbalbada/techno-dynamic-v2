@@ -121,6 +121,9 @@ class SuggestionController(ModelViewSet):
                 temperature=0.7,
             )
             ai_response = response['choices'][0]['message']['content'].strip()
+            ai_response = ai_response.replace('\n', '')
+            # Remove any instances of ** from the response
+            ai_response = ai_response.replace('**', '')
             print("AI RESPONSE:", ai_response)
 
             # Update the existing suggestion with the new insights and old content
@@ -138,94 +141,102 @@ class SuggestionController(ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    
-    def createSuggestion(self, request):
+
+    def createContent(self, request):
         lesson_id = request.data.get('lesson_id')
-        print("here here", lesson_id)
-        if not lesson_id:
-            return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        notification_id = request.data.get('notification_id')
+        
+        if not lesson_id or not notification_id:
+            return Response({"error": "lesson_id or notification_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # guard lesson and notification check if exists
+        existing_lesson = Lesson.objects.filter(id=lesson_id).first()
+        existing_notification = Notification.objects.filter(notif_id=notification_id).first()
+
+        if not existing_lesson or not existing_notification:
+            return Response({"error": "Lesson or Notification does not exist."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if a suggestion already exists for the lesson
-        existing_suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
-        if existing_suggestion:
-            return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
+        existing_suggestion, IsCreated = Suggestion.objects.get_or_create(lesson_id=lesson_id)
 
-        # Fetch FAQs for the lesson
-        faqs = Faq.objects.filter(lesson_id=lesson_id)
-        faq_serializer = FaqSerializer(faqs, many=True)
-        faq_data = faq_serializer.data
-
-        # Fetch Lesson Contents for the lesson
+        # Check if existing_suggestion has insight value early return
+        # if existing_suggestion and existing_suggestion.content:
+        #     return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
+        
+        # Fetch lesson contents
         lesson_contents = LessonContent.objects.filter(lesson_id=lesson_id)
-        print("RAW LESSON CONTENT",lesson_contents)
+        
+        # Serialize and clean lesson content data
         lesson_content_serializer = LessonContentSerializer(lesson_contents, many=True)
         lesson_content_data = lesson_content_serializer.data
-        print("Serialized Lesson Contents:", lesson_content_data)
-        for content in lesson_content_data:
-            print("\n\nContent:", content['contents']) 
 
         # Ensure the content field exists in lesson content data
         lesson_content_text = "\n".join([content['contents'] for content in lesson_content_data if 'contents' in content])
-        
-        print("\n\nLESSON CONTENT = ",lesson_content_text)
-        # Format data for the AI
-        faq_text = "\n".join([faq['question'] for faq in faq_data])
-        print("faq_text",faq_text)
+        print("content: ", lesson_content_text)
 
-        # Prepare the input for the AI
+        # Get grouped questions related to the given notification_id
+        grouped_questions = GroupedQuestions.objects.filter(notification_id=notification_id, lesson_id=lesson_id)
+        
+        # Get FAQs related to these grouped questions
+        faqs = Faq.objects.filter(grouped_questions__in=grouped_questions).select_related('grouped_questions__notification')
+
+        # Prepare the response data with only questions
+        faq_questions = [faq.question for faq in faqs if faq.grouped_questions and faq.grouped_questions.notification]
+
         input_text = f"""
-            Here are some FAQs from students:
-            {faq_text}
+            Here is the FAQ from students:
+            ${faq_questions}
 
             Here are the original lesson contents:
-            {lesson_content_text}
+            ${lesson_content_text}
 
-            NOTE: PLEASE DO NOT USE \\n IF YOU NEED TO BREAK A LINE USE <br> INSTEAD AND IF YOU WANT TO BOLD A TITLE OR WORD USE <strong>TITLE HERE</strong>. RETURN IN HTML MARKUP, I DON'T WANT TO SEE NEWLINES USE <br> .
-            NOTE VERY IMPORTANT: IF THERE IS A VIDEO LINK IN THE CONTENT YOU MUST RETAIN IT
-            NOTE VERY IMPORTANT: FOR HEADERS OR TITLE USE <h1> UNTIL <h3> DONT USE **TITLE** SINCE YOU NEED TO RETURN HTML MARKUP
+            NOTE:
+            RETURN ME HTML MARKUP: use <br> for breaking lines
+            RETURN ME A REVISED AND RICH, ENHANCED CONTENT BASED ROM THE FAQ AND ORIGINAL LESSONS.
+            USE <h1> UNTIL <h3> for TITLES NOT **
+            YOU HAVE TO EXPLAIN AND EXPOUND GIVE MANY EXAMPLES. EACH PARAGRAPH SHOULD HAVE ATLEAST 20 SENTENCES WITH REAL WORLD EXAMPLES. BE REALISTIC USE YOUR SOURCES. AS IF YOU ARE CREATING YOUR FIRST AND LAST CONTENT AS A TEACHER, BE PASSIONATE.
+            PROVIDE BULLETS, LIST <li> <ul> GIVEN EXAMPLES ON THE TOPIC, BE CREATIVE IT IS A MUST YOU HAVE LIST OR BULLETS HIGHLY REQUIRED.
+            PARAPHRASE EACH PARAGRAPH USE SCHOOL-APPROPRIATE WORDS.
 
-            Based on these FAQs and original lesson contents, provide:
-            1. Insights in bullet form similar to the following examples this is insight based on the faq from students so most likely you will tell the user (teacher) that Students are most likely eager to learn etc etc.., return in HTML MARKUP: DONT ANSWER STARTING WITH \"Insights:\", just go directly with answers DO NOT MENTION ENHANCED INSIGHTS OR ETC
-            - <strong>Entrepreneurship's Impact:</strong> Students are keen to explore entrepreneurship's role in driving economic growth and innovation, especially in identifying opportunities and fostering competition.<br>
-            - <strong>Qualities of Success:</strong> There's strong interest in the qualities defining successful entrepreneurs, emphasizing creativity, determination, and resilience.<br>
-            - <strong>Technological Influence:</strong> Students recognize the importance of technology in entrepreneurship, highlighting the need to leverage advancements for innovation and competitiveness.<br>
-            - <strong>Areas for Improvement:</strong> To enhance learning, deeper insights into specific strategies for opportunity identification, risk management, and technological integration could be provided.<br>
-            - <strong>Unlock the full potential of your lesson materials:</strong> By addressing student curiosity and strengthening key concepts.<br>
-            Limit to these 5 bullets just focus on painpointing what might wrong in the lesson and how to address them.
+            IT IS EXPECTED THAT YOU HAVE SUMMARY AT THE END, SUMMARIZING THE TOPIC. IF THERE IS A YOUTUBE LINK VIDEO FROM ORIGINAL LESSON CONTENT YOU MUST RETAIN IT.
 
-            2. An enhanced version of the lesson content based on the FAQs and original content, making it richer and more informative, USE MORE SCHOOL APPROPRIATE WORDS PARAPHRASE SOME OF THEM. Cite some short examples if possible for each scenarios make it detailed, Paraphrase the title of 2. make it more understandable. If you can, provide a youtube video links embedded that would be highly appreciated, return in HTML MARKUP PLEASE DO NOT USE \\n IF YOU NEED TO BREAK A LINE USE <br> INSTEAD. Based on these FAQs and original lesson contents. DONT ANSWER STARTING WITH \"Enhanced Lesson Content:\", just go directly with answers DO NOT MENTION ENHANCED LESSON CONTENT, IF THERE IS A YOUTUBE VIDEO LINK IN THE CONTENT YOU MUST RETAIN IT
-            You must have a summary at the bottom part of the lesson content so that you will leave a good impression and detailed explanation to users.
-            NOTE: PLEASE DO NOT USE \\n IF YOU NEED TO BREAK A LINE USE <br> INSTEAD AND IF YOU WANT TO BOLD A TITLE OR WORD USE <strong>TITLE HERE</strong>. RETURN IN HTML MARKUP, I DON'T WANT TO SEE NEWLINES USE <br> .
-            NOTE: IF THERE IS A YOUTUBE VIDEO LINK IN THE CONTENT YOU MUST RETAIN IT
+            I DONT WANT TO SEE ANY NEWLINES \n ON YOUR RESPONSE. I WILL BE DISAPPOINTED. DONT OVERUSE <br> FOR UI PLEASURITY.
+
+            FOR <br> IF YOU ARE USING <h3> YOU CAN HAVE 2 <br> BELOW BUT I YOU ARE USING <h1> UNTIL <h2> USE ONLY 1 <br> BELOW ON IT.
+            NOTE: DONT USE TOO MUCH <br> PLEASE. ONLY USE 1-2 <br> PER PARAGRAPH.
+
             """
-
-
+        
         try:
             # Call OpenAI API to get the suggestion
             openai.api_key = os.environ.get("OPENAI_API_KEY")
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant. ALWAYS RESPOND IN HTML MARKUP, USE <br> for newlines instead of \\n, if there is a video link in the input_text you must retain it, dont state the title like \" Insights, Enhanced Lesson Content\" instead go directly to your answer and use <h1> up to <h3> for titles, not **, also you dont have to say 1. or 2. when you answer those numbers just go directly"},
+                    {"role": "system", "content": "You are a helpful assistant. RETURN AN HTML MARKUP. USE <br> for breaking lines. I DONT WANT TO SEE ANY NEWLINES \n ON YOUR RESPONSE. I WILL BE DISAPPOINTED"},
                     {"role": "user", "content": input_text}
                 ],
                 max_tokens=1500,
                 temperature=0.7,
             )
             ai_response = response['choices'][0]['message']['content'].strip()
+            # Preprocess the response to ensure it uses <br> and removes unwanted characters
+            # Remove all newlines and replace with <br>
+            ai_response = ai_response.replace('\n', '')
+            # Remove any instances of ** from the response
+            ai_response = ai_response.replace('**', '')
 
-            # Parse the AI response
-            insights, enhanced_content = ai_response.split('\n\n', 1)
+            # Update the existing suggestion with the new insights and old content
+            existing_suggestion.content = ai_response
+            # existing_suggestion.content = None
+            if not existing_suggestion.old_content:
+                existing_suggestion.old_content = lesson_content_text
+            existing_suggestion.save()
 
-            # Save the suggestion
-            suggestion = Suggestion.objects.create(
-                lesson_id=lesson_id,
-                insights=insights.strip(),
-                content=enhanced_content.strip(),
-                old_content=lesson_content_text,
-            )
-
-            return Response(SuggestionSerializer(suggestion).data, status=status.HTTP_201_CREATED)
+            if IsCreated:
+                return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_201_CREATED)
+            
+            return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

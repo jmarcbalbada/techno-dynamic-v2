@@ -133,6 +133,10 @@ suggestion_insight_actions = {
   'post': 'createInsight'
 }
 
+suggestion_content_actions = {
+  'post': 'createContent'
+}
+
 APPEND_SLASH = True
 #
 routes = SimpleRouter()
@@ -201,11 +205,11 @@ urlpatterns = [
     path('notification/', NotificationController.as_view(notification_detail_actions)),
 
     # Suggestions
-    # path('suggestions/', SuggestionController.as_view({'get': 'list', 'post': 'create'})),
     path('suggestions/', SuggestionController.as_view(suggestion_detail_actions)),
     path('suggestions/revert/', SuggestionController.as_view(suggestion_revert_actions)),
 
     path('suggestions/insights/', SuggestionController.as_view(suggestion_insight_actions)),
+    path('suggestions/contents/', SuggestionController.as_view(suggestion_content_actions)),
 
     # Retrieve, update, and delete a specific suggestion
     path('suggestions/<int:pk>/', SuggestionController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),

@@ -20,7 +20,7 @@ import Profile from 'pages/Profile/Profile';
 import Query from 'pages/Query/Query';
 import ProtectedLayout from 'hocs/ProtectedLayout';
 import Register from 'pages/Register/Register';
-import FrequentlyAskedQuestions from "pages/Faq/FrequentlyAskedQuestions";
+import FrequentlyAskedQuestions from 'pages/Faq/FrequentlyAskedQuestions';
 import SuggestContent from './pages/SuggestedContent/SuggestContent';
 
 export const router = createBrowserRouter(
@@ -31,17 +31,26 @@ export const router = createBrowserRouter(
 
       <Route element={<ProtectedLayout />}>
         <Route index path='/' element={<Dashboard />} />
-        <Route path='/lessons/:lessonNumber/:pageNumber/:isNotif?/:lessonID/:isInsight?' element={<Lesson />} />
+        <Route
+          path='/lessons/:lessonNumber/:pageNumber/:isNotif?/:lessonID/:isInsight?'
+          element={<Lesson />}
+        />
         {/* <Route path='/suggest/:lessonNumber/:pageNumber' element={<SuggestContent />} /> */}
         <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/create' element={<Create />} />
-          <Route path='/suggest/:lessonNumber/:pageNumber/:lessonID' element={<SuggestContent />} />
-            <Route path='/lessons/:lessonNumber/:pageNumber/:lessonID/rvContent' element={<RevertContent />} />
-            <Route path='suggestcontent' element={<SuggestContent/>} />
-            <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
-            <Route path='/queries' element={<Query />} />
-            <Route path='/faq' element={<FrequentlyAskedQuestions/>} />
+          <Route
+            path='/suggest/:lessonNumber/:pageNumber/:lessonID'
+            element={<SuggestContent />}
+          />
+          <Route
+            path='/lessons/:lessonNumber/:pageNumber/:lessonID/rvContent'
+            element={<RevertContent />}
+          />
+          <Route path='suggestcontent' element={<SuggestContent />} />
+          <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
+          <Route path='/queries' element={<Query />} />
+          <Route path='/faq' element={<FrequentlyAskedQuestions />} />
         </Route>
         <Route path='/profile' element={<Profile />} />
       </Route>
