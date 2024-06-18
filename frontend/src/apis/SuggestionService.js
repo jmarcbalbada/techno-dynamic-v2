@@ -6,19 +6,24 @@ const BASE_URL = `${config.API_URL}api/suggestions`;
 
 export const SuggestionService = {
   // create suggestion or return suggestion if exist
-  create_suggestion: (lesson_id) =>
-    axios.post(
-      `${BASE_URL}/`,
-      { lesson_id },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    ),
+  // create_suggestion: (lesson_id) =>
+  //   axios.post(
+  //     `${BASE_URL}/`,
+  //     { lesson_id },
+  //     {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   ),
   create_insights: (lesson_id, notification_id) =>
     axios.post(
       `${BASE_URL}/insights/`,
+      { lesson_id, notification_id },
+    ),
+  create_content: (lesson_id, notification_id) =>
+    axios.post(
+      `${BASE_URL}/contents/`,
       { lesson_id, notification_id },
     ),
   accept_content: (lesson_id) =>
