@@ -272,6 +272,7 @@ class SuggestionController(ModelViewSet):
             # Update the lesson with the new content
             lesson = LessonContent.objects.get(lesson_id=lesson_id)
             lesson.contents = new_content
+            print("lesson contents", lesson.contents)
             lesson.save()
             
             return Response({"message": "Lesson content updated successfully"}, status=status.HTTP_200_OK)
@@ -330,9 +331,10 @@ class SuggestionController(ModelViewSet):
             suggestion.delete()
 
             # Delete the FAQs based on the lesson_id
-            faqs = Faq.objects.filter(lesson_id=lesson_id)
-            faqs.delete()
+            # faqs = Faq.objects.filter(lesson_id=lesson_id)
+            # faqs.delete()
             
-            return Response({"message": "Suggestion and FAQs deleted successfully"}, status=status.HTTP_200_OK)
+            return Response({"message": "Suggestion deleted successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        

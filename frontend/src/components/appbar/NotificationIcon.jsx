@@ -67,11 +67,15 @@ const NotificationIcon = ({
                   sx={{
                     display: 'flex',
                     gap: 2,
-                    p: 3
+                    p: 3,
+                    '&:hover': {
+                      cursor: 'default' // Set the hover cursor to normal
+                    }
                   }}>
                   <ThumbUpIcon
                     sx={{
-                      color: '#1b5e20'
+                      color: '#1b5e20',
+                      hover: ''
                     }}
                   />
                   No notifications as of now.

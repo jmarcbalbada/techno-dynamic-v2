@@ -117,7 +117,6 @@ notification_detail_actions = {
 
 suggestion_detail_actions = {
     # 'get': 'get_suggestions_by_lesson_id',
-    'post': 'createSuggestion',
     'put': 'updateContent',
     'delete': 'deleteSuggestionByLessonId',
 }
