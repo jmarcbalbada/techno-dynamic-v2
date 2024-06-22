@@ -17,6 +17,18 @@ const useNotifications = (user) => {
         }
     }, [countNotif, user.role]);
 
+    // TODO update this not good practice
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (user.role === "teacher") {
+                getCountUnreadNotifications();
+            }
+        }, 3000); // Run every 3 seconds
+
+        // Clean up the interval on component unmount
+        return () => clearInterval(interval);
+    }, [user.role]);
+
     const getUnreadNotifications = async () => {
         try {
             const response = await NotificationService.getUnreadNotif();
