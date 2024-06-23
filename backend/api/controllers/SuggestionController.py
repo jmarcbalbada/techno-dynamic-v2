@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from api.model.Suggestion import Suggestion
-from api.serializer.SuggestionSerializer import SuggestionSerializer  # Adjust the import path as needed
+from api.serializer.SuggestionSerializer import SuggestionSerializer
 from api.serializer.FaqSerializer import FaqSerializer
 from api.serializer.LessonContentSerializer import LessonContentSerializer
 from api.model.Notification import Notification
@@ -19,6 +19,7 @@ from api.model.LessonContent import LessonContent
 from api.model.Query import Query
 from api.model.GroupedQuestions import GroupedQuestions
 from api.model.SubQuery import SubQuery
+from api.controllers.static.prompts import *
 import openai
 
 import os
@@ -86,27 +87,7 @@ class SuggestionController(ModelViewSet):
         # Prepare the response data with only questions
         faq_questions = [faq.question for faq in faqs if faq.grouped_questions and faq.grouped_questions.notification]
 
-        # print("FAQs Questions:", faq_questions)
-
-        input_text = f"""
-            Here is the FAQ from students:
-            ${faq_questions}
-
-            Here are the original lesson contents:
-            {lesson_content_text}
-
-            NOTE: YOU ARE REQUIRED TO CREATE AN INSIGHT GIVEN THE FAQ AND ORIGINAL LESSON CONTENTS:
-            NOTE: YOU MUST RETURN AN HTML MARKUP NOT AN HTML FILE AND IT SHOULD BE RICH INSIGHTS.
-            NOTE: YOU MUST SAY IN EVERY BULLET THAT STUDENTS ARE MORELIKELY WANT TO LEARN ABOUT ETC ETC
-            Insights in bullet form similar to the following examples this is insight based on the faq from students so most likely you will tell the user (teacher) that Students are most likely eager to learn etc etc.., return in HTML MARKUP: DONT ANSWER STARTING WITH \"Insights:\", just go directly with answers DO NOT MENTION ENHANCED INSIGHTS OR ETC
-            - <strong>Entrepreneurship's Impact:</strong> Students are keen to explore entrepreneurship's role in driving economic growth and innovation, especially in identifying opportunities and fostering competition.<br>
-            - <strong>Qualities of Success:</strong> There's strong interest in the qualities defining successful entrepreneurs, emphasizing creativity, determination, and resilience.<br>
-            - <strong>Technological Influence:</strong> Students recognize the importance of technology in entrepreneurship, highlighting the need to leverage advancements for innovation and competitiveness.<br>
-            - <strong>Areas for Improvement:</strong> To enhance learning, deeper insights into specific strategies for opportunity identification, risk management, and technological integration could be provided.<br>
-            - <strong>Unlock the full potential of your lesson materials:</strong> By addressing student curiosity and strengthening key concepts.<br>
-            Limit to these 5 bullets just focus on painpointing what might wrong in the lesson and how to address them.
-            NOTE: IT IS A MUST THAT YOU INCLUDE THESE 5 BULLETS MENTIONED IN YOUR RESPONSE AND HIGHLY ENCOURAGE TO USE <br> rather than "\n
-            """
+        input_text = prompt_create_insights_abs(faq_questions,lesson_content_text)
         
         try:
             # Call OpenAI API to get the suggestion
@@ -114,7 +95,7 @@ class SuggestionController(ModelViewSet):
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant. ALWAYS RESPOND IN HTML MARKUP, USE <br> for newlines instead of \\n, dont state the title like \" Insights\" instead go directly to your answer and use <h1> up to <h3> for titles, not **"},
+                    {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT_INSIGHTS},
                     {"role": "user", "content": input_text}
                 ],
                 max_tokens=1500,
@@ -183,29 +164,7 @@ class SuggestionController(ModelViewSet):
         # Prepare the response data with only questions
         faq_questions = [faq.question for faq in faqs if faq.grouped_questions and faq.grouped_questions.notification]
 
-        input_text = f"""
-            Here is the FAQ from students:
-            ${faq_questions}
-
-            Here are the original lesson contents:
-            ${lesson_content_text}
-
-            NOTE:
-            RETURN ME HTML MARKUP: use <br> for breaking lines
-            RETURN ME A REVISED AND RICH, ENHANCED CONTENT BASED ROM THE FAQ AND ORIGINAL LESSONS.
-            USE <h1> UNTIL <h3> for TITLES NOT **
-            YOU HAVE TO EXPLAIN AND EXPOUND GIVE MANY EXAMPLES. EACH PARAGRAPH SHOULD HAVE ATLEAST 20 SENTENCES WITH REAL WORLD EXAMPLES. BE REALISTIC USE YOUR SOURCES. AS IF YOU ARE CREATING YOUR FIRST AND LAST CONTENT AS A TEACHER, BE PASSIONATE.
-            PROVIDE BULLETS, LIST <li> <ul> GIVEN EXAMPLES ON THE TOPIC, BE CREATIVE IT IS A MUST YOU HAVE LIST OR BULLETS HIGHLY REQUIRED.
-            PARAPHRASE EACH PARAGRAPH USE SCHOOL-APPROPRIATE WORDS.
-
-            IT IS EXPECTED THAT YOU HAVE SUMMARY AT THE END, SUMMARIZING THE TOPIC. IF THERE IS A YOUTUBE LINK VIDEO FROM ORIGINAL LESSON CONTENT YOU MUST RETAIN IT.
-
-            I DONT WANT TO SEE ANY NEWLINES \n ON YOUR RESPONSE. I WILL BE DISAPPOINTED. DONT OVERUSE <br> FOR UI PLEASURITY.
-
-            FOR <br> IF YOU ARE USING <h3> YOU CAN HAVE 2 <br> BELOW BUT I YOU ARE USING <h1> UNTIL <h2> USE ONLY 1 <br> BELOW ON IT.
-            NOTE: DONT USE TOO MUCH <br> PLEASE. ONLY USE 1-2 <br> PER PARAGRAPH.
-
-            """
+        input_text = prompt_create_content_abs(faq_questions,lesson_content_text)
         
         try:
             # Call OpenAI API to get the suggestion
@@ -213,7 +172,7 @@ class SuggestionController(ModelViewSet):
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant. RETURN AN HTML MARKUP. USE <br> for breaking lines. I DONT WANT TO SEE ANY NEWLINES \n ON YOUR RESPONSE. I WILL BE DISAPPOINTED"},
+                    {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT},
                     {"role": "user", "content": input_text}
                 ],
                 max_tokens=1500,

@@ -1,6 +1,7 @@
 import json
 # import openai
 import os
+from api.controllers.static.prompts import *
 
 from django.db.models import Count
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotFound
@@ -38,7 +39,6 @@ class ChatBotController(GenericViewSet):
 
     def chatbot_response(self, request, lesson_id, lesson_content_id):
         secret_key = os.environ.get("OPENAI_API_KEY")
-        # openai.api_key = self.openai_api_key
 
         # Extract the message from the JSON request body
         try:
@@ -64,77 +64,39 @@ class ChatBotController(GenericViewSet):
         except LessonContent.DoesNotExist:
             return HttpResponseNotFound("Lesson content not found")
 
-        # Retrieve or initialize the Query object for the user and lesson
-        user = request.user
-        query, created = Query.objects.get_or_create(lesson=lesson, user=user)
-
-        # Load the existing conversation context from the Query object, if any
-        conversation_context = json.loads(query.context) if query.context else []
-
-        # Check if the conversation context has been created for the first time
-        if created:
-            # If this is a new query, there will be no past conversation
-            past_conversation = []
-        else:
-            # If this is an existing query, load the conversation context
-            past_conversation = []
-            sorted_subqueries = query.get_subqueries().order_by('created_at')
-            for subquery in sorted_subqueries:
-                past_conversation.append(
-                    {"role": "user", "content": subquery.question, "time": subquery.created_at.isoformat()})
-                past_conversation.append(
-                    {"role": "assistant", "content": subquery.response, "time": subquery.created_at.isoformat()})
-
+        # Prepare the history content for the assistant's introduction
         lesson_title = lesson.get_title()
         lesson_subtitle = lesson.get_subtitle()
         content = content_text
-        history_content = f"You are a helpful assistant that provides information based on the lesson provided only. If the question is not related to the lesson, then you can say that it is not related. Lesson Title: {lesson_title}\nSubtitle: {lesson_subtitle}\nContent: {content}"
+        # history_content = f"You are a helpful assistant that provides information based on the lesson provided only. If the question is not related to the lesson, then you can say that it is not related. Lesson Title: {lesson_title}\nSubtitle: {lesson_subtitle}\nContent: {content}. Answer in 2-4 sentences only."
+        history_content = prompt_history_content(lesson_title,lesson_subtitle,content)
 
-        # Combine the past conversation with the current context (if any)
-        initial_memory = past_conversation + conversation_context
+        # Initialize the conversation context
+        conversation_context = []
 
-        # Deduplication function
-        def remove_duplicates(past_conversations):
-            seen = set()
-            cleaned_conversations = []
-            for conversation in past_conversations:
-                unique_key = (conversation['role'], conversation['content'], conversation['time'])
-                if unique_key not in seen:
-                    seen.add(unique_key)
-                    cleaned_conversations.append(conversation)
-            return cleaned_conversations
+        # Setup the OpenAI model and memory
+        llm = ChatOpenAI(openai_api_key=secret_key, model_name="gpt-3.5-turbo", temperature=0)
+        memory = ConversationSummaryBufferMemory(llm=llm)
 
-        # Deduplicate initial memory
-        initial_memories = remove_duplicates(initial_memory)
-        llm = ChatOpenAI(openai_api_key= secret_key , model_name="gpt-3.5-turbo", temperature=0)
-        memory = ConversationSummaryBufferMemory(llm=llm, initial_memory=initial_memories)
+        memory.save_context({"input": history_content}, {"output": CHATBOT_OUTPUT_CONTEXT})
 
-        memory.save_context({"input": history_content}, {"output": "Thank you for providing me with information. Ask me anything about the said topic"})
-        for conversation in initial_memories:
-            if conversation['role'] == 'user':
-                input_text = conversation['content']
-            elif conversation['role'] == 'assistant':
-                output_text = conversation['content']
-                memory.save_context({"input": input_text}, {"output": output_text})
-
+        # Setup the conversation chain
         conversation = ConversationChain(llm=llm,
                                          memory=memory,
                                          verbose=True)
 
+        # Generate AI response based on user message
         ai_response = conversation.predict(input=f"Can you answer my question or Do what I say directly: {user_message}?")
 
-        # After getting the response, update the conversation context
+        # Update the conversation context with the new interaction
         new_interaction = [
             {"role": "user", "content": user_message, "time": timezone.now().isoformat()},
             {"role": "assistant", "content": ai_response, "time": timezone.now().isoformat()}
         ]
-
         conversation_context.extend(new_interaction)
 
-        # Deduplicate again to be safe
-        conversation_context = remove_duplicates(conversation_context)
-
         # Update the Query object with the new context
+        query, created = Query.objects.get_or_create(lesson=lesson, user=request.user)
         query.set_context(json.dumps(conversation_context))
         query.save()
 
@@ -142,50 +104,14 @@ class ChatBotController(GenericViewSet):
         subquery = SubQuery(question=user_message, response=ai_response)
         subquery.save()
 
-        # Get the user from the reques
-        
-        user = request.user
+        # Add the new SubQuery to the Query's subqueries
+        query.add_subquery(subquery)
 
-        # Check if there's an existing query for this lesson and user combination
-        try:
-            existing_query = Query.objects.get(lesson=lesson, user=user)
-            # Add the new SubQuery to the existing query's subqueries
-            existing_query.add_subquery(subquery)
-        except Query.DoesNotExist:
-            # If no existing query, create a new one
-            new_query = Query()
-            new_query.set_lesson(lesson)
-            new_query.set_user(user)
-            new_query.add_subquery(subquery)
-            new_query.save()
-
-        
-        #check if the question is related to any questions of the students by this topic
-
-        # will check if the user_message is frequently asked
-        # if the user_messagee is frequently asked it will create a FAQ and related-content row
-        # the FAQ will also have the related-content-id (note: its possible to implement a multi relatinoal frequently asked question)
-
-
-
-        RelatedContentController.process_message_and_add_to_faq(lesson_id,user_message)
-
-
-        #check
-        # faq, created = Faq.objects.get_or_create(lesson=lesson,related_content=related_content_id, question=user_message)
-
-        # if created:
-        #     print("FAQ created for the lesson")
-        # else:
-        #     print("FAQ retrieved for the lesson")
-
-        # # Append the new question to the existing FAQ questions
-        # updated_question = f"{faq.question}\n{user_message}"
-        # faq.question = updated_question
-        # faq.save()
-        # print("Updated FAQ:", faq.question)
+        # Process the user message and add to FAQ if relevant
+        RelatedContentController.process_message_and_add_to_faq(lesson_id, user_message)
 
         return JsonResponse({"response": ai_response})
+    
     
     def llama_model(self, request, lesson_id, lesson_content_id):
         # Authenticate user
@@ -319,7 +245,7 @@ class ChatBotController(GenericViewSet):
         # }
 
         response = requests.post(BASE_URL, headers=headers, data=json.dumps(data))
-        # return JsonResponse({"response": "gwapo"})
+        # return JsonResponse({"response": "?"})
         
 
         # response = completion(

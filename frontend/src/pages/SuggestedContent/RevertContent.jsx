@@ -51,6 +51,7 @@ const RevertContent = () => {
     await handleClearNotif();
     await handleClearSuggestionAndFaq();
     navigate(`/`);
+    window.location.reload();
   };
 
   const handleClearNotif = async () => {

@@ -23,9 +23,9 @@ const NotificationItem = ({
   const { setNotificationId } = useAuth();
 
   const handleNotificationLessonClick = (lessonNumber, lessonID) => {
-    console.log('lessonID notif', lessonID);
-    console.log('lessonNumber notif', lessonNumber);
-    console.log('Clicked here');
+    // console.log('lessonID notif', lessonID);
+    // console.log('lessonNumber notif', lessonNumber);
+    // console.log('Clicked here');
     navigate(`/lessons/${lessonNumber}/1/true/${lessonID}`);
     // window.location.reload();
   };
@@ -64,9 +64,22 @@ const NotificationItem = ({
 
   const handleMarkAsUnread = () => {
     setOpenedNotificationById(notif.notif_id);
-    console.log('notif_id', notif.notif_id);
+    // console.log('notif_id', notif.notif_id);
     handleMenuClose();
   };
+
+  const formattedDate =
+    new Date(notif.date_created).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }) +
+    ' at ' +
+    new Date(notif.date_created).toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    });
 
   return (
     <ListItemButton
@@ -81,7 +94,13 @@ const NotificationItem = ({
       }}>
       <ListItemText
         primary={`Lesson ${notif.lesson}`}
-        secondary={notif.message}
+        secondary={
+          <>
+            <span>{notif.message}</span>
+            <br />
+            <span>{formattedDate}</span>
+          </>
+        }
       />
       <Box>
         <IconButton edge='end' aria-label='options' onClick={handleMenuClick}>

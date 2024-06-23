@@ -6,6 +6,7 @@ const BASE_URL = `${config.API_URL}api/notification`;
 export const NotificationService = {
   getUnreadNotif: () => axios.get(`${BASE_URL}/getUnread/`),
   getCountUnreadNotif: () => axios.get(`${BASE_URL}/getCountUnread/`),
+  getAllNotif: () => axios.get(`${BASE_URL}/get_all_notification/`),
   // delete by notif id
   deleteNotificationById: (notification_id) =>
     axios.delete(`${BASE_URL}/deleteNotificationById/`, {

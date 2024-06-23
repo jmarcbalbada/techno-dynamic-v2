@@ -55,12 +55,11 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
       lesson: lesson?.lessonNumber || initialLessonNumber,
       file: file
     }));
-  
+
     // Check if the file has an id property to determine if it's an existing file or a new one
-    const newFiles = uploadedFilesArray.filter(fileObj => !fileObj.id);
+    const newFiles = uploadedFilesArray.filter((fileObj) => !fileObj.id);
     setFiles((existingFiles) => [...existingFiles, ...newFiles]);
   };
-  
 
   const handleDeleteFile = (fileToDelete) => {
     setFiles((files) => files.filter((file) => file !== fileToDelete));
@@ -175,7 +174,7 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
                 <Box>
                   <Typography variant='h6' display='flex' alignItems='center'>
                     <WarningIcon color='error' sx={{ mr: 0.5 }} />
-                    Danger Zone
+                    Delete this lesson?
                   </Typography>
                 </Box>
                 <Box sx={{ mt: 3 }}>
@@ -183,7 +182,7 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
                     onClick={handleDialogOpen}
                     color='error'
                     variant='outlined'>
-                    Delete Lesson
+                    Yes, delete it!
                   </Button>
                   {openDialog && (
                     <DeleteLessonDialog

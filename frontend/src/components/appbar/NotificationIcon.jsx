@@ -23,7 +23,7 @@ const NotificationIcon = ({
   const [showNotification, setShowNotification] = useState(false);
 
   const handleClickAway = () => {
-    console.log('this is unread', unreadNotif);
+    // console.log('this is unread', unreadNotif);
     setShowNotification(false);
   };
 

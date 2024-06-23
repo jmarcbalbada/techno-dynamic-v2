@@ -74,7 +74,7 @@ class RelatedContentController(ModelViewSet):
             if faq_count >= NOTIFICATION_THRESHOLD:
                 create_notification = Notification.objects.create(
                     lesson=lesson,
-                    message="Message: " + lesson.title + " needs an update"
+                    message="Message: Your lesson " + lesson.title + " as an AI suggestion based on FAQ's from students!"
                 )
                 grouped_questions.notification = create_notification
                 grouped_questions.notified = True
