@@ -23,17 +23,6 @@ class NotificationController(ModelViewSet):
             serializer = self.get_serializer(unread_notifications, many=True)
             notifications_data = serializer.data
 
-            # Add grouped questions and faqs data
-            # for notification in notifications_data:
-            #     grouped_questions = GroupedQuestions.objects.filter(notification_id=notification['notif_id'])
-            #     grouped_questions_serializer = GroupedQuestionsSerializer(grouped_questions, many=True)
-            #     notification['grouped_questions'] = grouped_questions_serializer.data
-
-                # for grouped_question in notification['grouped_questions']:
-                #     faqs = Faq.objects.filter(grouped_questions_id=grouped_question['grouped_question_id'])
-                #     faq_serializer = FaqSerializer(faqs, many=True)
-                #     grouped_question['faqs'] = faq_serializer.data
-
             return Response(notifications_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -95,12 +84,11 @@ class NotificationController(ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @action(detail=False, methods=['get'])
     def get_all_notification(self, request):
         try:
-            all_notifications = self.queryset.all()  # Fetch all notifications
-            serializer = self.get_serializer(all_notifications, many=True)
-            # print(serializer.data)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            notification_count = self.queryset.count()  # Get the count of all notifications
+            return Response({"count": notification_count}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     

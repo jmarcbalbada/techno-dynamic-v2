@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from "hooks/useAuth";
-import { LessonsService } from "apis/LessonsService";
-import CourseDetails from "components/dashboard/CourseDetails";
-import LessonCard from "components/dashboard/LessonCard";
-import useTitle from "hooks/useTitle";
+import { useAuth } from 'hooks/useAuth';
+import { LessonsService } from 'apis/LessonsService';
+import CourseDetails from 'components/dashboard/CourseDetails';
+import LessonCard from 'components/dashboard/LessonCard';
+import useTitle from 'hooks/useTitle';
 
-import { Box } from "@mui/material";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import { Box } from '@mui/material';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 
-import AddIcon from "@mui/icons-material/Add";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import NotificationMessageLayout from "../Notification/NotificationMessageLayout";
-import { FaqService } from "../../apis/FaqService";
+import AddIcon from '@mui/icons-material/Add';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import NotificationMessageLayout from '../Notification/NotificationMessageLayout';
+import { FaqService } from '../../apis/FaqService';
 
 const Dashboard = () => {
-  useTitle("Dashboard");
+  useTitle('Dashboard');
   const { user } = useAuth();
   const [lessons, setLessons] = useState([]);
   const [faq, setFaq] = useState([]);
@@ -43,7 +43,7 @@ const Dashboard = () => {
     try {
       const response = await LessonsService.list();
       if (response) {
-        console.log(response.data)
+        // console.log(response.data)
         setLessons(response.data);
       }
     } catch (error) {
@@ -63,11 +63,11 @@ const Dashboard = () => {
   };
 
   const handleAddLesson = () => {
-    navigate("/create");
+    navigate('/create');
   };
 
   const handleViewQuery = () => {
-    navigate("/queries"); // Navigate to the queries page when the button is clicked
+    navigate('/queries'); // Navigate to the queries page when the button is clicked
   };
 
   return (
@@ -79,21 +79,20 @@ const Dashboard = () => {
       </Box>
       <Box my={4}>
         <Grid container spacing={3}>
-          {user?.role === "teacher" && (
+          {user?.role === 'teacher' && (
             <>
               <Grid item xs={12} md={6}>
                 <Button
                   onClick={handleAddLesson}
-                  variant="contained"
-                  size="large"
+                  variant='contained'
+                  size='large'
                   startIcon={<AddIcon />}
                   // TODO: add color from palette
                   fullWidth
                   sx={{
-                    height: "100px",
-                    boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-                  }}
-                >
+                    height: '100px',
+                    boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'
+                  }}>
                   Add A New Lesson
                 </Button>
               </Grid>
@@ -102,17 +101,16 @@ const Dashboard = () => {
                   // TODO: add onClick for query
                   //onClick={handleAddLesson}
                   onClick={handleViewQuery} // Call handleViewQueries function when the button is clicked
-                  variant="contained"
-                  color="secondary"
-                  size="large"
+                  variant='contained'
+                  color='secondary'
+                  size='large'
                   startIcon={<QueryStatsIcon />}
                   // TODO: add color from palette
                   fullWidth
                   sx={{
-                    height: "100px",
-                    boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-                  }}
-                >
+                    height: '100px',
+                    boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'
+                  }}>
                   View Queries
                 </Button>
               </Grid>
@@ -123,7 +121,6 @@ const Dashboard = () => {
               {/*{lesson.coverImage}*/}
 
               <LessonCard
-
                 id={lesson.id}
                 lessonNumber={lesson.lessonNumber}
                 title={lesson.title}
