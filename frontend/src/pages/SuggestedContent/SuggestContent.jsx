@@ -41,7 +41,10 @@ const SuggestContent = () => {
   const handleAccept = () => {
     // console.log("clicked accept");
     handleNewContent();
-    navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`);
+    navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`, {
+      replace: true
+    });
+    window.history.pushState(null, null, window.location.href);
   };
 
   const handleNewContent = async () => {

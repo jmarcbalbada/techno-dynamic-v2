@@ -50,7 +50,9 @@ const RevertContent = () => {
   const handleClearCallbackSuggestionAndNotification = async () => {
     await handleClearNotif();
     await handleClearSuggestionAndFaq();
-    navigate(`/`);
+    navigate(`/`, { replace: true });
+    window.history.pushState(null, null, window.location.href);
+    // history.replace('/');
     window.location.reload();
   };
 
