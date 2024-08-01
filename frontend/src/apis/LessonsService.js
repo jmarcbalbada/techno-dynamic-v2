@@ -26,7 +26,7 @@ export const LessonsService = {
   //   axios.post(`${BASE_URL}/${lessonId}/pages/${pageId}/chatbot/`, {
   //     message,
   //   }),
-  testing: (lessonId, pageId, message) =>
+  chatbot: (lessonId, pageId, message) =>
     axios.post(`${BASE_URL}/${lessonId}/pages/${pageId}/chatbot/`, {
       message,
     }),
