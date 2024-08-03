@@ -43,7 +43,7 @@ class FaqController(ModelViewSet):
             'related_content__related_content_id',
             'related_content__general_context'
         ).annotate(count=Count('related_content__related_content_id')).order_by('-count')
-        #this part
+        # this part
         # # Check if any count is 10 and send a notification
         # for faq in faqs:
         #     if faq['count'] == 10:

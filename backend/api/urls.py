@@ -13,22 +13,10 @@ from .controllers.ImageMediaController import ImageMediaController
 from .controllers.FileController import FileController
 from .controllers.FaqController import FaqController
 from .controllers.SuggestionController import SuggestionController
-# from .controllers.NotificationController import NotificationController
 from .controllers.RelatedContentController import RelatedContentController
 from .controllers.NotificationController import NotificationController
 from rest_framework.routers import SimpleRouter
 
-faq_detail_actions = {
-    'post': 'create',
-    'put': 'update',
-    'delete': 'destroy',
-}
-
-related_content_detail_actions = {
-    'post': 'create',
-    'put': 'update',
-    'delete': 'destroy',
-}
 
 content_detail_actions = {
     'post': 'create',
@@ -104,28 +92,20 @@ file_detail_actions = {
 
 faq_detail_actions = {
     'get': 'get_questions_by_lesson_id',
-    'post': 'create_faqs_from_subqueries',
 }
 
 notification_detail_actions = {
     'get': 'get_all_count_unread_notif',
     'delete': 'deleteNotification',
-    # 'put': 'mark_all_as_read',
-    # 'patch': 'mark_all_as_read',
-    # 'post': 'mark_all_as_read',
 }
 
 suggestion_detail_actions = {
-    # 'get': 'get_suggestions_by_lesson_id',
     'put': 'updateContent',
     'delete': 'deleteSuggestionByLessonId',
 }
 
 suggestion_revert_actions = {
-    # 'get': 'get_suggestions_by_lesson_id',
-    # 'post': 'createSuggestion',
     'put': 'updateRevertContent',
-    # 'delete': 'deleteSuggestion',
 }
 
 suggestion_insight_actions = {
@@ -137,7 +117,8 @@ suggestion_content_actions = {
 }
 
 APPEND_SLASH = True
-#
+
+# Routers
 routes = SimpleRouter()
 routes.register('faqs', FaqController)
 routes.register('teacher', TeacherController)
@@ -193,11 +174,7 @@ urlpatterns = [
     path('lessons', LessonController.as_view({'get': 'findLessonbyLessonNumber'})),
 
     # Faq
-    path('faq/count_faq', FaqController.as_view({'get': 'get_count_faq_questions_all'})),
-    path('faq/<int:lesson_id>/', FaqController.as_view(faq_detail_actions)),
-
     path('faqs/', FaqController.as_view(faq_detail_actions)),
-    path('faqs/<int:lesson_id>/', FaqController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
 
     # Notification
     path('notification/getUnread', NotificationController.as_view({'get': 'get_all_notification'})),
@@ -209,15 +186,8 @@ urlpatterns = [
 
     path('suggestions/insights/', SuggestionController.as_view(suggestion_insight_actions)),
     path('suggestions/contents/', SuggestionController.as_view(suggestion_content_actions)),
-
-    # Retrieve, update, and delete a specific suggestion
-    path('suggestions/<int:pk>/', SuggestionController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
     
     # Get suggestions by lesson ID
     path('lessons/<int:lesson_id>/suggestions/', SuggestionController.as_view({'get': 'list'})),
 
-
-    path('related_contents/', RelatedContentController.as_view(related_content_detail_actions)),
-    path('related_contents/<int:pk>/', RelatedContentController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    # path('teacherprofile/<int:teacher_id>', TeacherController.as_view(content_detail_actions)),
 ]

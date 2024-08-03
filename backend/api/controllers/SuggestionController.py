@@ -27,24 +27,6 @@ import os
 class SuggestionController(ModelViewSet):
     queryset = Suggestion.objects.all()
     serializer_class = SuggestionSerializer
-
-    def get_queryset(self):
-        lesson_id = self.kwargs.get('lesson_id')
-        if lesson_id is not None:
-            return self.queryset.filter(lesson_id=lesson_id)
-        return super().get_queryset()
-
-    def list(self, request, lesson_id=None):
-        suggestions = self.get_queryset()
-        serializer = self.serializer_class(suggestions, many=True) 
-        return Response(serializer.data)
-    
-    def create(self, request):
-        serializer = self.serializer_class(data=request.data) 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def createInsight(self, request):
         lesson_id = request.data.get('lesson_id')
@@ -114,10 +96,18 @@ class SuggestionController(ModelViewSet):
                 existing_suggestion.old_content = lesson_content_text
             existing_suggestion.save()
 
+            # Reformat faq_questions into bullet points
+            formatted_faq_questions = '<p><i>'.join([f"&#8226; {question}" for question in faq_questions]) + '</i></p>'
+
+            response_data = {
+                "suggestion": SuggestionSerializer(existing_suggestion).data,
+                "faq_questions": formatted_faq_questions
+            }
+
             if IsCreated:
-                return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_201_CREATED)
+                return Response(response_data, status=status.HTTP_201_CREATED)
             
-            return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
+            return Response(response_data, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -199,19 +189,6 @@ class SuggestionController(ModelViewSet):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def retrieve(self, request, pk=None):
-        instance = self.get_object()
-        serializer = self.serializer_class(instance)
-        return Response(serializer.data)
-
-    def update(self, request, pk=None):
-        instance = self.get_object()
-        serializer = self.serializer_class(instance, data=request.data, partial=True) 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def updateContent(self, request):
         lesson_id = request.data.get('lesson_id')
@@ -270,11 +247,6 @@ class SuggestionController(ModelViewSet):
             return Response({"error": "Lesson content not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def destroy(self, request, pk=None):
-        instance = self.get_object()
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
     
     # delete suggestion and faq related
     def deleteSuggestionByLessonId(self, request):

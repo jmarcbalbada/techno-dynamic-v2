@@ -29,16 +29,6 @@ const Dashboard = () => {
     // getFaq();
   }, []);
 
-  // useEffect(() => {
-  //   if (faq.length > 0) {
-  //     faq.forEach(f => {
-  //       console.log("id", f.faq_id);
-  //       console.log("questions", f.questions);
-  //       console.log("count", f.question_count);
-  //     });
-  //   }
-  // }, [faq]);
-
   const getLessons = async () => {
     try {
       const response = await LessonsService.list();

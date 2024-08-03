@@ -37,29 +37,20 @@ const Lesson = () => {
   const [isError, setIsError] = useState(false);
   const [lessonInsights, setLessonInsights] = useState([]);
   const { user } = useAuth();
-  // const currID = parseInt(lessonID);
   const currID = parseInt(lessonID);
-  // const [lessonId, setLessonId] = useState(lessonID);
 
   useEffect(() => {
-    // console.log("isNotif", notif);
-    // console.log("isInsight", isInsight);
     getLessonLessonNumber(lessonNumber);
-    console.log('LESSONID', currID);
+    // console.log('LESSONID', currID);
   }, []);
 
-  // useEffect(() => {
-  //   console.log("i am rendered");
-  //   console.log("rendered insight", insight);
-  // }, [insight]);
-
   const suggestClick = () => {
-    console.log('suggest clicked');
+    // console.log('suggest clicked');
     navigate(`/suggest/${lessonNumber}/1/${currID}`);
   };
 
   const insightClicked = () => {
-    console.log('insight clicked');
+    // console.log('insight clicked');
     getSuggestionInsights(currID);
     setInsight(true);
   };
@@ -68,11 +59,6 @@ const Lesson = () => {
     try {
       const response = await LessonsService.getByLessonNumber(lessonNumber);
       setLesson(response.data);
-      // setLessonId(response.data.id);
-      // console.log("lesson ids ", response.data.id);
-      // console.log("response.data", response.data);
-
-      // console.log("lessonID", currID);
     } catch (error) {
       console.log('error', error);
       setIsError(true);
@@ -84,14 +70,17 @@ const Lesson = () => {
   const getSuggestionInsights = async () => {
     try {
       const notif_id = localStorage.getItem('notification_id');
-      console.log('notif id', notif_id);
       if (notif_id) {
         const response = await SuggestionService.create_insights(
           currID,
           notif_id
         );
-        setLessonInsights(response.data.insights);
-        console.log('response.data', response.data);
+        setLessonInsights(
+          '<i>' +
+            response.data.faq_questions +
+            '</i><hr>' +
+            response.data.suggestion.insights
+        );
       }
     } catch (error) {
       console.log('error', error);
