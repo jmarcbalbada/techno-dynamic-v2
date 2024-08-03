@@ -96,10 +96,18 @@ class SuggestionController(ModelViewSet):
                 existing_suggestion.old_content = lesson_content_text
             existing_suggestion.save()
 
+            # Reformat faq_questions into bullet points
+            formatted_faq_questions = '<p><i>'.join([f"&#8226; {question}" for question in faq_questions]) + '</i></p>'
+
+            response_data = {
+                "suggestion": SuggestionSerializer(existing_suggestion).data,
+                "faq_questions": formatted_faq_questions
+            }
+
             if IsCreated:
-                return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_201_CREATED)
+                return Response(response_data, status=status.HTTP_201_CREATED)
             
-            return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
+            return Response(response_data, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

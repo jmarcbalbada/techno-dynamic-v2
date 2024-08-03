@@ -63,6 +63,9 @@ def prompt_create_insights_abs(faq_questions,lesson_content_text):
             - <strong>Unlock the full potential of your lesson materials:</strong> By addressing student curiosity and strengthening key concepts.<br>
             Limit to these 5 bullets just focus on painpointing what might wrong in the lesson and how to address them.
             NOTE: IT IS A MUST THAT YOU INCLUDE THESE 5 BULLETS MENTIONED IN YOUR RESPONSE AND HIGHLY ENCOURAGE TO USE <br> rather than "\n
+            The insight must be about this:
+            ${faq_questions}
+            NOTE: You must mention the important words or context what is in the faq_questions.
             """
   
   return input_text

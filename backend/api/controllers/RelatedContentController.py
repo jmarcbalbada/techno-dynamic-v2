@@ -51,7 +51,8 @@ class RelatedContentController(ModelViewSet):
                 most_similar_faq = faq
 
         # Threshold for similarity
-        SIMILARITY_THRESHOLD = Teacher.objects.filter(id=1).first().threshold
+        # SIMILARITY_THRESHOLD = Teacher.objects.filter(id=1).first().threshold
+        SIMILARITY_THRESHOLD = 0.4
         NOTIFICATION_THRESHOLD = Teacher.objects.filter(id=1).first().notification_threshold
 
         # Process based on similarity

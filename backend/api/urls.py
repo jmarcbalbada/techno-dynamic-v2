@@ -18,12 +18,6 @@ from .controllers.NotificationController import NotificationController
 from rest_framework.routers import SimpleRouter
 
 
-related_content_detail_actions = {
-    'post': 'create',
-    'put': 'update',
-    'delete': 'destroy',
-}
-
 content_detail_actions = {
     'post': 'create',
     'put': 'update',
@@ -98,7 +92,6 @@ file_detail_actions = {
 
 faq_detail_actions = {
     'get': 'get_questions_by_lesson_id',
-    'post': 'create_faqs_from_subqueries',
 }
 
 notification_detail_actions = {
@@ -182,7 +175,6 @@ urlpatterns = [
 
     # Faq
     path('faqs/', FaqController.as_view(faq_detail_actions)),
-    path('faqs/<int:lesson_id>/', FaqController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
 
     # Notification
     path('notification/getUnread', NotificationController.as_view({'get': 'get_all_notification'})),
@@ -194,15 +186,8 @@ urlpatterns = [
 
     path('suggestions/insights/', SuggestionController.as_view(suggestion_insight_actions)),
     path('suggestions/contents/', SuggestionController.as_view(suggestion_content_actions)),
-
-    # Retrieve, update, and delete a specific suggestion
-    path('suggestions/<int:pk>/', SuggestionController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
     
     # Get suggestions by lesson ID
     path('lessons/<int:lesson_id>/suggestions/', SuggestionController.as_view({'get': 'list'})),
 
-
-    path('related_contents/', RelatedContentController.as_view(related_content_detail_actions)),
-    path('related_contents/<int:pk>/', RelatedContentController.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    # path('teacherprofile/<int:teacher_id>', TeacherController.as_view(content_detail_actions)),
 ]

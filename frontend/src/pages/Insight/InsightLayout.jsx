@@ -16,8 +16,10 @@ const InsightLayout = ({ handleSuggest, sampleContentReal }) => {
   const navigate = useNavigate();
 
   const sampleContent = String(sampleContentReal);
+  const headerFaqQuestions =
+    '<b><h4>These are the questions under these insights:</h4><br></b>';
 
-  const modifiedContent = sampleContent.replace('1. ', '');
+  const modifiedContent = headerFaqQuestions + sampleContent.replace('1. ', '');
 
   return (
     <>
@@ -85,6 +87,7 @@ const InsightLayout = ({ handleSuggest, sampleContentReal }) => {
           <Box
             sx={{
               marginLeft: '2%',
+              marginRight: '2%',
               paddingTop: '1%',
               lineHeight: 1.8,
               paddingBottom: '20px'

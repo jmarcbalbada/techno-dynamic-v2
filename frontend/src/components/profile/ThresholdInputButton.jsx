@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -7,7 +7,6 @@ import {
   Button,
   useTheme
 } from '@mui/material';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useAuth } from '../../hooks/useAuth';
 import { TeacherService } from '../../apis/TeacherService';
 import { useForm, Controller } from 'react-hook-form';
@@ -26,6 +25,7 @@ const schema = yup.object().shape({
 const ThresholdInputButton = () => {
   const theme = useTheme();
   const { threshold } = useAuth();
+  const [tempThreshold, setTempThreshold] = useState(null);
   const {
     control,
     handleSubmit,
@@ -37,10 +37,24 @@ const ThresholdInputButton = () => {
     }
   });
 
+  useEffect(() => {
+    const onMountTreshold = async () => {
+      try {
+        const response = await TeacherService.getTeacherThreshold();
+        setTempThreshold(response.data.similarity_threshold);
+      } catch (error) {
+        console.error('Failed to fetch threshold', error);
+      }
+    };
+
+    onMountTreshold();
+  }, []);
+
   const onSubmit = async (data) => {
     try {
       await TeacherService.setTeacherThreshold(data.threshold);
       alert('Threshold updated successfully');
+      window.location.reload();
     } catch (error) {
       console.error('Failed to update threshold', error);
       alert('Failed to update threshold');
@@ -115,6 +129,16 @@ const ThresholdInputButton = () => {
       <Button variant='contained' color='primary' type='submit'>
         Save
       </Button>
+      <Typography variant='h7' gutterBottom>
+        Current Threshold:{' '}
+        <span
+          style={{
+            color: theme.palette.background.neutral,
+            fontWeight: 'bold'
+          }}>
+          {tempThreshold}
+        </span>
+      </Typography>
     </Box>
   );
 };
