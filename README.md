@@ -3,7 +3,7 @@
 Techno-Dynamic-Learning V2 is an advanced learning management system designed specifically for technopreneurship courses. Building upon the foundation of [Techno-Dynamic-Learning V1](https://github.com/sebastianyebes/Techno-Dynamic-Learning), this extended version incorporates dynamic content generation and insightful suggestions based on frequently asked questions (FAQ) from students.
 
 
-# Features
+## Features
 
 - User-friendly interface
 - AI Chatbot assistant for personalized support
@@ -78,8 +78,6 @@ Techno-Dynamic-Learning V2 is an advanced learning management system designed sp
   npm run dev
 ```
 
->  Copyright (c) [2024]
-
 This project includes contributions from the following contributors:
 #### - [raphaellaconsay](https://github.com/raphaellaconsay)
 #### - [sebastianyebes](https://github.com/sebastianyebes)
@@ -87,4 +85,4 @@ This project includes contributions from the following contributors:
 #### - [Amadeo0312](https://github.com/Amadeo0312)
 #### - [Mauledby](https://github.com/Mauledby)
 
-All rights reserved.
+> All rights reserved 2024.
