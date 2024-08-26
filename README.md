@@ -11,9 +11,9 @@ Techno-Dynamic-Learning V2 is an advanced learning management system designed sp
 - Insights and suggestions derived from FAQ data
 - Enhanced learning experience for both educators and students
 
-# Project Instructions
+## Project Instructions
 
-## Backend - Django
+> Backend - Django
 
 1. Move directory (from root directory)
 
@@ -58,7 +58,7 @@ Techno-Dynamic-Learning V2 is an advanced learning management system designed sp
   python3 manage.py runserver / python manage.py runserver
 ```
 
-## Frontend - ViteJS
+> Frontend - ViteJS
 
 1. Move directory (from root directory)
 
@@ -78,13 +78,13 @@ Techno-Dynamic-Learning V2 is an advanced learning management system designed sp
   npm run dev
 ```
 
-<h2> Copyright (c) [2024] <h2>
+>  Copyright (c) [2024]
 
 This project includes contributions from the following contributors:
-- [raphaellaconsay](https://github.com/raphaellaconsay)
-- [sebastianyebes](https://github.com/sebastianyebes)
-- [kibyes123](https://github.com/kibyes123)
-- [Amadeo0312](https://github.com/Amadeo0312)
-- [Mauledby](https://github.com/Mauledby)
+#### - [raphaellaconsay](https://github.com/raphaellaconsay)
+#### - [sebastianyebes](https://github.com/sebastianyebes)
+#### - [kibyes123](https://github.com/kibyes123)
+#### - [Amadeo0312](https://github.com/Amadeo0312)
+#### - [Mauledby](https://github.com/Mauledby)
 
 All rights reserved.
