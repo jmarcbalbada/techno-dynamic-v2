@@ -61,7 +61,9 @@ const SuggestContent = () => {
   const getSkeletonLoading = () => {
     return (
       <>
-        <Typography>Please wait while we load your content...</Typography>
+        <Typography variant='body2'>
+          Please wait and refrain from refreshing while we load your content...
+        </Typography>
         <Skeleton
           variant='rounded'
           height={150}
@@ -199,8 +201,10 @@ const SuggestContent = () => {
           currID,
           notif_id
         );
+        // console.log('response.data', response.data);
+        // setSuggestedContents(response.data.content);
         console.log('response.data', response.data);
-        setSuggestedContents(response.data.content);
+        setSuggestedContents(response.data.ai_response);
         setIsLoading(false);
       }
     } catch (error) {
