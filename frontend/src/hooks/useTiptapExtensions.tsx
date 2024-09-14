@@ -33,6 +33,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
 import Youtube from '@tiptap/extension-youtube';
+import ImageResize from 'tiptap-extension-resize-image';
 import {
   FontSize,
   HeadingWithAnchor,
@@ -113,6 +114,7 @@ export default function useTiptapExtensions({
       HorizontalRule,
 
       ResizableImage,
+      ImageResize,
       Dropcursor,
 
       TaskList,

@@ -1,3 +1,5 @@
+import re
+from datetime import datetime
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -143,7 +145,7 @@ class SuggestionController(ModelViewSet):
 
         # Ensure the content field exists in lesson content data
         lesson_content_text = "\n".join([content['contents'] for content in lesson_content_data if 'contents' in content])
-        print("content: ", lesson_content_text)
+        # print("con    tent: ", lesson_content_text)
 
         # Get grouped questions related to the given notification_id
         grouped_questions = GroupedQuestions.objects.filter(notification_id=notification_id, lesson_id=lesson_id)
@@ -160,12 +162,12 @@ class SuggestionController(ModelViewSet):
             # Call OpenAI API to get the suggestion
             openai.api_key = os.environ.get("OPENAI_API_KEY")
             response = openai.ChatCompletion.create(
-                model="gpt-4o",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT},
                     {"role": "user", "content": input_text}
                 ],
-                max_tokens=1500,
+                max_tokens=4000,
                 temperature=0.7,
             )
             ai_response = response['choices'][0]['message']['content'].strip()
@@ -175,17 +177,50 @@ class SuggestionController(ModelViewSet):
             # Remove any instances of ** from the response
             ai_response = ai_response.replace('**', '')
 
-            # Update the existing suggestion with the new insights and old content
-            existing_suggestion.content = ai_response
+            # Clean all marks
+            propose_ai_content = self.cleanMarkAiContent(ai_response)
+            print("PROPOSE AI CONTENT = " + propose_ai_content)
+
+            # # Use regex to find and remove the entire tag and its contents
+            # propose_ai_content = re.sub(r'<mark style="background-color: lightcoral;">.*?</mark>', '', ai_response, flags=re.DOTALL)
+            # # 2. Remove only the <mark> tags while keeping the content inside (for yellow marks)
+            # # This will replace <mark> and </mark> but keep the content
+            # propose_ai_content = re.sub(r'</?mark>', '', ai_response)
+
+            # propose_ai_content = propose_ai_content.replace('\n', '')
+            # # Remove any instances of ** from the response
+            # propose_ai_content = propose_ai_content.replace('**', '')
+            # propose_ai_content = propose_ai_content.replace('```html', '')
+
+            # # Update the existing suggestion with the new insights and old content
+            # existing_suggestion.content = ai_response
+
+            # Updating content to cleaned HTML MARKUP
+            existing_suggestion.content = propose_ai_content
+            print("existing_suggestion.content",existing_suggestion.content)
+
             # existing_suggestion.content = None
             if not existing_suggestion.old_content:
                 existing_suggestion.old_content = lesson_content_text
+
             existing_suggestion.save()
 
+             # Add the proposed AI response to the response data1
+            response_data = {
+                'suggestion': SuggestionSerializer(existing_suggestion).data,
+                'ai_response': ai_response
+            }
+
+            # Return the response with the created or updated status
             if IsCreated:
-                return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_201_CREATED)
+                return Response(response_data, status=status.HTTP_201_CREATED)
+
+            return Response(response_data, status=status.HTTP_200_OK)
+
+            # if IsCreated:
+            #     return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_201_CREATED)
             
-            return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
+            # return Response(SuggestionSerializer(existing_suggestion).data, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -203,12 +238,14 @@ class SuggestionController(ModelViewSet):
                 return Response({"error": "No suggestion found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
 
             new_content = suggestion.content
-            print("new content", new_content)
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"[current_time: {current_time}] new content: {new_content}")
+            # print("new content", new_content)
 
             # Update the lesson with the new content
             lesson = LessonContent.objects.get(lesson_id=lesson_id)
             lesson.contents = new_content
-            print("lesson contents", lesson.contents)
+            print("[current_time: {current_time}] lesson contents", lesson.contents)
             lesson.save()
             
             return Response({"message": "Lesson content updated successfully"}, status=status.HTTP_200_OK)
@@ -268,4 +305,32 @@ class SuggestionController(ModelViewSet):
             return Response({"message": "Suggestion deleted successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+    # helper
+    @staticmethod
+    def cleanMarkAiContent(ai_response):
+        """
+        This function cleans AI-generated content by performing the following actions:
+        1. Removes content wrapped in <mark> tags with 'lightcoral' background.
+        2. Removes only <mark> tags while retaining the content for yellow marks.
+        3. Removes any newline characters, '**', and '```html' from the content.
+        """
+
+        # 1. Remove <mark style="background-color: lightcoral;">...</mark> and its contents
+        cleaned_content = re.sub(r'<mark style="background-color: lightcoral;">.*?</mark>', '', ai_response, flags=re.DOTALL)
+        
+        # 2. Remove <mark> and </mark> tags but retain the content inside them
+        cleaned_content = re.sub(r'</?mark>', '', cleaned_content)
+        
+        # 3. Replace newline characters with ''
+        cleaned_content = cleaned_content.replace('\n', '')
+        
+        # 4. Remove any instances of '**'
+        cleaned_content = cleaned_content.replace('**', '')
+        
+        # 5. Remove any instances of '```html'
+        cleaned_content = cleaned_content.replace('```html', '')
+
+        return cleaned_content
         

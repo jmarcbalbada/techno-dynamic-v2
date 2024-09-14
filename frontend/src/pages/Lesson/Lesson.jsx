@@ -58,6 +58,7 @@ const Lesson = () => {
   const getLessonLessonNumber = async (lessonNumber) => {
     try {
       const response = await LessonsService.getByLessonNumber(lessonNumber);
+      console.log('response', response.data);
       setLesson(response.data);
     } catch (error) {
       console.log('error', error);
@@ -92,7 +93,12 @@ const Lesson = () => {
   const handleNextPage = () => {
     if (currentPage < lesson?.pages?.length) {
       setCurrentPage((prev) => prev + 1);
-      navigate(`/lessons/${lessonNumber}/${currentPage + 1}`);
+      navigate(
+        `/lessons/${lessonNumber}/${currentPage + 1}/${isNotif}/${lessonID}`
+      );
+      // navigate(`/lessons/${lessonNumber}/${currentPage + 1}`);
+    } else if (notif) {
+      navigate(`/`);
     } else {
       navigate(`/lessons/${lessonNumber}/end`);
     }
@@ -101,7 +107,9 @@ const Lesson = () => {
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
-      navigate(`/lessons/${lessonNumber}/${currentPage - 1}`);
+      navigate(
+        `/lessons/${lessonNumber}/${currentPage - 1}/${isNotif}/${lessonID}`
+      );
     } else {
       navigate(`/`);
     }
