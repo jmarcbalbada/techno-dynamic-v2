@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from api.model.Notification import Notification
 import json
 
 from api.model.Lesson import Lesson
@@ -243,6 +244,12 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
 
         if instance is None:
             return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Check notification if exist and delete
+        notification = Notification.objects.filter(lesson_id=lesson_id)
+
+        if notification is not None:
+            notification.delete()
 
         instance.delete()
 

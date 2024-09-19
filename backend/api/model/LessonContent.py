@@ -23,7 +23,9 @@ class LessonContent(models.Model):
         return self.contents
 
     def set_contents(self, contents):
-        self.contents = contents
+        # Add delimiter
+        delimiter = "<!-- delimiter -->"
+        self.contents = contents + delimiter
 
     def get_url(self):
         return self.url
