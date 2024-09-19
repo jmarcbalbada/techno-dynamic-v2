@@ -32,8 +32,8 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
-backend/env
+# env/
+# backend/env
 venv/
 build/
 develop-eggs/
@@ -84,5 +84,4 @@ target/
 *.pyc
 local_settings.py
 
-.env
 db.sqlite3

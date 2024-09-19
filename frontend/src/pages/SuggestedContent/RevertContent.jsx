@@ -108,19 +108,22 @@ const RevertContent = () => {
     }
   };
 
+  // /lessons/:lessonNumber/:pageNumber/:lessonID/rvContent
+
   const handleNextPage = () => {
     if (currentPage < lesson?.pages?.length) {
       setCurrentPage((prev) => prev + 1);
-      navigate(`/lessons/${lessonNumber}/${currentPage + 1}`);
+      navigate(`/lessons/${lessonNumber}/${currentPage + 1}/${lessonID}/rvContent`);
     } else {
-      navigate(`/lessons/${lessonNumber}/end`);
+      // navigate(`/lessons/${lessonNumber}/end`);
+      alert("This is the last page of the lesson! Please review and click 'Looks good to me' to continue!")
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
-      navigate(`/lessons/${lessonNumber}/${currentPage - 1}`);
+      navigate(`/lessons/${lessonNumber}/${currentPage - 1}/${lessonID}/rvContent`);
     } else {
       navigate(`/`);
     }
@@ -317,13 +320,13 @@ const RevertContent = () => {
           </>
         )}
       </Container>
-      {/* <FooterControls
+      <FooterControls
         isFirstPage={currentPage === 1}
         handleNextPage={handleNextPage}
         handlePrevPage={handlePrevPage}
         handleEditPage={handleEditPage}
         handleOpenFiles={handleOpenFiles}
-      /> */}
+      />
     </Box>
   );
 };

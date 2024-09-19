@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'drf_yasg',
     'django_filters',
 ]
 
@@ -138,7 +139,10 @@ AUTH_PASSWORD_VALIDATORS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
-    "https://techno-dynamic-learning.vercel.app"
+    "https://techno-dynamic-learning.vercel.app",
+    "https://2c18-143-44-165-161.ngrok-free.app",
+    "http://localhost:8000"
+
 ]
 
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://localhost:3000,http://localhost:5173').split(',')

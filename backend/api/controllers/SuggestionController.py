@@ -22,6 +22,7 @@ from api.model.Query import Query
 from api.model.GroupedQuestions import GroupedQuestions
 from api.model.SubQuery import SubQuery
 from api.controllers.static.prompts import *
+from api.controllers.LessonContentController import LessonContentsController
 import openai
 
 import os
@@ -44,8 +45,22 @@ class SuggestionController(ModelViewSet):
         if not existing_lesson or not existing_notification:
             return Response({"error": "Lesson or Notification does not exist."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if a suggestion already exists for the lesson
-        existing_suggestion, IsCreated = Suggestion.objects.get_or_create(lesson_id=lesson_id)
+        # # Check if a suggestion already exists for the lesson
+        # existing_suggestion, IsCreated = Suggestion.objects.get_or_create(lesson_id=lesson_id)
+
+        # Check if there are any existing suggestions for the lesson
+        # substitute for get_or_create method
+        suggestions = Suggestion.objects.filter(lesson_id=lesson_id)
+
+        if suggestions.exists():
+            
+            # If only one suggestion exists, use that suggestion
+            existing_suggestion = suggestions.first()
+            IsCreated = False
+        else:
+            # Create a new suggestion
+            existing_suggestion = Suggestion.objects.create(lesson_id=lesson_id)
+            IsCreated = True
 
         # Check if existing_suggestion has insight value early return
         # if existing_suggestion and existing_suggestion.insights:
@@ -129,8 +144,20 @@ class SuggestionController(ModelViewSet):
         if not existing_lesson or not existing_notification:
             return Response({"error": "Lesson or Notification does not exist."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if a suggestion already exists for the lesson
-        existing_suggestion, IsCreated = Suggestion.objects.get_or_create(lesson_id=lesson_id)
+        # # Check if a suggestion already exists for the lesson
+        # existing_suggestion, IsCreated = Suggestion.objects.get_or_create(lesson_id=lesson_id)
+
+        suggestions = Suggestion.objects.filter(lesson_id=lesson_id)
+
+        if suggestions.exists():
+            
+            # If only one suggestion exists, use that suggestion
+            existing_suggestion = suggestions.first()
+            IsCreated = False
+        else:
+            # Create a new suggestion
+            existing_suggestion = Suggestion.objects.create(lesson_id=lesson_id)
+            IsCreated = True
 
         # Check if existing_suggestion has insight value early return
         # if existing_suggestion and existing_suggestion.content:
@@ -167,8 +194,8 @@ class SuggestionController(ModelViewSet):
                     {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT},
                     {"role": "user", "content": input_text}
                 ],
-                max_tokens=4000,
-                temperature=0.7,
+                max_tokens=4000, # enough tokens for now
+                temperature=0.7, # more creative
             )
             ai_response = response['choices'][0]['message']['content'].strip()
             # Preprocess the response to ensure it uses <br> and removes unwanted characters
@@ -180,20 +207,6 @@ class SuggestionController(ModelViewSet):
             # Clean all marks
             propose_ai_content = self.cleanMarkAiContent(ai_response)
             print("PROPOSE AI CONTENT = " + propose_ai_content)
-
-            # # Use regex to find and remove the entire tag and its contents
-            # propose_ai_content = re.sub(r'<mark style="background-color: lightcoral;">.*?</mark>', '', ai_response, flags=re.DOTALL)
-            # # 2. Remove only the <mark> tags while keeping the content inside (for yellow marks)
-            # # This will replace <mark> and </mark> but keep the content
-            # propose_ai_content = re.sub(r'</?mark>', '', ai_response)
-
-            # propose_ai_content = propose_ai_content.replace('\n', '')
-            # # Remove any instances of ** from the response
-            # propose_ai_content = propose_ai_content.replace('**', '')
-            # propose_ai_content = propose_ai_content.replace('```html', '')
-
-            # # Update the existing suggestion with the new insights and old content
-            # existing_suggestion.content = ai_response
 
             # Updating content to cleaned HTML MARKUP
             existing_suggestion.content = propose_ai_content
@@ -224,7 +237,7 @@ class SuggestionController(ModelViewSet):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+        
     def updateContent(self, request):
         lesson_id = request.data.get('lesson_id')
         print("lesson id = ", lesson_id)
@@ -237,22 +250,35 @@ class SuggestionController(ModelViewSet):
             if not suggestion:
                 return Response({"error": "No suggestion found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
 
-            new_content = suggestion.content
-            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print(f"[current_time: {current_time}] new content: {new_content}")
-            # print("new content", new_content)
+            # Process content via pagination (split by delimiter)
+            result = LessonContentsController.split_content_by_delimiter(suggestion.content)
+            page_contents = result[1]
+            print("Page contents = ", page_contents)
 
-            # Update the lesson with the new content
-            lesson = LessonContent.objects.get(lesson_id=lesson_id)
-            lesson.contents = new_content
-            print("[current_time: {current_time}] lesson contents", lesson.contents)
-            lesson.save()
-            
-            return Response({"message": "Lesson content updated successfully"}, status=status.HTTP_200_OK)
+            # Get All Previous Lesson Contents
+            prev_contents = LessonContent.objects.filter(lesson_id=lesson_id).order_by('id')
+            prev_contents_list = list(prev_contents)  # Convert queryset to list
+
+            # Ensure the number of LessonContent pages matches the page_contents length
+            if len(prev_contents_list) != len(page_contents):
+                return Response({"error": "Mismatch in number of pages and contents"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Iterate through each page and assign content to corresponding LessonContent
+            for index, content in enumerate(page_contents):
+                lesson_content = prev_contents_list[index]
+                lesson_content.contents = content.strip()  # Assign content of the page
+                lesson_content.save()
+                print(f"Updated LessonContent page {index + 1}: {content}")
+
+            return Response({"message": "Content updated successfully"})
+
         except Lesson.DoesNotExist:
             return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+        
         except Exception as e:
+            print(f"Error: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     
     # revert content
     def updateRevertContent(self, request):
@@ -272,18 +298,39 @@ class SuggestionController(ModelViewSet):
                 return Response({"error": "No old content found in the suggestion"}, status=status.HTTP_404_NOT_FOUND)
             print("old content", old_content)
 
-            # Update the LessonContent with the old content
-            lesson_content = LessonContent.objects.filter(lesson_id=lesson_id).first()
-            if not lesson_content:
-                return Response({"error": "Lesson content not found"}, status=status.HTTP_404_NOT_FOUND)
-            lesson_content.contents = old_content
-            lesson_content.save()
-            
+            # Count the delimiters in old_content
+            delimiter_count = old_content.count("<!-- delimiter -->")
+            print(f"Delimiter count in old content: {delimiter_count}")
+
+            # Split the old_content using the delimiter
+            result = LessonContentsController.split_content_by_delimiter(old_content, isRevert=True)
+            page_contents = result[1]
+            print("Split old content into pages:", page_contents)
+
+            # Get all the existing LessonContent records for the lesson_id
+            lesson_contents = LessonContent.objects.filter(lesson_id=lesson_id).order_by('id')
+            lesson_contents_list = list(lesson_contents)
+
+            # Ensure the number of lesson contents matches the number of pages
+            if len(lesson_contents_list) != len(page_contents):
+                print(f"LessonContent pages: {len(lesson_contents_list)}, Split pages: {len(page_contents)}")
+                return Response({"error": "Mismatch between old content pages and lesson content pages"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Iterate through each page content and update the corresponding LessonContent record
+            for index, content in enumerate(page_contents):
+                lesson_content = lesson_contents_list[index]
+                lesson_content.contents = content.strip()  # Assign the old page content
+                lesson_content.save()
+                print(f"Updated LessonContent page {index + 1} with old content")
+
             return Response({"message": "Lesson content reverted successfully"}, status=status.HTTP_200_OK)
+
         except LessonContent.DoesNotExist:
             return Response({"error": "Lesson content not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
     
     # delete suggestion and faq related
     def deleteSuggestionByLessonId(self, request):

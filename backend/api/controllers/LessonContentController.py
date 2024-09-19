@@ -4,6 +4,7 @@ from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateMode
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+import re
 
 from api.model.LessonContent import LessonContent
 from api.serializer.LessonContentSerializer import LessonContentSerializer
@@ -91,3 +92,35 @@ class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixi
         instance.delete()
 
         return Response({"success": "Lesson contents deleted"})
+
+    # helper
+    # returns tuple : [0] - lenOfPages [1] - arr of contents
+    @staticmethod
+    def split_content_by_delimiter(content: str, isRevert: bool = False):
+        # Define the delimiter pattern
+        delimiter_pattern = r"<!-- delimiter -->"
+        
+        # Split the content by delimiter
+        page_contents = re.split(delimiter_pattern, content)
+        
+        # Add the delimiter back to the non-final parts
+        page_contents = [part + "<!-- delimiter -->" for part in page_contents[:-1]] + [page_contents[-1]]
+        
+        # Check if it's a revert action, remove the last page if it's empty
+        if isRevert and page_contents[-1].strip() == '':
+            page_contents.pop()  # Remove the last empty page
+
+        # Count the number of pages
+        num_pages = len(page_contents)
+
+        return num_pages, page_contents
+
+    
+    @staticmethod
+    def getAllContentsHelper(lesson_id):
+        contents = LessonContent.objects.filter(lesson_id=lesson_id)
+
+        if contents is None:
+            return None
+        
+        return contents
