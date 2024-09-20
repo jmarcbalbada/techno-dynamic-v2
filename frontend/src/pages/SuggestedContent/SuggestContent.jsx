@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
 import {
@@ -168,9 +168,14 @@ const SuggestContent = () => {
     }
   };
 
+  const hasFetched = useRef(false);
+
   useEffect(() => {
-    getLessonLessonNumber(lessonNumber);
-    getSuggestionContent();
+    if (!hasFetched.current) {
+      getLessonLessonNumber(lessonNumber);
+      getSuggestionContent();
+      hasFetched.current = true;
+    }
   }, []);
 
   const getLessonLessonNumber = async (lessonNumber) => {
