@@ -151,7 +151,13 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                     # Update an existing page
                     existing_page = existing_pages.filter(id=page_id).first()
                     if existing_page:
-                        existing_page.contents = page_data.get('contents', '')
+                        # Ensure the content is a string before appending
+                        content = page_data.get('contents', '')
+                        if not isinstance(content, str):
+                            content = str(content)  # Convert to string if needed
+
+                        # existing_page.contents = page_data.get('contents', '') + + "<!-- delimiter -->" # add delimiter
+                        existing_page.contents = content + "<!-- delimiter -->"
                         existing_page.url = page_data.get('url', None)
                         existing_page.files = page_data.get('files', None)
                         existing_page.save()
@@ -163,7 +169,14 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                     # Create a new page
                     new_page = LessonContent()
                     new_page.set_lesson_id(instance.id)
-                    new_page.set_contents(page_data.get('contents', ''))
+
+                    # Ensure the content is a string before appending
+                    content = page_data.get('contents', '')
+                    if not isinstance(content, str):
+                        content = str(content)  # Convert to string if needed
+                    
+                    # new_page.set_contents(page_data.get('contents', '') + "<!-- delimiter -->")
+                    new_page.set_contents(content + "<!-- delimiter -->")
                     new_page.set_url(page_data.get('url', None))
                     new_page.set_file(page_data.get('files', None))
                     new_page.save()

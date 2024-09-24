@@ -59,7 +59,7 @@ class LessonContentsController(GenericViewSet, ListModelMixin, RetrieveModelMixi
         if instance is None:
             return Response({"error": "Lesson contents not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        instance.contents = data['contents']
+        instance.contents = data['contents'] + "<!-- delimiter -->"
         instance.files = request.FILES.get('files')
         instance.save()
         serializer = LessonContentSerializer(instance)

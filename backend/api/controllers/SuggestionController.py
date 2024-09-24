@@ -206,11 +206,11 @@ class SuggestionController(ModelViewSet):
 
             # Clean all marks
             propose_ai_content = self.cleanMarkAiContent(ai_response)
-            print("PROPOSE AI CONTENT = " + propose_ai_content)
+            # print("PROPOSE AI CONTENT = " + propose_ai_content)
 
             # Updating content to cleaned HTML MARKUP
             existing_suggestion.content = propose_ai_content
-            print("existing_suggestion.content",existing_suggestion.content)
+            # print("existing_suggestion.content",existing_suggestion.content)
 
             # existing_suggestion.content = None
             if not existing_suggestion.old_content:
@@ -240,10 +240,12 @@ class SuggestionController(ModelViewSet):
         
     def updateContent(self, request):
         lesson_id = request.data.get('lesson_id')
+        print("request", request.data)
         print("lesson id = ", lesson_id)
+        
         if not lesson_id:
             return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
             # Fetch the Suggestion content based on the lesson_id
             suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
@@ -257,20 +259,33 @@ class SuggestionController(ModelViewSet):
 
             # Get All Previous Lesson Contents
             prev_contents = LessonContent.objects.filter(lesson_id=lesson_id).order_by('id')
-            prev_contents_list = list(prev_contents)  # Convert queryset to list
+            prev_contents_list = list(prev_contents)
 
-            # Ensure the number of LessonContent pages matches the page_contents length
-            if len(prev_contents_list) != len(page_contents):
-                return Response({"error": "Mismatch in number of pages and contents"}, status=status.HTTP_400_BAD_REQUEST)
+            print("length")
+            print("page_contents length = ", len(page_contents))
+            print("prev_contents_list length = ", len(prev_contents_list))
 
-            # Iterate through each page and assign content to corresponding LessonContent
-            for index, content in enumerate(page_contents):
+            # Update existing pages first
+            for index, content in enumerate(page_contents[:len(prev_contents_list)]):
                 lesson_content = prev_contents_list[index]
                 lesson_content.contents = content.strip()  # Assign content of the page
                 lesson_content.save()
                 print(f"Updated LessonContent page {index + 1}: {content}")
 
-            return Response({"message": "Content updated successfully"})
+            # If new content has more pages than the existing ones, create new LessonContent for the extra pages
+            if len(page_contents) > len(prev_contents_list):
+                for new_index in range(len(prev_contents_list), len(page_contents)):
+                    new_content = page_contents[new_index]
+                    if new_content.strip():  # Only create new page if content is not empty
+                        new_lesson_content = LessonContent(
+                            lesson_id=lesson_id,
+                            contents=new_content.strip()
+                        )
+                        new_lesson_content.save()
+                        print(f"Created new LessonContent page {new_index + 1}: {new_content}")
+
+            # If new content has fewer pages, just update existing pages (no deletion allowed)
+            return Response({"message": "Content updated successfully"}, status=status.HTTP_200_OK)
 
         except Lesson.DoesNotExist:
             return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -279,14 +294,13 @@ class SuggestionController(ModelViewSet):
             print(f"Error: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    
-    # revert content
+    # Revert content logic
     def updateRevertContent(self, request):
         lesson_id = request.data.get('lesson_id')
         print("lesson id = ", lesson_id)
         if not lesson_id:
             return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
             # Fetch the Suggestion content based on the lesson_id
             suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
@@ -296,12 +310,7 @@ class SuggestionController(ModelViewSet):
             old_content = suggestion.old_content
             if not old_content:
                 return Response({"error": "No old content found in the suggestion"}, status=status.HTTP_404_NOT_FOUND)
-            print("old content", old_content)
-
-            # Count the delimiters in old_content
-            delimiter_count = old_content.count("<!-- delimiter -->")
-            print(f"Delimiter count in old content: {delimiter_count}")
-
+            
             # Split the old_content using the delimiter
             result = LessonContentsController.split_content_by_delimiter(old_content, isRevert=True)
             page_contents = result[1]
@@ -311,24 +320,33 @@ class SuggestionController(ModelViewSet):
             lesson_contents = LessonContent.objects.filter(lesson_id=lesson_id).order_by('id')
             lesson_contents_list = list(lesson_contents)
 
-            # Ensure the number of lesson contents matches the number of pages
-            if len(lesson_contents_list) != len(page_contents):
-                print(f"LessonContent pages: {len(lesson_contents_list)}, Split pages: {len(page_contents)}")
-                return Response({"error": "Mismatch between old content pages and lesson content pages"}, status=status.HTTP_400_BAD_REQUEST)
+            print(f"Existing pages: {len(lesson_contents_list)}, Reverted content pages: {len(page_contents)}")
 
-            # Iterate through each page content and update the corresponding LessonContent record
-            for index, content in enumerate(page_contents):
+            # Update existing pages
+            for index in range(min(len(lesson_contents_list), len(page_contents))):
                 lesson_content = lesson_contents_list[index]
-                lesson_content.contents = content.strip()  # Assign the old page content
+                lesson_content.contents = page_contents[index].strip()  # Assign the old page content
                 lesson_content.save()
                 print(f"Updated LessonContent page {index + 1} with old content")
+
+            # If old content has more pages, create new LessonContent for the excess pages
+            if len(page_contents) > len(lesson_contents_list):
+                for index in range(len(lesson_contents_list), len(page_contents)):
+                    new_lesson_content = LessonContent(
+                        lesson_id=lesson_id,
+                        contents=page_contents[index].strip()
+                    )
+                    new_lesson_content.save()
+                    print(f"Created new LessonContent page {index + 1} with old content")
 
             return Response({"message": "Lesson content reverted successfully"}, status=status.HTTP_200_OK)
 
         except LessonContent.DoesNotExist:
             return Response({"error": "Lesson content not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
+            print(f"Error: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
     
