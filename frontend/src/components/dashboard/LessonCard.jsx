@@ -18,12 +18,15 @@ import EditIcon from '@mui/icons-material/Edit';
 const LessonCard = (props) => {
   const { user } = useAuth();
   const { id, lessonNumber, title, description, pageCount, image, fileCount } =
-  props;
+    props;
   const url = config.API_URL.endsWith('/')
     ? config.API_URL.slice(0, -1)
     : config.API_URL;
   const imageUrl = `${url}`;
   const navigate = useNavigate();
+
+  // Randomly choose between 0.jpg or 1.jpg
+  const randomImageSuffix = Math.random() < 0.5 ? '1.jpg' : '2.jpg';
 
   const handleLessonClick = () => {
     navigate(`/lessons/${lessonNumber}/1/false/${id}`);
@@ -59,9 +62,9 @@ const LessonCard = (props) => {
           image={
             image
               ? image.includes('null')
-                ? 'https://source.unsplash.com/random/featured/?working,office'
+                ? `/office/office${randomImageSuffix}`
                 : `${imageUrl}${image}`
-              : 'https://source.unsplash.com/random/featured/?working,office'
+              : `/office/office${randomImageSuffix}`
           }
         />
         <CardContent

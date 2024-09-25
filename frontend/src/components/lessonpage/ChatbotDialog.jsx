@@ -1,5 +1,4 @@
-import React, { useState, useRef } from 'react';
-
+import React, { useState, useRef, useEffect } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { suggestedQuestions } from 'data/suggestedQuestions';
 
@@ -22,13 +21,49 @@ const ChatbotDialog = (props) => {
   const { open, handleClose, lessonId, pageId } = props;
   const [isGettingResponse, setIsGettingResponse] = useState(false);
   const [messageInput, setMessageInput] = useState('');
-  // neutral: "#4c80d4", main: '#1b5e20'
   const [messages, setMessages] = useState([
     {
       message: 'Hi, I am Pixie! How can I help you?',
       sender: 'bot'
     }
   ]);
+
+  // Ref to handle auto-scrolling
+  const messagesEndRef = useRef(null);
+
+  // Scroll to bottom whenever messages change
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => {
+        scrollToBottom();
+      }, 0); // Ensure scrolling happens after rendering
+    }
+  }, [open]);
+
+  useEffect(() => {
+    scrollToBottom(); // Scroll when messages are updated
+  }, [messages]);
+
+  // Handle pressing Enter to send the message
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter' && !isGettingResponse && messageInput.trim()) {
+        handleSend();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [messageInput, isGettingResponse]);
 
   const handleSend = async () => {
     setIsGettingResponse(true);
@@ -42,13 +77,11 @@ const ChatbotDialog = (props) => {
     ]);
 
     try {
-      // const response = await LessonsService.chatbot(lessonId, pageId, message);
       const response = await LessonsService.chatbot(lessonId, pageId, message);
       setMessages((prevMessages) => [
         ...prevMessages,
         { message: response.data.response, sender: 'bot' }
       ]);
-      console.log('data: ' + response.data);
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -115,6 +148,9 @@ const ChatbotDialog = (props) => {
               Getting response...
             </Typography>
           )}
+
+          {/* Auto scroll target */}
+          <div ref={messagesEndRef} />
         </Box>
         <Box>
           {messages.length === 1 && (
@@ -138,7 +174,7 @@ const ChatbotDialog = (props) => {
             label='Message'
             multiline
             maxRows={3}
-            value={messageInput}
+            value={messageInput.trim()}
             onChange={(e) => setMessageInput(e.target.value)}
           />
           <Button

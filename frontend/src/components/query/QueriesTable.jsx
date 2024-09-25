@@ -1,21 +1,24 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { format } from 'date-fns';
 
 import { QueriesService } from 'apis/QueriesService';
 import QueryDetailsDialog from './QueryDetailsDialog';
 
-import { Box, Breadcrumbs } from '@mui/material';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-
+import {
+  Box,
+  Breadcrumbs,
+  Button,
+  Container,
+  Divider,
+  Stack,
+  Typography,
+  Link
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Link from '@mui/material/Link';
 
+// Columns for DataGrid
 const columns = [
   {
     field: 'createdAt',
@@ -41,41 +44,43 @@ const columns = [
     width: 500,
     headerClassName: 'super-app-theme--header'
   }
-  // { field: 'courseYear', headerName: 'Course & Year', width: 260, headerClassName: 'super-app-theme--header' },
 ];
 
 const QueriesTable = () => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [selectedRow, setSelectedRow] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [queries, setQueries] = useState([]);
 
+  // Close dialog and navigate back
   const handleClose = useCallback(() => {
     navigate('/', { replace: true });
-  }, []);
+  }, [navigate]);
 
+  // Handle row click
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
     setIsDialogOpen(true);
   };
 
+  // Close the dialog
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
 
+  // Fetch queries on mount
   useEffect(() => {
     getQueries();
   }, []);
 
+  // Fetch and format query data
   const getQueries = async () => {
     try {
       const queryResponse = await QueriesService.list();
 
       if (queryResponse) {
-        // Transform the response data into rows for the DataGrid
         const formattedQueries = queryResponse.data.map((query) => {
-          // console.log("query", query);
           const createdAt = query.subqueries[0]
             ? new Date(query.subqueries[0].created_at)
             : null;
@@ -85,35 +90,22 @@ const QueriesTable = () => {
 
           return {
             id: query.id,
-            lessonId: query.lesson.id,
-            lessonNumber: query.lesson.lessonNumber,
-            title: query.lesson.title,
-            firstName: query.user.first_name,
-            lastName: query.user.last_name,
-            // preview: query.subqueries.question,
-            course: query.user.course,
-            year: query.user.year,
             lessonInfo: `${query.lesson.lessonNumber} - ${query.lesson.title}`,
             fullName: `${query.user.first_name} ${query.user.last_name}`,
-            // courseYear:
-            //   query.user.course && query.user.year
-            //     ? `${query.user.year} - ${query.user.course}`
-            //     : '',
-            preview: query.subqueries[0]
-              ? query.subqueries[0].question
-              : 'No question available',
+            preview: query.subqueries[0]?.question || 'No question available',
             createdAt: formattedDate
           };
         });
 
-        formattedQueries.sort((a, b) => {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
+        // Sort queries by createdAt in descending order
+        formattedQueries.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
 
         setQueries(formattedQueries);
       }
     } catch (error) {
-      console.log(error);
+      console.error('Failed to fetch queries:', error);
     }
   };
 
@@ -123,14 +115,19 @@ const QueriesTable = () => {
         <Stack divider={<Divider flexItem />} spacing={2}>
           <Box display='flex' justifyContent='space-between'>
             <Breadcrumbs aria-label='breadcrumb'>
-              <Link underline='hover' color='#1b5e20' href='/faq'>
+              <Link
+                underline='hover'
+                color={location.pathname === '/faq' ? '#1b5e20' : 'inherit'}
+                href='/faq'>
                 Frequently Asked
               </Link>
-              <Link underline='hover' color='inherit' href='/queries'>
+              <Link
+                underline='hover'
+                color={location.pathname === '/queries' ? '#1b5e20' : 'inherit'}
+                href='/queries'>
                 Student Queries
               </Link>
             </Breadcrumbs>
-            {/*<Typography variant='h4'>Student's Queries</Typography>*/}
             <Button onClick={handleClose} endIcon={<CloseIcon />}>
               Dashboard
             </Button>

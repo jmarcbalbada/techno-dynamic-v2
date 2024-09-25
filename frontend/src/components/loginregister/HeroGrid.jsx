@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 const HeroGrid = styled(Grid)(({ theme }) => ({
-  backgroundImage: 'url(https://source.unsplash.com/random/featured/?working,office)',
+  backgroundImage: 'url(/wil/wil1.jpg)',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
   backgroundPosition: 'center'

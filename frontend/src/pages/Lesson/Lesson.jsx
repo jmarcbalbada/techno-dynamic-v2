@@ -174,22 +174,26 @@ const Lesson = () => {
               open={fileModalOpen}
               handleClose={handleCloseFiles}
             />
-            <Fab
-              color='primary'
-              onClick={handleOpenChat}
-              sx={{
-                position: 'fixed',
-                bottom: '100px',
-                right: '50px'
-              }}>
-              <ChatIcon />
-            </Fab>
-            <ChatbotDialog
-              open={isChatOpen}
-              handleClose={handleCloseChat}
-              lessonId={lesson.id}
-              pageId={lesson?.pages[currentPage - 1]?.id}
-            />
+            {user.role === 'student' && (
+              <>
+                <Fab
+                  color='primary'
+                  onClick={handleOpenChat}
+                  sx={{
+                    position: 'fixed',
+                    bottom: '100px',
+                    right: '50px'
+                  }}>
+                  <ChatIcon />
+                </Fab>
+                <ChatbotDialog
+                  open={isChatOpen}
+                  handleClose={handleCloseChat}
+                  lessonId={lesson.id}
+                  pageId={lesson?.pages[currentPage - 1]?.id}
+                />
+              </>
+            )}
           </>
         )}
       </Container>
