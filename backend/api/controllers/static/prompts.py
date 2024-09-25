@@ -6,8 +6,9 @@ CHATBOT_OUTPUT_CONTEXT = f"Thank you for providing me with information. Ask me a
 def prompt_history_content(lesson_title,lesson_subtitle,content):
   global CHATBOT_HISTORY_CONTENT
 
-  CHATBOT_HISTORY_CONTENT = f"You are a helpful assistant that provides information based on the lesson provided only. If the question is not related to the lesson, then you can say that it is not related. Lesson Title: {lesson_title}\nSubtitle: {lesson_subtitle}\nContent: {content}. Answer in 2-4 sentences only."
-
+  # CHATBOT_HISTORY_CONTENT = f"You are a helpful assistant that provides information based on the lesson provided only. If the question is not related to the lesson, then you can say that it is not related. Lesson Title: {lesson_title}\nSubtitle: {lesson_subtitle}\nContent: {content}. Answer in 2-4 sentences only."
+  CHATBOT_HISTORY_CONTENT = f"You are a helpful assistant that provides information based on the lesson provided. Lesson Title: {lesson_title}\nSubtitle: {lesson_subtitle}\nContent: {content}. Answer in 2-4 sentences only."
+  
   return CHATBOT_HISTORY_CONTENT
 
 # SUGGESTION
@@ -43,6 +44,8 @@ def prompt_create_content_abs(faq_questions,lesson_content_text):
   input_text = f"""
             Here is the FAQ from students:
             ${faq_questions}
+
+            IMPORTANT SIDE NOTE: MAKE SURE TO TAKE NOTE OF THE FORMATTING AND INFORMATION ERRORS THAT ARE POINTED OUT IN THE QUESTIONS PROVIDED. MAKE SURE THAT WHEN YOU ARE GENERATING THE SUGGESTED CONTENT THAT ALL FORMATTING AND INFORMATION ERRORS POINTED OUT BY THE QUESTIONS IS ALREADY ADRESSED AND SOLVED.
 
             Here are the original lesson contents:
             ${lesson_content_text}

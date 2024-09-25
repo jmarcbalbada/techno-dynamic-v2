@@ -93,7 +93,7 @@ const NotificationItem = ({
         // cursor: 'pointer'
       }}>
       <ListItemText
-        primary={`Lesson ${notif.lesson}`}
+        primary={`Review required`}
         secondary={
           <>
             <span>{notif.message}</span>

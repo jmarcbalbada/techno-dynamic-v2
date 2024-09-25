@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from 'hooks/useAuth';
 import { courseCategories } from 'data/courseCategories';
@@ -29,6 +29,7 @@ import { CustomTextField } from '../loginregister/CustomTextField';
 const RegisterForm = () => {
   const { login } = useAuth();
   const timer = 3000;
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -63,14 +64,20 @@ const RegisterForm = () => {
         });
 
         if (response.status === 201) {
-          setSnackbarSuccessOpen(true);
+          setSnackbarSuccessOpen(true); // Show the snackbar
+
+          // Wait for the snackbar to be displayed before navigating
+          setTimeout(() => {
+            // After the snackbar is shown, navigate to the desired page
+            navigate('/');
+
+            // Log in after navigating
+            login({
+              username: values.username,
+              password: values.password
+            });
+          }, timer); // 'timer' here refers to the duration you want to delay (e.g., 3000ms)
         }
-        setTimeout(() => {
-          login({
-            username: values.username,
-            password: values.password
-          });
-        }, timer);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const response = error.response;

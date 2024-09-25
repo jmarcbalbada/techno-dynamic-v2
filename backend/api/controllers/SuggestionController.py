@@ -189,13 +189,13 @@ class SuggestionController(ModelViewSet):
             # Call OpenAI API to get the suggestion
             openai.api_key = os.environ.get("OPENAI_API_KEY")
             response = openai.ChatCompletion.create(
-                model="gpt-4o-mini",
+                model="gpt-4o",
                 messages=[
                     {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT},
                     {"role": "user", "content": input_text}
                 ],
                 max_tokens=4000, # enough tokens for now
-                temperature=0.7, # more creative
+                temperature=0.5, # more creative
             )
             ai_response = response['choices'][0]['message']['content'].strip()
             # Preprocess the response to ensure it uses <br> and removes unwanted characters
