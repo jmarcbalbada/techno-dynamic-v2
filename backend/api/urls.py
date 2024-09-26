@@ -15,6 +15,7 @@ from .controllers.FaqController import FaqController
 from .controllers.SuggestionController import SuggestionController
 from .controllers.RelatedContentController import RelatedContentController
 from .controllers.NotificationController import NotificationController
+from .controllers.ContentHistoryController import ContentHistoryController
 from rest_framework.routers import SimpleRouter
 
 
@@ -56,6 +57,22 @@ query_actions = {
 query_detail_actions = {
     'get': 'getQueryById',
     'delete': 'deleteQuery',
+}
+
+content_historyWithLessonId_actions = {
+    'post': 'createHistory',
+    'get': 'getAllHistoryByLessonId',
+
+}
+
+content_historyWithHistoryId_actions = {
+    'get': 'getHistoryByHistoryId',
+
+}
+
+content_historyAdminControls_actions = {
+    'put': 'updateHistory',
+    'delete': 'deleteHistory',
 }
 
 image_actions = {
@@ -142,9 +159,14 @@ urlpatterns = [
     path('lessons/<int:lesson_id>', LessonController.as_view(lesson_detail_actions)),
     path('lessons/<int:lesson_id>/pages/', LessonContentsController.as_view(lesson_contents_actions)),
     path('lessons/<int:lesson_id>/pages/<int:lesson_contents_id>', LessonContentsController.as_view(lesson_contents_detail_actions)),
-    # path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response', 'get': 'testing'})),
     path('lessons/<int:lesson_id>/pages/<int:lesson_content_id>/chatbot/', ChatBotController.as_view({'post': 'chatbot_response'})),
 
+    # History
+    path('lessons/history/lesson/<int:lesson_id>/', ContentHistoryController.as_view(content_historyWithLessonId_actions)),
+    path('lessons/history/history/<int:history_id>/', ContentHistoryController.as_view(content_historyWithHistoryId_actions)),
+    path('lessons/history/adminControl/<int:lesson_id>/<int:history_id>/', ContentHistoryController.as_view(content_historyAdminControls_actions)),
+
+    # Queries
     path('queries/', QueryController.as_view(query_actions)),
     path('queries/<int:pk>/', QueryController.as_view(query_detail_actions)),
 
@@ -182,6 +204,7 @@ urlpatterns = [
 
     # Suggestions
     path('suggestions/', SuggestionController.as_view(suggestion_detail_actions)),
+    path('suggestions/getoldcontent/<int:lesson_id>', SuggestionController.as_view({'get': 'getOldContent'})),
     path('suggestions/revert/', SuggestionController.as_view(suggestion_revert_actions)),
 
     path('suggestions/insights/', SuggestionController.as_view(suggestion_insight_actions)),
