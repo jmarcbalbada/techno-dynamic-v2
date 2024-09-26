@@ -12,6 +12,9 @@ export const SuggestionService = {
       { lesson_id, notification_id },
     ),
 
+  get_old_content:(lesson_id) =>
+    axios.get(`${BASE_URL}/getoldcontent/${lesson_id}`),
+
     // create content
   create_content: (lesson_id, notification_id) =>
     axios.post(

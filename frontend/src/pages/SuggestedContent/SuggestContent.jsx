@@ -35,8 +35,7 @@ const SuggestContent = () => {
   const theme = useTheme();
   const currID = parseInt(lessonID);
 
-  const temp = String(suggestedContents);
-  const finalSuggestContent = temp.replace('2. ', '');
+  const finalSuggestContent = String(suggestedContents);
 
   const handleAccept = () => {
     // console.log("clicked accept");

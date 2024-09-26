@@ -92,7 +92,7 @@ class SuggestionController(ModelViewSet):
             # Call OpenAI API to get the suggestion
             openai.api_key = os.environ.get("OPENAI_API_KEY")
             response = openai.ChatCompletion.create(
-                model="gpt-4o",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT_INSIGHTS},
                     {"role": "user", "content": input_text}
@@ -189,7 +189,7 @@ class SuggestionController(ModelViewSet):
             # Call OpenAI API to get the suggestion
             openai.api_key = os.environ.get("OPENAI_API_KEY")
             response = openai.ChatCompletion.create(
-                model="gpt-4o",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT},
                     {"role": "user", "content": input_text}
@@ -347,7 +347,27 @@ class SuggestionController(ModelViewSet):
             print(f"Error: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def getOldContent(self, request, lesson_id):
+        # lesson_id = request.data.get('lesson_id')
+        print("old content lesson id = ", lesson_id)
+        # Check if lesson_id is provided
+        if not lesson_id:
+            return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Fetch the suggestion based on lesson_id
+            suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
 
+            # Check if a suggestion was found
+            if not suggestion:
+                return Response({"error": "No suggestion found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
+
+            # Return the old_content
+            return Response({"old_content": suggestion.old_content}, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            # Handle any unexpected errors
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     
     # delete suggestion and faq related

@@ -22,6 +22,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import NotificationLayout from '../Notification/NotificationLayout';
 import InsightLayout from '../Insight/InsightLayout';
 import { SuggestionService } from 'apis/SuggestionService';
+import { ContentHistoryService } from 'apis/ContentHistoryService';
 import { NotificationService } from '../../apis/NotificationService';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 
@@ -35,26 +36,25 @@ const RevertContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [isReverted, setReverted] = useState(false);
+  const [oldContent, setOldContent] = useState('');
   const theme = useTheme();
   const currID = parseInt(lessonID);
 
   useEffect(() => {
     getLessonLessonNumber(lessonNumber);
+    getOldContent(currID);
   }, []);
 
-  const suggestClick = () => {
-    console.log('suggest clicked');
-    navigate(`/suggest/${lessonNumber}/1/`);
-  };
-
-  const handleClearCallbackSuggestionAndNotification = async () => {
-    await handleClearNotif();
-    await handleClearSuggestionAndFaq();
-    navigate(`/`, { replace: true });
-    window.history.pushState(null, null, window.location.href);
-    // history.replace('/');
-    window.location.reload();
-  };
+  const handleClearCallbackSuggestionAndNotificationAndAddToVersion =
+    async () => {
+      await handleClearNotif();
+      await handleAddVersionControl();
+      await handleClearSuggestionAndFaq();
+      navigate(`/`, { replace: true });
+      window.history.pushState(null, null, window.location.href);
+      // history.replace('/');
+      window.location.reload();
+    };
 
   const handleClearNotif = async () => {
     try {
@@ -64,6 +64,29 @@ const RevertContent = () => {
     } catch (error) {
       setIsError(true);
     } finally {
+    }
+  };
+
+  const getOldContent = async () => {
+    try {
+      const response = await SuggestionService.get_old_content(currID);
+      console.log('response.data', response.data);
+      setOldContent(response.data.old_content);
+      await console.log('old content is = ', oldContent);
+    } catch (error) {
+      setIsError(true);
+    }
+  };
+
+  const handleAddVersionControl = async () => {
+    try {
+      const response = await ContentHistoryService.createHistory(
+        currID,
+        oldContent
+      );
+      console.log('response.data', response.data);
+    } catch (error) {
+      setIsError(true);
     }
   };
 
@@ -113,17 +136,23 @@ const RevertContent = () => {
   const handleNextPage = () => {
     if (currentPage < lesson?.pages?.length) {
       setCurrentPage((prev) => prev + 1);
-      navigate(`/lessons/${lessonNumber}/${currentPage + 1}/${lessonID}/rvContent`);
+      navigate(
+        `/lessons/${lessonNumber}/${currentPage + 1}/${lessonID}/rvContent`
+      );
     } else {
       // navigate(`/lessons/${lessonNumber}/end`);
-      alert("This is the last page of the lesson! Please review and click 'Looks good to me' to continue!")
+      alert(
+        "This is the last page of the lesson! Please review and click 'Looks good to me' to continue!"
+      );
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
-      navigate(`/lessons/${lessonNumber}/${currentPage - 1}/${lessonID}/rvContent`);
+      navigate(
+        `/lessons/${lessonNumber}/${currentPage - 1}/${lessonID}/rvContent`
+      );
     } else {
       navigate(`/`);
     }
@@ -225,7 +254,9 @@ const RevertContent = () => {
                           textTransform: 'none', // Set text to normal case
                           paddingRight: '10px' // Add padding to the right of the icon
                         }}
-                        onClick={handleClearCallbackSuggestionAndNotification}>
+                        onClick={
+                          handleClearCallbackSuggestionAndNotificationAndAddToVersion
+                        }>
                         <DoneAllIcon sx={{ marginRight: '10px' }} />
                         Looks good to me!
                       </Button>
@@ -281,7 +312,9 @@ const RevertContent = () => {
                         textTransform: 'none', // Set text to normal case
                         paddingRight: '10px' // Add padding to the right of the icon
                       }}
-                      onClick={handleClearCallbackSuggestionAndNotification}>
+                      onClick={
+                        handleClearCallbackSuggestionAndNotificationAndAddToVersion
+                      }>
                       <HistoryIcon sx={{ marginRight: '10px' }} />
                       Return to Dashboard
                     </Button>

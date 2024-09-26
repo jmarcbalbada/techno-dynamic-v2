@@ -8,7 +8,7 @@ class LessonContent(models.Model):
     contents = models.TextField(default="", null=False)
     url = models.URLField(max_length=255, null=True, blank=True)
     files = models.FileField(upload_to='media/', null=True, blank=True)
-    images = models.ManyToManyField(ImageModel, related_name='lesson_contents', null=True, blank=True)
+    images = models.ManyToManyField(ImageModel, related_name='lesson_contents', blank=True)
 
     def __str__(self):
         return self.contents
