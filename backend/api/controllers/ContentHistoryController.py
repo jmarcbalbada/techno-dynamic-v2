@@ -83,8 +83,8 @@ class ContentHistoryController(ModelViewSet):
         serializer = ContentHistorySerializer(content_histories, many=True)
 
         # Fetch all the lesson contents for the lesson_id and concatenate them into a single string
-        current_lesson_contents = LessonContent.objects.filter(lesson_id=lesson_id)
-        concatenated_content = ''.join([content.contents for content in current_lesson_contents])
+        current_lesson_contents = LessonContent.objects.filter(lesson_id=lesson_id).order_by('id')
+        concatenated_content = '\n'.join([content.contents for content in current_lesson_contents])
 
         # Return content history and the concatenated lesson contents in the response
         return Response({
@@ -131,14 +131,23 @@ class ContentHistoryController(ModelViewSet):
                     new_lesson_content.save()
                     print(f"Created new LessonContent page {index + 1} with content from history")
 
+            # After updating/creating pages, check for pages with only <!-- delimiter --> and remove them
+            lesson_contents_after = LessonContent.objects.filter(lesson_id=lesson_id).order_by('id')
+
+            for content in lesson_contents_after:
+                if content.contents.strip() == "<!-- delimiter -->":
+                    print(f"Removing blank page with id {content.id}")
+                    content.delete()
+
             # Success response after restoration
             return Response({"message": "Lesson content restored successfully."}, status=status.HTTP_200_OK)
 
         except LessonContent.DoesNotExist:
-            return Response({"error": "Lesson content not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Lesson content not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(f"Error: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
     # Update ContentHistory (for admin/dev only)
