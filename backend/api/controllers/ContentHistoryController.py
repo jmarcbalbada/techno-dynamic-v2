@@ -1,3 +1,4 @@
+from api.model.LessonContent import LessonContent
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
@@ -6,7 +7,9 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from api.serializer.ContentHistorySerializer import ContentHistorySerializer
 from api.model.ContentHistory import ContentHistory
 from api.controllers.permissions.permissions import IsTeacher
+from api.controllers.LessonContentController import LessonContentsController
 from api.model.Lesson import Lesson
+from django.core.exceptions import ObjectDoesNotExist
 
 class ContentHistoryController(ModelViewSet):
     queryset = ContentHistory.objects.all()
@@ -21,7 +24,6 @@ class ContentHistoryController(ModelViewSet):
     #         return [IsAuthenticated()]
     # allow permission for now
 
-    from django.core.exceptions import ObjectDoesNotExist
 
     def createHistory(self, request, lesson_id=None):
           
@@ -76,9 +78,68 @@ class ContentHistoryController(ModelViewSet):
         if not lesson_id:
             return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Fetch content history
         content_histories = ContentHistory.objects.filter(lessonId=lesson_id)
         serializer = ContentHistorySerializer(content_histories, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # Fetch all the lesson contents for the lesson_id and concatenate them into a single string
+        current_lesson_contents = LessonContent.objects.filter(lesson_id=lesson_id)
+        concatenated_content = ''.join([content.contents for content in current_lesson_contents])
+
+        # Return content history and the concatenated lesson contents in the response
+        return Response({
+            'content_history': serializer.data,
+            'current_lesson': concatenated_content  # All lesson contents concatenated into one string
+        }, status=status.HTTP_200_OK)
+        
+    # Restore Version [HttpPut]
+    def restoreHistory(self, request, lesson_id=None, history_id=None):
+        if not lesson_id or not history_id:
+            return Response({"error": "Both lesson_id and history_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Fetch the specific history based on lesson_id and history_id
+            content_history = ContentHistory.objects.filter(lessonId=lesson_id, historyId=history_id).first()
+            if not content_history:
+                return Response({"error": "Content history not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            # Fetch the lesson content for the given lesson_id
+            lesson_contents = LessonContent.objects.filter(lesson_id=lesson_id).order_by('id')
+            lesson_contents_list = list(lesson_contents)
+
+            # Process the history content via pagination (split by delimiter)
+            result = LessonContentsController.split_content_by_delimiter(content_history.content, isRevert=True)
+            page_contents = result[1]  # Get array of content pages
+
+            # Log the number of pages for debugging
+            print(f"Restoring content: Existing lesson pages = {len(lesson_contents_list)}, History content pages = {len(page_contents)}")
+
+            # Update the existing lesson pages with the content from history
+            for index in range(min(len(lesson_contents_list), len(page_contents))):
+                lesson_content = lesson_contents_list[index]
+                lesson_content.contents = page_contents[index].strip()  # Update content of the page
+                lesson_content.save()
+                print(f"Updated LessonContent page {index + 1} with content from history")
+
+            # If the history has more pages than the current lesson, create new pages
+            if len(page_contents) > len(lesson_contents_list):
+                for index in range(len(lesson_contents_list), len(page_contents)):
+                    new_lesson_content = LessonContent(
+                        lesson_id=lesson_id,
+                        contents=page_contents[index].strip()
+                    )
+                    new_lesson_content.save()
+                    print(f"Created new LessonContent page {index + 1} with content from history")
+
+            # Success response after restoration
+            return Response({"message": "Lesson content restored successfully."}, status=status.HTTP_200_OK)
+
+        except LessonContent.DoesNotExist:
+            return Response({"error": "Lesson content not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     # Update ContentHistory (for admin/dev only)
     def updateHistory(self, request, lesson_id=None, history_id=None):

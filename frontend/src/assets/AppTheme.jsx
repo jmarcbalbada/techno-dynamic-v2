@@ -10,13 +10,14 @@ const AppTheme = createTheme({
     secondary: {
       main: '#cfd8dc',
       rusty: '#ffcc00',
+      darkerRusty: '#cc9900',
     },
     white: {
       main: '#fff',
       contrastText: '#000'
     },
     background: {
-      darker: "#cfd0d1",
+      darker: "#636363",
       default: '#f9fafb',
       neutral: "#4c80d4",
       lighterneutral: "#bfcfe9",

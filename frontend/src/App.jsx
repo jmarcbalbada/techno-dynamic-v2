@@ -22,6 +22,7 @@ import ProtectedLayout from 'hocs/ProtectedLayout';
 import Register from 'pages/Register/Register';
 import FrequentlyAskedQuestions from 'pages/Faq/FrequentlyAskedQuestions';
 import SuggestContent from './pages/SuggestedContent/SuggestContent';
+import VersionHistory from './pages/ContentHistory/VersionHistory';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,7 +36,6 @@ export const router = createBrowserRouter(
           path='/lessons/:lessonNumber/:pageNumber/:isNotif?/:lessonID/:isInsight?'
           element={<Lesson />}
         />
-        {/* <Route path='/suggest/:lessonNumber/:pageNumber' element={<SuggestContent />} /> */}
         <Route path='/lessons/:lessonNumber/end' element={<LessonEnd />} />
         <Route element={<RoleAccess roles={['teacher']} />}>
           <Route path='/create' element={<Create />} />
@@ -46,6 +46,10 @@ export const router = createBrowserRouter(
           <Route
             path='/lessons/:lessonNumber/:pageNumber/:lessonID/rvContent'
             element={<RevertContent />}
+          />
+          <Route
+            path='/lessons/history/:lessonID'
+            element={<VersionHistory />}
           />
           <Route path='suggestcontent' element={<SuggestContent />} />
           <Route path='/lessons/:lessonNumber/edit' element={<Edit />} />
