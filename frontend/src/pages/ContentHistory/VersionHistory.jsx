@@ -39,6 +39,8 @@ const VersionHistory = () => {
     try {
       const response =
         await ContentHistoryService.getHistoryByLessonId(lessonId);
+      console.log('response history', response.data);
+
       setHistories(response.data.content_history);
       setCurrentLesson(response.data.current_lesson);
     } catch (error) {
@@ -58,6 +60,7 @@ const VersionHistory = () => {
           lesson_id,
           history_id
         );
+
         if (response.status === 200) {
           setSnackbarSuccessOpen(true);
           setTimeout(() => {
@@ -173,15 +176,24 @@ const VersionHistory = () => {
                             ml: 2,
                             color: `${theme.palette.primary.main}`,
                             zIndex: 10,
-                            cursor: 'pointer',
-                            pointerEvents: 'auto'
+                            cursor: isCurrentVersion
+                              ? 'not-allowed'
+                              : 'pointer',
+                            pointerEvents: isCurrentVersion ? 'none' : 'auto'
                           }}
                           onClick={() =>
+                            !isCurrentVersion &&
                             handleRestoreButton(lessonId, history.historyId)
                           }>
                           {' '}
-                          <RestoreIcon />
-                          <Typography sx={{ ml: 0.8 }}>Restore</Typography>{' '}
+                          {!isCurrentVersion && (
+                            <>
+                              <RestoreIcon />
+                              <Typography sx={{ ml: 0.8 }}>
+                                Restore
+                              </Typography>{' '}
+                            </>
+                          )}
                         </Box>
                       </Box>
 
