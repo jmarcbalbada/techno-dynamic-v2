@@ -16,10 +16,15 @@ import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
 import Fab from '@mui/material/Fab';
 import { useAuth } from '../../hooks/useAuth';
+import { Tooltip } from '@mui/material';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationLayout from '../Notification/NotificationLayout';
 import InsightLayout from '../Insight/InsightLayout';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
+import { useTheme } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
 
 const Lesson = () => {
@@ -37,11 +42,15 @@ const Lesson = () => {
   const [isError, setIsError] = useState(false);
   const [lessonInsights, setLessonInsights] = useState([]);
   const { user } = useAuth();
+  const [notifIdAuth, setNotifIdAuth] = useState(false);
   const currID = parseInt(lessonID);
+  const theme = useTheme();
 
   useEffect(() => {
     getLessonLessonNumber(lessonNumber);
-    // console.log('LESSONID', currID);
+    if (notif) {
+      handleNotificationAuth();
+    }
   }, []);
 
   const suggestClick = () => {
@@ -59,12 +68,33 @@ const Lesson = () => {
     try {
       const response = await LessonsService.getByLessonNumber(lessonNumber);
       console.log('response', response.data);
+      localStorage.setItem(
+        'ltids',
+        JSON.stringify({
+          id: response?.data?.id,
+          title: response?.data?.title
+        })
+      );
       setLesson(response.data);
     } catch (error) {
       console.log('error', error);
       setIsError(true);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleNotificationAuth = async () => {
+    try {
+      const notifAuth = localStorage.getItem('notification_id');
+      if (!notifAuth) {
+        alert('Invalid access, accessing without notification!');
+        setNotifIdAuth(false);
+      } else {
+        setNotifIdAuth(true);
+      }
+    } catch (error) {
+      setIsError(true);
     }
   };
 
@@ -136,75 +166,130 @@ const Lesson = () => {
   };
 
   return (
-    <Box>
-      <Container
-        component='main'
-        sx={{
-          mt: 2,
-          mb: 12
-        }}>
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : isError ? (
-          <div>error</div>
-        ) : (
-          // <Navigate to="/404" replace />
-          <>
-            {notif && !insight && user.role == 'teacher' && (
-              <NotificationLayout
-                handleSuggest={suggestClick}
-                handleInsight={() => insightClicked(currID)}
-              />
-            )}
-            {insight && (
-              <InsightLayout
-                handleSuggest={suggestClick}
-                sampleContentReal={
-                  lessonInsights.length > 0
-                    ? lessonInsights
-                    : '<h4><i>Please wait...<i/><h4/>'
-                }
-              />
-            )}
-            <LessonPage
-              pageContent={lesson?.pages[currentPage - 1]?.contents}
-            />
-            <FilesModal
-              files={lesson?.lesson_files}
-              open={fileModalOpen}
-              handleClose={handleCloseFiles}
-            />
-            {user.role === 'student' && (
-              <>
-                <Fab
-                  color='primary'
-                  onClick={handleOpenChat}
+    <>
+      <Box sx={{ position: 'relative' }}>
+        {user.role === 'teacher' && !notif && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0, // Adjust this value as needed
+              left: {
+                xs: '1rem', // Small screens
+                sm: '1.6rem', // Medium screens
+                md: '1.6rem', // Large screens
+                lg: '1.6rem' // Extra-large screens
+              },
+              mt: 5,
+              zIndex: 10, // Ensure this is on top of other elements
+              pointerEvents: 'auto' // Make sure it can be clicked
+            }}>
+            <Typography
+              variant='body2'
+              align='left'
+              sx={{
+                display: 'inline-block',
+                mt: 2,
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: 16
+              }}>
+              <Link
+                color={theme.palette.primary.main}
+                href={`/lessons/history/${lessonID}`}>
+                View Version History
+              </Link>
+              <Tooltip
+                title={
+                  <>
+                    <Typography variant='body1'>Version Control</Typography>
+                    <Typography variant='body2'>
+                      Quickly access and restore previous versions.
+                    </Typography>
+                  </>
+                }>
+                <AutoAwesomeIcon
                   sx={{
-                    position: 'fixed',
-                    bottom: '100px',
-                    right: '50px'
-                  }}>
-                  <ChatIcon />
-                </Fab>
-                <ChatbotDialog
-                  open={isChatOpen}
-                  handleClose={handleCloseChat}
-                  lessonId={lesson.id}
-                  pageId={lesson?.pages[currentPage - 1]?.id}
+                    color: '#4c80d4',
+                    fontSize: '1.0rem',
+                    marginLeft: '10px'
+                  }}
                 />
+              </Tooltip>
+            </Typography>
+          </Box>
+        )}
+
+        <Box sx={{ mt: 2 }}>
+          <Container
+            component='main'
+            sx={{
+              mb: 12
+            }}>
+            {isLoading ? (
+              <div>Loading...</div>
+            ) : isError ? (
+              <div>Error, something went wrong!</div>
+            ) : notifIdAuth === false && notif ? (
+              <div>Error, invalid access!</div>
+            ) : (
+              <>
+                {notif && !insight && user.role === 'teacher' && (
+                  <NotificationLayout
+                    handleSuggest={suggestClick}
+                    handleInsight={() => insightClicked(currID)}
+                  />
+                )}
+                {insight && (
+                  <InsightLayout
+                    handleSuggest={suggestClick}
+                    sampleContentReal={
+                      lessonInsights.length > 0
+                        ? lessonInsights
+                        : '<h4><i>Please wait...<i/><h4/>'
+                    }
+                  />
+                )}
+                <LessonPage
+                  pageContent={lesson?.pages[currentPage - 1]?.contents}
+                />
+                <FilesModal
+                  files={lesson?.lesson_files}
+                  open={fileModalOpen}
+                  handleClose={handleCloseFiles}
+                />
+                {user.role === 'student' && (
+                  <>
+                    <Fab
+                      color='primary'
+                      onClick={handleOpenChat}
+                      sx={{
+                        position: 'fixed',
+                        bottom: '100px',
+                        right: '50px'
+                      }}>
+                      <ChatIcon />
+                    </Fab>
+                    <ChatbotDialog
+                      open={isChatOpen}
+                      handleClose={handleCloseChat}
+                      lessonId={lesson.id}
+                      pageId={lesson?.pages[currentPage - 1]?.id}
+                    />
+                  </>
+                )}
               </>
             )}
-          </>
-        )}
-      </Container>
-      <FooterControls
-        isFirstPage={currentPage === 1}
-        handleNextPage={handleNextPage}
-        handlePrevPage={handlePrevPage}
-        handleEditPage={handleEditPage}
-        handleOpenFiles={handleOpenFiles}
-      />
-    </Box>
+          </Container>
+          <FooterControls
+            isFirstPage={currentPage === 1}
+            handleNextPage={handleNextPage}
+            handlePrevPage={handlePrevPage}
+            handleEditPage={handleEditPage}
+            handleOpenFiles={handleOpenFiles}
+          />
+        </Box>
+      </Box>
+    </>
   );
 };
 

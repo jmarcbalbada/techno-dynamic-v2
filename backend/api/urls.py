@@ -62,7 +62,10 @@ query_detail_actions = {
 content_historyWithLessonId_actions = {
     'post': 'createHistory',
     'get': 'getAllHistoryByLessonId',
+}
 
+content_historyWithLessonsIdAndHistoryId_actions = {
+    'put': 'restoreHistory',
 }
 
 content_historyWithHistoryId_actions = {
@@ -165,6 +168,7 @@ urlpatterns = [
     path('lessons/history/lesson/<int:lesson_id>/', ContentHistoryController.as_view(content_historyWithLessonId_actions)),
     path('lessons/history/history/<int:history_id>/', ContentHistoryController.as_view(content_historyWithHistoryId_actions)),
     path('lessons/history/adminControl/<int:lesson_id>/<int:history_id>/', ContentHistoryController.as_view(content_historyAdminControls_actions)),
+    path('lessons/history/restore/<int:lesson_id>/<int:history_id>/', ContentHistoryController.as_view(content_historyWithLessonsIdAndHistoryId_actions)),
 
     # Queries
     path('queries/', QueryController.as_view(query_actions)),

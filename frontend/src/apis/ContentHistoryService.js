@@ -14,5 +14,9 @@ export const ContentHistoryService = {
 
   // Get a specific history entry by historyId
   getHistoryByHistoryId: (history_id) =>
-    axios.get(`${BASE_URL}/history/${history_id}/`)
+    axios.get(`${BASE_URL}/history/${history_id}/`),
+
+  // Restore a specific history for a lesson by lessonId and historyId
+  restoreHistory: (lesson_id, history_id) =>
+    axios.put(`${BASE_URL}/restore/${lesson_id}/${history_id}/`)
 };
