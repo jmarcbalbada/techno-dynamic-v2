@@ -21,7 +21,7 @@ import Query from 'pages/Query/Query';
 import ProtectedLayout from 'hocs/ProtectedLayout';
 import Register from 'pages/Register/Register';
 import FrequentlyAskedQuestions from 'pages/Faq/FrequentlyAskedQuestions';
-import SuggestContent from './pages/SuggestedContent/SuggestContent';
+import SuggestContent from 'pages/SuggestedContent/SuggestContent';
 import VersionHistory from './pages/ContentHistory/VersionHistory';
 
 export const router = createBrowserRouter(
