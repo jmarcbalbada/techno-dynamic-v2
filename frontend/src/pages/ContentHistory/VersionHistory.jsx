@@ -3,7 +3,6 @@ import {
   Container,
   Typography,
   Box,
-  Button,
   Breadcrumbs,
   Accordion,
   AccordionSummary,
@@ -25,6 +24,7 @@ const VersionHistory = () => {
   const [isError, setIsError] = useState(false);
   const [histories, setHistories] = useState([]);
   const [currentLesson, setCurrentLesson] = useState('');
+  const [expanded, setExpanded] = useState(false);
   const lessonTitle = lessonAndTitleIds?.title || 'Your lesson';
   const [snackbarSuccessOpen, setSnackbarSuccessOpen] = useState(false);
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const VersionHistory = () => {
     try {
       const response =
         await ContentHistoryService.getHistoryByLessonId(lessonId);
-      console.log('response history', response.data);
+      // console.log('response history', response.data);
 
       setHistories(response.data.content_history);
       setCurrentLesson(response.data.current_lesson);
@@ -49,10 +49,14 @@ const VersionHistory = () => {
     }
   };
 
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
   const handleRestoreButton = async (lesson_id = lessonId, history_id) => {
     try {
       const confirmation = window.confirm(
-        `Are you sure you want to restore this version?${lesson_id} & ${history_id}`
+        `Are you sure you want to restore this version?`
       );
 
       if (confirmation) {
@@ -62,12 +66,15 @@ const VersionHistory = () => {
         );
 
         if (response.status === 200) {
+          // Get the restored content from the selected history
+          const restoredContent = histories.find(
+            (history) => history.historyId === history_id
+          )?.content;
+
+          // Set the restored content as the current lesson
+          setCurrentLesson(restoredContent);
+          setExpanded(false);
           setSnackbarSuccessOpen(true);
-          setTimeout(() => {
-            // refresh after restore
-            window.location.reload();
-          }, timer);
-          // alert('Version restored successfully!');
         } else {
           alert('Failed to restore version.');
         }
@@ -146,7 +153,10 @@ const VersionHistory = () => {
               const isCurrentVersion = currentLesson === history.content;
 
               return (
-                <Accordion key={history.historyId}>
+                <Accordion
+                  key={history.historyId}
+                  expanded={expanded === `panel${history.historyId}`}
+                  onChange={handleAccordionChange(`panel${history.historyId}`)}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls={`panel${history.historyId}-content`}
@@ -268,7 +278,7 @@ const VersionHistory = () => {
           sx={{
             width: '100%'
           }}>
-          Restoring version, please wait!
+          Restored successfully!
         </SnackBarAlert>
       </Snackbar>
     </Container>

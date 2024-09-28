@@ -35,7 +35,7 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
 
         for lesson in lessons:
             lesson_data = LessonSerializer(lesson).data
-            lesson_contents = LessonContent.objects.filter(lesson=lesson)
+            lesson_contents = LessonContent.objects.filter(lesson=lesson).order_by('id')
             lesson_contents_data = LessonContentSerializer(lesson_contents, many=True).data
             lesson_data['pages'] = lesson_contents_data
             data.append(lesson_data)

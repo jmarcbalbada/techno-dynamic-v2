@@ -21,10 +21,11 @@ export const SuggestionService = {
       `${BASE_URL}/contents/`,
       { lesson_id, notification_id },
     ),
-  accept_content: (lesson_id) =>
+
+    accept_content: (lesson_id,new_content) =>
     axios.put(
       `${BASE_URL}/`,
-      { lesson_id },
+        { lesson_id,new_content },
       {
         headers: {
           "Content-Type": "application/json",
@@ -50,4 +51,6 @@ export const SuggestionService = {
         "Content-Type": "application/json",
       },
     }),
+
+
 };

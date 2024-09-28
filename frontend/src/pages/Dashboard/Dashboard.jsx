@@ -26,7 +26,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getLessons();
-    // getFaq();
+    deleteNotifId();
   }, []);
 
   const getLessons = async () => {
@@ -39,6 +39,11 @@ const Dashboard = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const deleteNotifId = async () => {
+    localStorage.removeItem('notification_id');
+    localStorage.removeItem('ltids');
   };
 
   const getFaq = async () => {

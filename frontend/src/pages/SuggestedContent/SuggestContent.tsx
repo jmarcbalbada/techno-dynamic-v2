@@ -1,27 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
-import {
-  useParams,
-  useNavigate,
-  useLocation,
-  Navigate
-} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Box, Button, Tooltip } from '@mui/material';
-import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import Container from '@mui/material/Container';
 import LessonPage from 'components/lessonpage/LessonPage';
-import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { useTheme } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
 import PersonIcon from '@mui/icons-material/Person';
-import ManageSearchOutlinedIcon from '@mui/icons-material/ManageSearchOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { NotificationService } from '../../apis/NotificationService';
-import Skeleton from '@mui/material/Skeleton';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import Skeleton from '@mui/material/Skeleton';
+import { clsx } from 'clsx';
+import CreateIcon from '@mui/icons-material/Create';
+import Editor from 'components/editor/Editor';
+import { NotificationService } from 'apis/NotificationService';
 
 const SuggestContent = () => {
   const { lessonNumber, pageNumber, lessonID } = useParams();
@@ -31,25 +25,46 @@ const SuggestContent = () => {
   const [isError, setIsError] = useState(false);
   const [totalPage, setTotalPage] = useState(0);
   const [allContents, setAllContents] = useState('');
-  const [suggestedContents, setSuggestedContents] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [suggestedContents, setSuggestedContents] = useState('');
   const theme = useTheme();
   const currID = parseInt(lessonID);
-
-  const finalSuggestContent = String(suggestedContents);
+  const editorRef = useRef(null);
 
   const handleAccept = () => {
-    // console.log("clicked accept");
-    handleNewContent();
+    // console.log('hanldeAccept');
+    const newsuggestedContent = handleSave();
+    handleNewContent(newsuggestedContent);
     navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`, {
       replace: true
     });
     window.history.pushState(null, null, window.location.href);
   };
 
-  const handleNewContent = async () => {
+  const handleSave = () => {
+    let finalChanges = '';
+
+    // if edit and save right away
+    if (isEditing) {
+      finalChanges = editorRef.current.getHTMLContent();
+    } else {
+      finalChanges = suggestedContents;
+    }
+
+    return finalChanges;
+  };
+
+  const handleEditedChanges = () => {
+    setIsEditing(false);
+    setSuggestedContents(editorRef.current.getHTMLContent());
+  };
+
+  const handleNewContent = async (newData) => {
+    // console.log('newContent');
+
     try {
-      const response = await SuggestionService.accept_content(currID);
-      console.log('response', response.data);
+      const response = await SuggestionService.accept_content(currID, newData);
+      // console.log('response', response.data);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -57,6 +72,89 @@ const SuggestContent = () => {
     }
   };
 
+  const handleIgnore = () => {
+    handleClearCallbackSuggestionAndNotification();
+    navigate(`/`);
+  };
+
+  const handleClearCallbackSuggestionAndNotification = async () => {
+    await handleClearNotif();
+    await handleClearSuggestionAndFaq();
+    navigate(`/`);
+  };
+
+  const handleClearNotif = async () => {
+    try {
+      const response = await NotificationService.deleteNotifByLessonId(currID);
+      // console.log('response.data', response.data);
+    } catch (error) {
+      setIsError(true);
+    }
+  };
+
+  const handleClearSuggestionAndFaq = async () => {
+    try {
+      const response = await SuggestionService.delete_suggestion(currID);
+      // console.log('response.data', response.data);
+    } catch (error) {
+      setIsError(true);
+    }
+  };
+
+  const hasFetched = useRef(false);
+
+  useEffect(() => {
+    if (!hasFetched.current) {
+      getLessonLessonNumber(lessonNumber);
+      getSuggestionContent();
+      hasFetched.current = true;
+    }
+  }, []);
+
+  const getLessonLessonNumber = async (lessonNumber) => {
+    try {
+      const response = await LessonsService.getByLessonNumber(lessonNumber);
+      setLesson(response.data);
+      setTotalPage(response.data.pages.length);
+
+      // Concatenate contents of all pages
+      let contents = '';
+      response.data.pages.forEach((page) => {
+        contents += page.contents;
+      });
+      setAllContents(contents);
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      // Do not set isLoading to false here if you have other async operations
+    }
+  };
+
+  const getSuggestionContent = async () => {
+    try {
+      const notif_id = localStorage.getItem('notification_id');
+      // console.log('notif id', notif_id);
+      if (notif_id) {
+        const response = await SuggestionService.create_content(
+          currID,
+          notif_id
+        );
+        // console.log('response.data', response.data);
+        setSuggestedContents(response.data.ai_response);
+      }
+    } catch (error) {
+      console.log('error', error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegenerate = async () => {
+    setIsLoading(true);
+    await getSuggestionContent();
+    setIsLoading(false);
+  };
   const getSkeletonLoading = () => {
     return (
       <>
@@ -117,112 +215,8 @@ const SuggestContent = () => {
           height={20}
           sx={{ marginTop: '2%', marginBottom: '5px' }}
         />
-
-        <Skeleton
-          variant='rounded'
-          height={20}
-          sx={{ marginTop: '2%', marginBottom: '5px' }}
-        />
-
-        <Skeleton
-          variant='rounded'
-          height={20}
-          sx={{ marginTop: '2%', marginBottom: '20px' }}
-        />
       </>
     );
-  };
-
-  const handleIgnore = () => {
-    // console.log("clicked ignore");
-    handleClearCallbackSuggestionAndNotification();
-    navigate(`/`);
-  };
-
-  const handleClearCallbackSuggestionAndNotification = async () => {
-    await handleClearNotif();
-    await handleClearSuggestionAndFaq();
-    navigate(`/`);
-  };
-
-  const handleClearNotif = async () => {
-    try {
-      const response = await NotificationService.deleteNotifByLessonId(currID);
-      // setLesson(response.data);
-      console.log('response.data', response.data);
-    } catch (error) {
-      setIsError(true);
-    } finally {
-    }
-  };
-
-  const handleClearSuggestionAndFaq = async () => {
-    try {
-      const response = await SuggestionService.delete_suggestion(currID);
-      // setLesson(response.data);
-      console.log('response.data', response.data);
-    } catch (error) {
-      setIsError(true);
-    } finally {
-    }
-  };
-
-  const hasFetched = useRef(false);
-
-  useEffect(() => {
-    if (!hasFetched.current) {
-      getLessonLessonNumber(lessonNumber);
-      getSuggestionContent();
-      hasFetched.current = true;
-    }
-  }, []);
-
-  const getLessonLessonNumber = async (lessonNumber) => {
-    try {
-      const response = await LessonsService.getByLessonNumber(lessonNumber);
-      setLesson(response.data);
-      setTotalPage(response.data.pages.length);
-
-      // Concatenate contents of all pages
-      let contents = '';
-      response.data.pages.forEach((page) => {
-        contents += page.contents;
-      });
-      setAllContents(contents);
-    } catch (error) {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getSuggestionContent = async () => {
-    try {
-      const notif_id = localStorage.getItem('notification_id');
-      console.log('notif id', notif_id);
-      if (notif_id) {
-        const response = await SuggestionService.create_content(
-          currID,
-          notif_id
-        );
-        // console.log('response.data', response.data);
-        // setSuggestedContents(response.data.content);
-        console.log('response.data', response.data);
-        setSuggestedContents(response.data.ai_response);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.log('error', error);
-      setIsError(true);
-    } finally {
-    }
-  };
-
-  const handleRegenerate = async () => {
-    setIsLoading(true);
-    getSkeletonLoading();
-    await getSuggestionContent();
-    setIsLoading(false);
   };
 
   return (
@@ -275,11 +269,12 @@ const SuggestContent = () => {
             '&:hover': {
               backgroundColor: '#761e1e'
             },
-            textTransform: 'none', // Set text to normal case
-            paddingRight: '10px', // Add padding to the right of the icon
+            textTransform: 'none',
+            paddingRight: '10px',
             borderRadius: '20px'
           }}
-          onClick={handleIgnore}>
+          onClick={handleIgnore}
+          disable={isLoading}>
           <CloseIcon sx={{ marginRight: '10px' }} />
           Ignore
         </Button>
@@ -288,19 +283,20 @@ const SuggestContent = () => {
           sx={{
             ml: 1,
             backgroundColor: '#1b5e20',
-            textTransform: 'none', // Set text to normal case
-            paddingRight: '10px', // Add padding to the right of the icon
+            textTransform: 'none',
+            paddingRight: '10px',
             borderRadius: '20px'
           }}
-          onClick={handleAccept}>
+          onClick={handleAccept}
+          disabled={isLoading}>
           <CheckIcon sx={{ marginRight: '10px' }} />
           Accept
         </Button>
       </Box>
       <Box display='flex' flexDirection='row' justifyContent='space-between'>
+        {/* Left Side - Your Content */}
         <Box
           sx={{
-            // height: "fit-content",
             height: '800px',
             overflowY: 'auto',
             width: '49%',
@@ -312,10 +308,7 @@ const SuggestContent = () => {
             border: `3px solid ${theme.palette.background.neutral}`,
             textAlign: 'justify'
           }}>
-          <Box
-            sx={{
-              marginBottom: '2%'
-            }}>
+          <Box sx={{ marginBottom: '2%' }}>
             <PersonIcon
               sx={{
                 color: theme.palette.background.neutral,
@@ -335,9 +328,9 @@ const SuggestContent = () => {
           </Box>
           <LessonPage pageContent={allContents} />
         </Box>
+        {/* Right Side - Suggested Content */}
         <Box
           sx={{
-            // height: "fit-content",
             height: '800px',
             overflowY: 'auto',
             width: '49%',
@@ -374,25 +367,67 @@ const SuggestContent = () => {
                 Suggested Content
               </Typography>
             </Box>
-            <Tooltip title='Generate again'>
-              <RestartAltIcon
-                sx={{
-                  fontSize: '24px',
-                  color: theme.palette.primary.main,
-                  fontWeight: 'bold',
-                  '&:hover': {
-                    cursor: 'pointer'
-                  }
-                }}
-                onClick={handleRegenerate}
-              />
-            </Tooltip>
+            {!isEditing && (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Tooltip title='Edit this content'>
+                  <CreateIcon
+                    sx={{
+                      fontSize: '24px',
+                      color: theme.palette.primary.main,
+                      fontWeight: 'bold',
+                      '&:hover': {
+                        cursor: 'pointer'
+                      }
+                    }}
+                    onClick={() => {
+                      setIsEditing(true);
+                    }}
+                  />
+                </Tooltip>
+                <Tooltip title='Generate again'>
+                  <RestartAltIcon
+                    sx={{
+                      fontSize: '24px',
+                      color: theme.palette.primary.main,
+                      fontWeight: 'bold',
+                      ml: 2, // Adjust this value to control spacing between the icons
+                      '&:hover': {
+                        cursor: 'pointer'
+                      }
+                    }}
+                    className={clsx(isLoading && 'hidden')}
+                    onClick={handleRegenerate}
+                  />
+                </Tooltip>
+              </Box>
+            )}
+
+            {isEditing && (
+              <Tooltip title='Save and preview'>
+                <CheckIcon
+                  sx={{
+                    fontSize: '24px',
+                    color: theme.palette.primary.main,
+                    fontWeight: 'bold',
+                    '&:hover': {
+                      cursor: 'pointer'
+                    }
+                  }}
+                  onClick={() => {
+                    // setIsEditing(false);
+                    handleEditedChanges();
+                  }}
+                />
+              </Tooltip>
+            )}
           </Box>
-          {/* Conditional rendering based on finalSuggestContent */}
-          {isLoading || !finalSuggestContent ? (
-            <>{getSkeletonLoading()}</>
+          {/* Conditional rendering based on isLoading and suggestedContents */}
+          {isLoading ? (
+            getSkeletonLoading()
+          ) : !isEditing && suggestedContents ? (
+            <LessonPage pageContent={suggestedContents} />
           ) : (
-            <LessonPage pageContent={finalSuggestContent} />
+            isEditing && <Editor ref={editorRef} contents={suggestedContents} />
           )}
         </Box>
       </Box>

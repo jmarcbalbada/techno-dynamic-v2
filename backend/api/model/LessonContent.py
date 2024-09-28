@@ -10,6 +10,9 @@ class LessonContent(models.Model):
     files = models.FileField(upload_to='media/', null=True, blank=True)
     images = models.ManyToManyField(ImageModel, related_name='lesson_contents', blank=True)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return self.contents
 

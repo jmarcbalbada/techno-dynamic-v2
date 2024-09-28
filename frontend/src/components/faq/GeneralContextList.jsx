@@ -26,7 +26,7 @@ const GeneralContextList = ({ lessonId }) => {
     try {
       const params = { lesson_id: lessonId, page };
       const response = await FaqService.getGeneralContextGroup(params);
-      console.log('General contexts response:', response.data);
+      // console.log('General contexts response:', response.data);
       if (response.data) {
         setGeneralContexts(response.data.results);
         setNext(response.data.next);
@@ -48,7 +48,8 @@ const GeneralContextList = ({ lessonId }) => {
             )
           }
           sx={{
-            backgroundColor: index % 2 === 0 ? '#e0e0e0' : '#ffffff'
+            backgroundColor: '#e9e9e9',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.35)'
           }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography

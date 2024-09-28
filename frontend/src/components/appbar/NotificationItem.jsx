@@ -34,7 +34,7 @@ const NotificationItem = ({
     setNotificationId(notif.notif_id);
     localStorage.setItem('notification_id', notif.notif_id);
     const id = localStorage.getItem('notification_id');
-    id ? console.log('id was created') : console.log('id was not created');
+    // id ? console.log('id was created') : console.log('id was not created');
     try {
       const response = await LessonsService.getById(notif.lesson);
       const lessonNum = response.data;
@@ -44,7 +44,7 @@ const NotificationItem = ({
       console.log(error);
     }
 
-    console.log('notif', notif);
+    // console.log('notif', notif);
     // navigate(`/suggestcontent`);
   };
 

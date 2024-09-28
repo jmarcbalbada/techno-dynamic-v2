@@ -47,10 +47,10 @@ const Lesson = () => {
   const theme = useTheme();
 
   useEffect(() => {
-    getLessonLessonNumber(lessonNumber);
     if (notif) {
       handleNotificationAuth();
     }
+    getLessonLessonNumber(lessonNumber);
   }, []);
 
   const suggestClick = () => {
@@ -67,7 +67,7 @@ const Lesson = () => {
   const getLessonLessonNumber = async (lessonNumber) => {
     try {
       const response = await LessonsService.getByLessonNumber(lessonNumber);
-      console.log('response', response.data);
+      // console.log('response', response.data);
       localStorage.setItem(
         'ltids',
         JSON.stringify({
@@ -128,7 +128,8 @@ const Lesson = () => {
       );
       // navigate(`/lessons/${lessonNumber}/${currentPage + 1}`);
     } else if (notif) {
-      navigate(`/`);
+      // navigate(`/`);
+      alert('This is the last page of the lesson! Please review to continue!');
     } else {
       navigate(`/lessons/${lessonNumber}/end`);
     }
@@ -171,17 +172,28 @@ const Lesson = () => {
         {user.role === 'teacher' && !notif && (
           <Box
             sx={{
-              position: 'absolute',
-              top: 0, // Adjust this value as needed
+              position: {
+                xs: 'relative',
+                sm: 'relative',
+                md: 'relative',
+                lg: 'relative',
+                xl: 'absolute'
+              },
+              top: {
+                xs: '0',
+                sm: '0'
+              },
               left: {
-                xs: '1rem', // Small screens
-                sm: '1.6rem', // Medium screens
-                md: '1.6rem', // Large screens
-                lg: '1.6rem' // Extra-large screens
+                xs: '1.0rem',
+                sm: '1.6rem'
+              },
+              mt: {
+                xs: 0,
+                sm: 5
               },
               mt: 5,
-              zIndex: 10, // Ensure this is on top of other elements
-              pointerEvents: 'auto' // Make sure it can be clicked
+              zIndex: 10,
+              pointerEvents: 'auto'
             }}>
             <Typography
               variant='body2'

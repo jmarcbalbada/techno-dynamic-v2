@@ -53,7 +53,7 @@ const ThresholdInputButton = () => {
   const onSubmit = async (data) => {
     try {
       await TeacherService.setTeacherThreshold(data.threshold);
-      alert('Threshold updated successfully');
+      alert('Similarity threshold updated successfully!');
       window.location.reload();
     } catch (error) {
       console.error('Failed to update threshold', error);
@@ -65,7 +65,10 @@ const ThresholdInputButton = () => {
     <Box
       display='flex'
       alignItems='center'
-      gap={2}
+      sx={{
+        paddingRight: '1.0rem'
+      }}
+      gap={1}
       component='form'
       onSubmit={handleSubmit(onSubmit)}>
       <Typography variant='h6' gutterBottom>
