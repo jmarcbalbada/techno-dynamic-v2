@@ -7,14 +7,27 @@ iframe {
   outline: 0px solid transparent;
 }
 
-div[data-youtube-video] > iframe {
-  cursor: move;
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  height: auto;
+/* Make the container resizable */
+div[data-youtube-video] {
+  position: relative;
+  resize: both; /* Enable resizing in both directions */
+  overflow: hidden;
+  max-width: 100%;
+  min-width: 300px; /* Set a minimum width to avoid shrinking too much */
+  min-height: 200px; /* Set a minimum height */
 }
+
+/* Ensure iframe fits inside the container */
+div[data-youtube-video] > iframe {
+  width: 95%;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  cursor: move;
+}
+
 
 .ProseMirror-selectednode iframe {
   transition: outline 0.15s;
   outline: 6px solid #fbbf24;
 }
+

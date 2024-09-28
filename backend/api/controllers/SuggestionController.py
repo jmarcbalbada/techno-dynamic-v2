@@ -75,7 +75,7 @@ class SuggestionController(ModelViewSet):
 
         # Ensure the content field exists in lesson content data
         lesson_content_text = "\n".join([content['contents'] for content in lesson_content_data if 'contents' in content])
-        print("content: ", lesson_content_text)
+        # print("content: ", lesson_content_text)
 
         # Get grouped questions related to the given notification_id
         grouped_questions = GroupedQuestions.objects.filter(notification_id=notification_id, lesson_id=lesson_id)
@@ -104,7 +104,7 @@ class SuggestionController(ModelViewSet):
             ai_response = ai_response.replace('\n', '')
             # Remove any instances of ** from the response
             ai_response = ai_response.replace('**', '')
-            print("AI RESPONSE:", ai_response)
+            # print("AI RESPONSE:", ai_response)
 
             # Update the existing suggestion with the new insights and old content
             existing_suggestion.insights = ai_response
@@ -189,7 +189,7 @@ class SuggestionController(ModelViewSet):
             # Call OpenAI API to get the suggestion
             openai.api_key = os.environ.get("OPENAI_API_KEY")
             response = openai.ChatCompletion.create(
-                model="gpt-4o",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT},
                     {"role": "user", "content": input_text}

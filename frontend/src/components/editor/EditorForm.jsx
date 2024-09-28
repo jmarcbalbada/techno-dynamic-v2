@@ -26,7 +26,7 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
   const [files, setFiles] = useState(lesson ? lesson.lesson_files : []);
 
   useEffect(() => {
-    console.log('files', files);
+    // console.log('files', files);
   }, [files]);
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();

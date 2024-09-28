@@ -23,7 +23,6 @@ const NotificationIcon = ({
   const [showNotification, setShowNotification] = useState(false);
 
   const handleClickAway = () => {
-    // console.log('this is unread', unreadNotif);
     setShowNotification(false);
   };
 
@@ -32,21 +31,32 @@ const NotificationIcon = ({
     handleNotificationClick();
   };
 
+  const handleItemClick = (notifId) => {
+    setOpenedNotificationById(notifId); // Mark notification as opened
+    setShowNotification(false); // Close the notification panel after marking as opened
+  };
+
   return (
     <Box sx={{ position: 'relative' }}>
       <IconButton
         sx={{
-          paddingRight: '60px',
+          paddingRight: {
+            xs: '1rem', // small devices
+            sm: '1.25rem', // small-medium devices
+            md: '1.5rem', // medium devices
+            lg: '1.75rem', // large devices
+            xl: '2rem' // extra large devices
+          },
           display: 'inline',
           transition: 'transform 0.3s ease',
           '&:hover': {
             backgroundColor: 'transparent',
-            transform: 'scale(1.1)'
+            transform: 'scale(1.2)'
           }
         }}
         onClick={handleIconButtonClick}>
         <Badge badgeContent={countNotif} color='error'>
-          <NotificationsOutlinedIcon sx={{ fontSize: 28 }} />
+          <NotificationsOutlinedIcon sx={{ fontSize: 24 }} />
         </Badge>
       </IconButton>
       {showNotification && (
@@ -74,8 +84,7 @@ const NotificationIcon = ({
                   }}>
                   <ThumbUpIcon
                     sx={{
-                      color: '#1b5e20',
-                      hover: ''
+                      color: '#1b5e20'
                     }}
                   />
                   No notifications as of now.
@@ -86,10 +95,7 @@ const NotificationIcon = ({
                     <NotificationItem
                       key={notif.notif_id}
                       notif={notif}
-                      onClick={() => {
-                        setShowNotification(false);
-                        setAllToReadNotifications();
-                      }}
+                      onClick={() => handleItemClick(notif.notif_id)} // Close panel on item click
                       setOpenedNotificationById={setOpenedNotificationById}
                       deleteNotificationById={deleteNotificationById}
                     />

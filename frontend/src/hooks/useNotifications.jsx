@@ -27,7 +27,7 @@ const useNotifications = (user) => {
   const getAllNotifications = async () => {
     try {
       const response = await NotificationService.getAllNotif();
-      console.log('count', response.data.count);
+      // console.log('count', response.data.count);
       setAllNotif(response.data.count);
     } catch (error) {
       console.log('error', error);

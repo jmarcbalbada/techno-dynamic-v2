@@ -127,12 +127,21 @@ export default function useTiptapExtensions({
 
       Youtube.configure({
         HTMLAttributes: {
-          width: '100%',
-          height: 'auto'
+          'data-youtube-video': '', // Wrap iframe with data attribute for styling
+          class: 'responsive-iframe' // Optional additional class for more styles
         },
         inline: false,
         disableKBcontrols: true
       }),
+
+      // Youtube.configure({
+      //   HTMLAttributes: {
+      //     width: '100%',
+      //     height: 'auto'
+      //   },
+      //   inline: false,
+      //   disableKBcontrols: true
+      // }),
 
       History
     ];

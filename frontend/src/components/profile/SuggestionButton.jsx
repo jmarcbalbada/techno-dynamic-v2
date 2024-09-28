@@ -23,7 +23,7 @@ const SuggestionButton = () => {
   const handleSuggestion = async (event) => {
     const similarity = event.target.checked;
     try {
-      console.log("similarity", similarity);
+      // console.log("similarity", similarity);
       await TeacherService.setTeacherSuggestion(similarity);
       setSuggestions(similarity); // Update state with the new value
     } catch (error) {

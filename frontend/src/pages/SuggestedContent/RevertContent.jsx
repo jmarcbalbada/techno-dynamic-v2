@@ -60,7 +60,7 @@ const RevertContent = () => {
     try {
       const response = await NotificationService.deleteNotifByLessonId(currID);
       // setLesson(response.data);
-      console.log('response.data', response.data);
+      // console.log('response.data', response.data);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -70,9 +70,9 @@ const RevertContent = () => {
   const getOldContent = async () => {
     try {
       const response = await SuggestionService.get_old_content(currID);
-      console.log('response.data', response.data);
+      // console.log('response.data', response.data);
       setOldContent(response.data.old_content);
-      await console.log('old content is = ', oldContent);
+      // await console.log('old content is = ', oldContent);
     } catch (error) {
       setIsError(true);
     }
@@ -84,7 +84,7 @@ const RevertContent = () => {
         currID,
         oldContent
       );
-      console.log('response.data', response.data);
+      // console.log('response.data', response.data);
     } catch (error) {
       setIsError(true);
     }
@@ -94,7 +94,7 @@ const RevertContent = () => {
     try {
       const response = await SuggestionService.delete_suggestion(currID);
       // setLesson(response.data);
-      console.log('response.data', response.data);
+      // console.log('response.data', response.data);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -112,7 +112,7 @@ const RevertContent = () => {
     try {
       const response = await SuggestionService.revert_content(currID);
       // setLesson(response.data);
-      console.log('response.data', response.data);
+      // console.log('response.data', response.data);
     } catch (error) {
       setIsError(true);
     } finally {
@@ -123,7 +123,7 @@ const RevertContent = () => {
     try {
       const response = await LessonsService.getByLessonNumber(lessonNumber);
       setLesson(response.data);
-      console.log('response.data', response.data);
+      // console.log('response.data', response.data);
     } catch (error) {
       setIsError(true);
     } finally {

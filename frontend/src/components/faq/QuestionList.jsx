@@ -20,7 +20,7 @@ const QuestionList = ({ lessonId, relatedContentId }) => {
         page
       };
       const response = await FaqService.getFilteredQuestions(params);
-      console.log('Questions response:', response.data);
+      // console.log('Questions response:', response.data);
       if (response.data) {
         setFaqs(response.data.results);
         setNext(response.data.next);
@@ -41,8 +41,12 @@ const QuestionList = ({ lessonId, relatedContentId }) => {
               fontStyle: 'italic',
               fontSize: '90%',
               backgroundColor: '#ffffff',
-              padding: '3px', // Optional: Add padding for better visibility
-              borderRadius: '2px' // Optional: Add border-radius for rounded corners
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.20)',
+              padding: '0.7rem',
+              paddingLeft: '0.5rem',
+              borderRadius: '7px',
+              outline: '1px dotted #999999',
+              outlineOffset: '0px'
             }}>{`${(page - 1) * 10 + index + 1}. ${faq.question}`}</Typography>
         </Box>
       ))}

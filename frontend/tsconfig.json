@@ -14,11 +14,26 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Paths for module alias */
+    "baseUrl": "./",
+    "paths": {
+      "apis/*": ["src/apis/*"],
+      "components/*": ["src/components/*"],
+      "utils/*": ["src/utils/*"]
+    },
+
+    "allowJs": true, // Enable TypeScript to work with JS files
+    "checkJs": false,
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Compatibility with CommonJS */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
