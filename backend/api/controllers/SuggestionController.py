@@ -237,20 +237,95 @@ class SuggestionController(ModelViewSet):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
+    def updateNewSuggestionContent(self, request):
+        new_data = request.data.get('new_data')
+        lesson_id = request.data.get('lesson_id')
+
+
+    # def updateContent(self, request):
+    #     lesson_id = request.data.get('lesson_id')
+    #     new_content = request.data.get('new_content')
+    #     print("lesson id = ", lesson_id)
+    #
+    #     if not lesson_id:
+    #         return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+    #     # if not new_content:
+    #     #     return Response({"error": "new_content is required"}, status=status.HTTP_400_BAD_REQUEST)
+    #     try:
+    #         # Fetch the Suggestion content based on the lesson_id
+    #         suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
+    #         if not suggestion:
+    #             return Response({"error": "No suggestion found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
+    #
+    #         # filtering the yellow and red mark
+    #         newer_content = self.cleanMarkAiContent(new_content)
+    #         suggestion.content = newer_content
+    #         suggestion.save()
+    #
+    #
+    #
+    #         # Process content via pagination (split by delimiter)
+    #         result = LessonContentsController.split_content_by_delimiter(suggestion.content)
+    #         page_contents = result[1]
+    #         print("Page contents = ", page_contents)
+    #
+    #         # Get All Previous Lesson Contents
+    #         prev_contents = LessonContent.objects.filter(lesson_id=lesson_id).order_by('id')
+    #         prev_contents_list = list(prev_contents)
+    #
+    #         print("length")
+    #         print("page_contents length = ", len(page_contents))
+    #         print("prev_contents_list length = ", len(prev_contents_list))
+    #
+    #         # Update existing pages first
+    #         for index, content in enumerate(page_contents[:len(prev_contents_list)]):
+    #             lesson_content = prev_contents_list[index]
+    #             lesson_content.contents = content.strip()  # Assign content of the page
+    #             lesson_content.save()
+    #             print(f"Updated LessonContent page {index + 1}: {content}")
+    #
+    #         # If new content has more pages than the existing ones, create new LessonContent for the extra pages
+    #         if len(page_contents) > len(prev_contents_list):
+    #             for new_index in range(len(prev_contents_list), len(page_contents)):
+    #                 new_content = page_contents[new_index]
+    #                 if new_content.strip():  # Only create new page if content is not empty
+    #                     new_lesson_content = LessonContent(
+    #                         lesson_id=lesson_id,
+    #                         contents=new_content.strip()
+    #                     )
+    #                     new_lesson_content.save()
+    #                     print(f"Created new LessonContent page {new_index + 1}: {new_content}")
+    #
+    #         # If new content has fewer pages, just update existing pages (no deletion allowed)
+    #         return Response({"message": "Content updated successfully"}, status=status.HTTP_200_OK)
+    #
+    #     except Lesson.DoesNotExist:
+    #         return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
+    #
+    #     except Exception as e:
+    #         print(f"Error: {str(e)}")
+    #         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     def updateContent(self, request):
         lesson_id = request.data.get('lesson_id')
-        print("request", request.data)
+        new_content = request.data.get('new_content')
         print("lesson id = ", lesson_id)
-        
+
         if not lesson_id:
             return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
-
+        # if not new_content:
+        #     return Response({"error": "new_content is required"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             # Fetch the Suggestion content based on the lesson_id
             suggestion = Suggestion.objects.filter(lesson_id=lesson_id).first()
             if not suggestion:
-                return Response({"error": "No suggestion found for the given lesson_id"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "No suggestion found for the given lesson_id"},
+                                status=status.HTTP_404_NOT_FOUND)
+
+            # filtering the yellow and red mark
+            newer_content = self.cleanMarkAiContent(new_content)
+            suggestion.content = newer_content
+            suggestion.save()
 
             # Process content via pagination (split by delimiter)
             result = LessonContentsController.split_content_by_delimiter(suggestion.content)
@@ -289,7 +364,7 @@ class SuggestionController(ModelViewSet):
 
         except Lesson.DoesNotExist:
             return Response({"error": "Lesson not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         except Exception as e:
             print(f"Error: {str(e)}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
