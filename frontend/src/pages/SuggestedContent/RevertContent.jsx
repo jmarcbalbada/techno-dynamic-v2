@@ -72,6 +72,7 @@ const RevertContent = () => {
       const response = await SuggestionService.get_old_content(currID);
       // console.log('response.data', response.data);
       setOldContent(response.data.old_content);
+      // console.log('old content ', response.data.old_content);
       // await console.log('old content is = ', oldContent);
     } catch (error) {
       setIsError(true);
@@ -80,6 +81,8 @@ const RevertContent = () => {
 
   const handleAddVersionControl = async () => {
     try {
+      // console.log('old content vers', oldContent);
+
       const response = await ContentHistoryService.createHistory(
         currID,
         oldContent

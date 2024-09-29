@@ -10,7 +10,7 @@ const Copyright = (props) => {
       <Typography variant='body2' align='center'>
         {'Copyright © '}
         <Link color='inherit' href='#'>
-          TechnoDynamic
+          TechnoDynamicV2
         </Link>
         {` `} {new Date().getFullYear()}
         {'.'}
