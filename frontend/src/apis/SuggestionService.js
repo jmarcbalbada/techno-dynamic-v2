@@ -1,35 +1,35 @@
-import axios from "axios";
+import axios from 'axios';
 
-import config from "data/config";
+import config from 'data/config';
 
 const BASE_URL = `${config.API_URL}api/suggestions`;
 
 export const SuggestionService = {
   // create insights
   create_insights: (lesson_id, notification_id) =>
-    axios.post(
-      `${BASE_URL}/insights/`,
-      { lesson_id, notification_id },
-    ),
+    axios.post(`${BASE_URL}/insights/`, { lesson_id, notification_id }),
 
-  get_old_content:(lesson_id) =>
+  get_old_content: (lesson_id) =>
     axios.get(`${BASE_URL}/getoldcontent/${lesson_id}`),
 
-    // create content
+  // create content with a 3-minute timeout
   create_content: (lesson_id, notification_id) =>
     axios.post(
       `${BASE_URL}/contents/`,
       { lesson_id, notification_id },
+      {
+        timeout: 180000 // Set timeout to 3 minutes (180000 milliseconds)
+      }
     ),
 
-    accept_content: (lesson_id,new_content) =>
+  accept_content: (lesson_id, new_content) =>
     axios.put(
       `${BASE_URL}/`,
-        { lesson_id,new_content },
+      { lesson_id, new_content },
       {
         headers: {
-          "Content-Type": "application/json",
-        },
+          'Content-Type': 'application/json'
+        }
       }
     ),
   // Method to revert content
@@ -39,8 +39,8 @@ export const SuggestionService = {
       { lesson_id },
       {
         headers: {
-          "Content-Type": "application/json",
-        },
+          'Content-Type': 'application/json'
+        }
       }
     ),
   // Method to delete suggestion
@@ -48,9 +48,7 @@ export const SuggestionService = {
     axios.delete(`${BASE_URL}/`, {
       data: { lesson_id },
       headers: {
-        "Content-Type": "application/json",
-      },
-    }),
-
-
+        'Content-Type': 'application/json'
+      }
+    })
 };

@@ -56,7 +56,7 @@ const VersionHistory = () => {
   const handleRestoreButton = async (lesson_id = lessonId, history_id) => {
     try {
       const confirmation = window.confirm(
-        `Are you sure you want to restore this version?`
+        `Are you sure you want to restore this version? You won't be able to revert to the current version afterward.`
       );
 
       if (confirmation) {
