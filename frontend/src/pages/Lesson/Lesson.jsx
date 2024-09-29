@@ -185,13 +185,14 @@ const Lesson = () => {
               },
               left: {
                 xs: '1.0rem',
-                sm: '1.6rem'
+                sm: '1.6rem',
+                md: '1.6rem',
+                xl: '2.5rem'
               },
               mt: {
                 xs: 0,
                 sm: 5
               },
-              mt: 5,
               zIndex: 10,
               pointerEvents: 'auto'
             }}>
