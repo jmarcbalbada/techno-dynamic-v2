@@ -16,14 +16,16 @@ import {
 
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { BsRobot } from 'react-icons/bs';
 
 const ChatbotDialog = (props) => {
   const { open, handleClose, lessonId, pageId } = props;
   const [isGettingResponse, setIsGettingResponse] = useState(false);
   const [messageInput, setMessageInput] = useState('');
+  const robotName = 'TekBot';
   const [messages, setMessages] = useState([
     {
-      message: 'Hi, I am Pixie! How can I help you?',
+      message: `Hi, I am ${robotName}! How can I help you?`,
       sender: 'bot'
     }
   ]);
@@ -91,7 +93,7 @@ const ChatbotDialog = (props) => {
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth='md'>
-      <DialogTitle>Chatbot Assistant</DialogTitle>
+      <DialogTitle sx={{ cursor: 'default' }}>Ask {robotName}!</DialogTitle>
       <DialogContent dividers>
         <Box display='flex' flexDirection='column' width={1}>
           {messages.map((message, index) => {
@@ -118,19 +120,25 @@ const ChatbotDialog = (props) => {
                 }}>
                 {isBot && (
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <SmartToyIcon
-                      sx={{
-                        mr: '5px',
-                        color: '#4c80d4'
-                      }}
+                    <BsRobot
+                      size={24}
+                      color='#4c80d4'
+                      style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
                     />
-                    <Typography variant='subtitle2' color='primary'>
-                      Pixie
+                    <Typography
+                      variant='subtitle2'
+                      color='primary'
+                      sx={{ cursor: 'default' }}>
+                      {robotName}
                     </Typography>
                   </Box>
                 )}
                 {!isBot && (
-                  <Typography align='right' variant='subtitle2' color='primary'>
+                  <Typography
+                    align='right'
+                    variant='subtitle2'
+                    color='primary'
+                    sx={{ cursor: 'default' }}>
                     {message.sender}
                   </Typography>
                 )}
@@ -174,7 +182,7 @@ const ChatbotDialog = (props) => {
             label='Message'
             multiline
             maxRows={3}
-            value={messageInput.trim()}
+            value={messageInput.trimEnd()}
             onChange={(e) => setMessageInput(e.target.value)}
           />
           <Button
