@@ -87,7 +87,7 @@ const NotificationIcon = ({
                       color: '#1b5e20'
                     }}
                   />
-                  No notifications as of now.
+                  No notifications for now.
                 </Typography>
               ) : (
                 <List>

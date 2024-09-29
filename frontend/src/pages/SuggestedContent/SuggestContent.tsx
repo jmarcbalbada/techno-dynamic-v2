@@ -31,14 +31,20 @@ const SuggestContent = () => {
   const currID = parseInt(lessonID);
   const editorRef = useRef(null);
 
-  const handleAccept = () => {
-    // console.log('hanldeAccept');
+  const handleAccept = async () => {
+    // Save the suggested content
     const newsuggestedContent = handleSave();
-    handleNewContent(newsuggestedContent);
-    navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`, {
-      replace: true
-    });
-    window.history.pushState(null, null, window.location.href);
+
+    // Wait for the response from handleNewContent
+    await handleNewContent(newsuggestedContent);
+
+    // Add a delay of 1 second before navigating
+    setTimeout(() => {
+      navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`, {
+        replace: true
+      });
+      window.history.pushState(null, null, window.location.href);
+    }, 500); // 1 second delay
   };
 
   const handleSave = () => {
@@ -133,7 +139,8 @@ const SuggestContent = () => {
   const getSuggestionContent = async () => {
     try {
       const notif_id = localStorage.getItem('notification_id');
-      // console.log('notif id', notif_id);
+
+      // add 3 min timeout if request is rejected
       if (notif_id) {
         const response = await SuggestionService.create_content(
           currID,
@@ -143,7 +150,12 @@ const SuggestContent = () => {
         setSuggestedContents(response.data.ai_response);
       }
     } catch (error) {
-      console.log('error', error);
+      // Handle timeout or other errors
+      if (error.code === 'ECONNABORTED') {
+        console.log('Request timed out');
+      } else {
+        console.log('error', error);
+      }
       setIsError(true);
     } finally {
       setIsLoading(false);
@@ -367,7 +379,7 @@ const SuggestContent = () => {
                 Suggested Content
               </Typography>
             </Box>
-            {!isEditing && (
+            {!isEditing && !isLoading && (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Tooltip title='Edit this content'>
                   <CreateIcon
@@ -422,7 +434,11 @@ const SuggestContent = () => {
             )}
           </Box>
           {/* Conditional rendering based on isLoading and suggestedContents */}
-          {isLoading ? (
+          {isError ? (
+            <div>
+              <p>Something went wrong, please refresh or try again later.</p>
+            </div>
+          ) : isLoading ? (
             getSkeletonLoading()
           ) : !isEditing && suggestedContents ? (
             <LessonPage pageContent={suggestedContents} />

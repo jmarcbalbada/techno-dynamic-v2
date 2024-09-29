@@ -24,6 +24,7 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
     lesson ? lesson.pages : [{ contents: '' }]
   );
   const [files, setFiles] = useState(lesson ? lesson.lesson_files : []);
+  const [filesToDelete, setFilesToDelete] = useState([]);
 
   useEffect(() => {
     // console.log('files', files);
@@ -63,6 +64,14 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
 
   const handleDeleteFile = (fileToDelete) => {
     setFiles((files) => files.filter((file) => file !== fileToDelete));
+
+    // If the file is an existing file (has an ID), add it to the filesToDelete array
+    if (fileToDelete.id) {
+      setFilesToDelete((prevFilesToDelete) => [
+        ...prevFilesToDelete,
+        fileToDelete.id
+      ]);
+    }
   };
 
   const formikBase = useFormik({
@@ -80,8 +89,14 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
         formData.append('subtitle', values.subtitle);
         formData.append('lessonNumber', values.lessonNumber);
         formData.append('pages', JSON.stringify(pages));
+
         for (let file of files) {
           formData.append('lesson_files', file.file);
+        }
+
+        // If filesToDelete is not empty, add the files_to_delete field to formData
+        if (filesToDelete.length > 0) {
+          formData.append('files_to_delete', JSON.stringify(filesToDelete));
         }
 
         if (values.coverImage instanceof File) {
@@ -91,6 +106,7 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
             formData.append('coverImage', lesson.coverImage);
           }
         }
+
         // TODO: add error handling
         if (lesson) {
           const response = await LessonsService.update(lesson.id, formData);

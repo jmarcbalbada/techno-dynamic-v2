@@ -25,9 +25,7 @@ div[data-youtube-video] > iframe {
   cursor: move;
 }
 
-
 .ProseMirror-selectednode iframe {
   transition: outline 0.15s;
   outline: 6px solid #fbbf24;
 }
-
