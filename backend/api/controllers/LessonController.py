@@ -151,12 +151,10 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                     # Update an existing page
                     existing_page = existing_pages.filter(id=page_id).first()
                     if existing_page:
-                        # Ensure the content is a string before appending
                         content = page_data.get('contents', '')
                         if not isinstance(content, str):
                             content = str(content)  # Convert to string if needed
 
-                        # existing_page.contents = page_data.get('contents', '') + + "<!-- delimiter -->" # add delimiter
                         existing_page.contents = content + "<!-- delimiter -->"
                         existing_page.url = page_data.get('url', None)
                         existing_page.files = page_data.get('files', None)
@@ -170,12 +168,10 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                     new_page = LessonContent()
                     new_page.set_lesson_id(instance.id)
 
-                    # Ensure the content is a string before appending
                     content = page_data.get('contents', '')
                     if not isinstance(content, str):
-                        content = str(content)  # Convert to string if needed
-                    
-                    # new_page.set_contents(page_data.get('contents', '') + "<!-- delimiter -->")
+                        content = str(content)
+
                     new_page.set_contents(content + "<!-- delimiter -->")
                     new_page.set_url(page_data.get('url', None))
                     new_page.set_file(page_data.get('files', None))
@@ -196,7 +192,7 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
 
             existing_files = File.objects.filter(lesson=instance)
 
-            # Update or create files in the request
+            # Update or create new files, append to the existing files
             updated_file_ids = set()
             for uploaded_file in updated_files:
                 file_serializer = FileSerializer(data={'file': uploaded_file, 'lesson': instance.id})
@@ -204,16 +200,15 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
                     file_serializer.save()
                     updated_file_ids.add(file_serializer.data['id'])
 
-            # Delete files that are not in the updated request
-            for existing_file in existing_files:
-                if existing_file.id not in updated_file_ids:
-                    existing_file.delete()
+            # Retain existing files and append new ones (no deletion unless explicitly required)
+            updated_file_ids.update(existing_files.values_list('id', flat=True))
 
-        # If no files are provided, delete all existing files associated with the lesson
-        elif "lesson_files" not in request.FILES:
-            existing_files = File.objects.filter(lesson=instance)
-            for existing_file in existing_files:
-                existing_file.delete()
+        # Handle file deletion if "files_to_delete" is provided
+        if "files_to_delete" in request.data:
+            files_to_delete = json.loads(request.data.get('files_to_delete', '[]'))
+            existing_files = File.objects.filter(lesson=instance, id__in=files_to_delete)
+            for file in existing_files:
+                file.delete()
 
         # Update other lesson fields if needed
         instance.set_lesson_number(lesson_data['lessonNumber'])
@@ -234,6 +229,8 @@ class LessonController(GenericViewSet, ListModelMixin, RetrieveModelMixin, Creat
         response_data['lesson_files'] = updated_files_data
 
         return Response(response_data)
+
+
 
     def patchLesson(self, request, lesson_id=None):
         lesson = self.get_queryset().filter(id=lesson_id).first()
