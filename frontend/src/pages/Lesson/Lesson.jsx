@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   useParams,
   useNavigate,
-  useLocation,
-  Navigate
 } from 'react-router-dom';
 
 import { LessonsService } from 'apis/LessonsService';
@@ -25,7 +23,6 @@ import InsightLayout from '../Insight/InsightLayout';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useTheme } from '@mui/material/styles';
-import Skeleton from '@mui/material/Skeleton';
 
 const Lesson = () => {
   const { lessonNumber, pageNumber, isNotif, isInsight, lessonID } =
@@ -46,6 +43,7 @@ const Lesson = () => {
   const [footerHeight, setFooterHeight] = useState(100);
   const currID = parseInt(lessonID);
   const theme = useTheme();
+  const [suggestionLoading,setSuggestionLoading] = useState(true)
 
   useEffect(() => {
     if (notif) {
@@ -101,14 +99,12 @@ const Lesson = () => {
 
   const getSuggestionInsights = async () => {
     try {
+      setSuggestionLoading(true); // Start loading
       const notif_id = localStorage.getItem('notification_id');
       if (notif_id) {
-        const response = await SuggestionService.create_insights(
-          currID,
-          notif_id
-        );
+        const response = await SuggestionService.create_insights(currID, notif_id);
         setLessonInsights(
-          '<i>' +
+            '<i>' +
             response.data.faq_questions +
             '</i><hr>' +
             response.data.suggestion.insights
@@ -118,8 +114,10 @@ const Lesson = () => {
       console.log('error', error);
       setIsError(true);
     } finally {
+      setSuggestionLoading(false); // Loading is done
     }
   };
+
 
   const handleNextPage = () => {
     if (currentPage < lesson?.pages?.length) {
@@ -255,6 +253,7 @@ const Lesson = () => {
                 )}
                 {insight && (
                   <InsightLayout
+                    suggestionLoading={suggestionLoading}
                     handleSuggest={suggestClick}
                     sampleContentReal={
                       lessonInsights.length > 0

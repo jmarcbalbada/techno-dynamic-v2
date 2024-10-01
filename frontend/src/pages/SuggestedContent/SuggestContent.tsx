@@ -316,23 +316,26 @@ const SuggestContent = () => {
           justifyContent: 'flex-end',
           marginBottom: '4px'
         }}>
-        <Button
-          variant='contained'
-          color='primary'
-          sx={{
-            backgroundColor: theme.palette.background.danger,
-            '&:hover': {
-              backgroundColor: '#761e1e'
-            },
-            textTransform: 'none',
-            paddingRight: '10px',
-            borderRadius: '20px'
-          }}
-          onClick={handleIgnore}
-          disable={isLoading}>
-          <CloseIcon sx={{ marginRight: '10px' }} />
-          Ignore
-        </Button>
+          {!isLoading && (
+              <Button
+                  variant='contained'
+                  color='primary'
+                  sx={{
+                      backgroundColor: theme.palette.background.danger,
+                      '&:hover': {
+                          backgroundColor: '#761e1e',
+                      },
+                      textTransform: 'none',
+                      paddingRight: '10px',
+                      borderRadius: '20px',
+                  }}
+                  onClick={handleIgnore}
+                  disabled={isLoading}
+              >
+                  <CloseIcon sx={{ marginRight: '10px' }} />
+                  Ignore
+              </Button>
+          )}
         <Button
           variant='contained'
           sx={{
