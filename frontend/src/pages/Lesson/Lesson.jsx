@@ -43,6 +43,7 @@ const Lesson = () => {
   const [lessonInsights, setLessonInsights] = useState([]);
   const { user } = useAuth();
   const [notifIdAuth, setNotifIdAuth] = useState(false);
+  const [footerHeight, setFooterHeight] = useState(100);
   const currID = parseInt(lessonID);
   const theme = useTheme();
 
@@ -187,7 +188,7 @@ const Lesson = () => {
                 xs: '1.0rem',
                 sm: '1.6rem',
                 md: '1.6rem',
-                xl: '2.5rem'
+                xl: '1.6rem'
               },
               mt: {
                 xs: 0,
@@ -272,33 +273,42 @@ const Lesson = () => {
                 />
                 {user.role === 'student' && (
                   <>
+                    {/* Fab Button */}
                     <Fab
                       color='primary'
                       onClick={handleOpenChat}
                       sx={{
                         position: 'fixed',
-                        bottom: '100px',
-                        right: '50px'
+                        bottom: `${footerHeight + 20}px`, // Dynamically adjust Fab position based on Footer height
+                        right: '50px',
+                        zIndex: 1200 // Ensure it's above FooterControls
                       }}>
                       <ChatIcon />
                     </Fab>
+
+                    {/* Chatbot Dialog */}
                     <ChatbotDialog
                       open={isChatOpen}
                       handleClose={handleCloseChat}
                       lessonId={lesson.id}
                       pageId={lesson?.pages[currentPage - 1]?.id}
+                      // sx={{
+                      //   zIndex: 1300 // Keep ChatbotDialog higher than FooterControls but below Fab
+                      // }}
                     />
                   </>
                 )}
               </>
             )}
           </Container>
+
           <FooterControls
             isFirstPage={currentPage === 1}
             handleNextPage={handleNextPage}
             handlePrevPage={handlePrevPage}
             handleEditPage={handleEditPage}
             handleOpenFiles={handleOpenFiles}
+            setFooterHeight={setFooterHeight} // This callback receives the footer height
           />
         </Box>
       </Box>

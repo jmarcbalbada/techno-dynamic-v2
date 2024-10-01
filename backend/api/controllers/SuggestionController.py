@@ -294,6 +294,10 @@ class SuggestionController(ModelViewSet):
                         new_lesson_content.save()
                         print(f"Created new LessonContent page {new_index + 1}: {new_content}")
 
+            # Delete the LessonContent entries where the contents are just the delimiter (empty pages)
+            LessonContent.objects.filter(lesson_id=lesson_id, contents="<!-- delimiter -->").delete()
+            print(f"Deleted blank pages with content only as <!-- delimiter -->")
+
             # If new content has fewer pages, just update existing pages (no deletion allowed)
             return Response({"message": "Content updated successfully"}, status=status.HTTP_200_OK)
 
@@ -412,11 +416,15 @@ class SuggestionController(ModelViewSet):
         3. Removes any newline characters, '**', and '```html' from the content.
         """
 
-        # 1. Remove <mark style="background-color: lightcoral;">...</mark> and its contents
-        cleaned_content = re.sub(r'<mark style="background-color: lightcoral;">.*?</mark>', '', ai_response, flags=re.DOTALL)
+        # 1. Remove <mark> tags with 'lightcoral' background and their content
+        # This will handle any variations in spaces within the tag
+        cleaned_content = re.sub(
+            r'<mark\s+style\s*=\s*"background-color\s*:\s*lightcoral\s*;">.*?</mark>', 
+            '', ai_response, flags=re.DOTALL | re.IGNORECASE
+        )
         
-        # 2. Remove <mark> and </mark> tags but retain the content inside them
-        cleaned_content = re.sub(r'</?mark>', '', cleaned_content)
+        # 2. Remove <mark> and </mark> tags but retain the content inside them (for yellow marks)
+        cleaned_content = re.sub(r'</?mark(?:\s+[^>]+)?>', '', cleaned_content, flags=re.IGNORECASE)
         
         # 3. Replace newline characters with ''
         cleaned_content = cleaned_content.replace('\n', '')
