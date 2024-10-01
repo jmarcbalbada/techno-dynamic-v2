@@ -292,9 +292,9 @@ const Lesson = () => {
                       handleClose={handleCloseChat}
                       lessonId={lesson.id}
                       pageId={lesson?.pages[currentPage - 1]?.id}
-                      // sx={{
-                      //   zIndex: 1300 // Keep ChatbotDialog higher than FooterControls but below Fab
-                      // }}
+                      sx={{
+                        zIndex: 5000 // Keep ChatbotDialog higher than FooterControls but below Fab
+                      }}
                     />
                   </>
                 )}
@@ -302,14 +302,24 @@ const Lesson = () => {
             )}
           </Container>
 
-          <FooterControls
+          {!isChatOpen && (
+            <FooterControls
+              isFirstPage={currentPage === 1}
+              handleNextPage={handleNextPage}
+              handlePrevPage={handlePrevPage}
+              handleEditPage={handleEditPage}
+              handleOpenFiles={handleOpenFiles}
+              setFooterHeight={setFooterHeight} // This callback receives the footer height
+            />
+          )}
+          {/* <FooterControls
             isFirstPage={currentPage === 1}
             handleNextPage={handleNextPage}
             handlePrevPage={handlePrevPage}
             handleEditPage={handleEditPage}
             handleOpenFiles={handleOpenFiles}
             setFooterHeight={setFooterHeight} // This callback receives the footer height
-          />
+          /> */}
         </Box>
       </Box>
     </>

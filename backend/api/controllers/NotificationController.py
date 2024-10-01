@@ -101,7 +101,7 @@ class NotificationController(ModelViewSet):
     
     @action(detail=False, methods=['put'])
     def mark_all_as_read(self, request):
-        print("mark read was called")
+        # print("mark read was called")
         try:
             unread_notifs = self.queryset.filter(is_read=False)
             unread_notifs.update(is_read=True)

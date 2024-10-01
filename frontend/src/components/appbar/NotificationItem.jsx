@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  ListItem,
   ListItemText,
   IconButton,
   Menu,
@@ -16,40 +15,32 @@ import { LessonsService } from '../../apis/LessonsService';
 const NotificationItem = ({
   notif,
   deleteNotificationById,
-  setOpenedNotificationById
+  setOpenedNotificationById,
+  onClose // Make sure to use the onClick prop to close the notification panel
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const { setNotificationId } = useAuth();
 
-  const handleNotificationLessonClick = (lessonNumber, lessonID) => {
-    // console.log('lessonID notif', lessonID);
-    // console.log('lessonNumber notif', lessonNumber);
-    // console.log('Clicked here');
-    navigate(`/lessons/${lessonNumber}/1/true/${lessonID}`);
-    // window.location.reload();
-  };
-
-  const handleClick = async () => {
+  const handleNotificationLessonClick = async () => {
     setNotificationId(notif.notif_id);
     localStorage.setItem('notification_id', notif.notif_id);
     const id = localStorage.getItem('notification_id');
-    // id ? console.log('id was created') : console.log('id was not created');
+
     try {
       const response = await LessonsService.getById(notif.lesson);
       const lessonNum = response.data;
-      // console.log("lesson num", lessonNum);
-      handleNotificationLessonClick(lessonNum.lessonNumber, lessonNum.id);
+      navigate(`/lessons/${lessonNum.lessonNumber}/1/true/${lessonNum.id}`);
+
+      // Close the notification panel
+      onClose();
     } catch (error) {
       console.log(error);
     }
-
-    // console.log('notif', notif);
-    // navigate(`/suggestcontent`);
   };
 
   const handleMenuClick = (event) => {
-    event.stopPropagation();
+    event.stopPropagation(); // Stop event propagation to prevent the menu click from affecting the parent
     setAnchorEl(event.currentTarget);
   };
 
@@ -64,7 +55,6 @@ const NotificationItem = ({
 
   const handleMarkAsUnread = () => {
     setOpenedNotificationById(notif.notif_id);
-    // console.log('notif_id', notif.notif_id);
     handleMenuClose();
   };
 
@@ -83,17 +73,16 @@ const NotificationItem = ({
 
   return (
     <ListItemButton
-      // button
-      onClick={handleClick}
+      onClick={handleNotificationLessonClick} // Use the onClick from NotificationIcon to close the panel
+      // handleNotificationLessonClick
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: notif.is_open ? '#f0f0f0' : '#ffffff'
-        // cursor: 'pointer'
       }}>
       <ListItemText
-        primary={`Review required`}
+        primary='Review required'
         secondary={
           <>
             <span>{notif.message}</span>
