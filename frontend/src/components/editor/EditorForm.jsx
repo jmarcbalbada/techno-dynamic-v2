@@ -113,7 +113,8 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
         } else {
           const response = await LessonsService.create(formData);
         }
-        navigate('/', { replace: true });
+        // navigate('/', { replace: true });
+        navigate(-1, { replace: true });
       } catch (error) {
         console.log('error', error);
       }

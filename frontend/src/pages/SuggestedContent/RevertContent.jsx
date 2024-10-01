@@ -48,7 +48,9 @@ const RevertContent = () => {
   const handleClearCallbackSuggestionAndNotificationAndAddToVersion =
     async () => {
       await handleClearNotif();
-      await handleAddVersionControl();
+      if (!isReverted) {
+        await handleAddVersionControl();
+      }
       await handleClearSuggestionAndFaq();
       navigate(`/`, { replace: true });
       window.history.pushState(null, null, window.location.href);

@@ -27,9 +27,43 @@ const SuggestContent = () => {
   const [allContents, setAllContents] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [suggestedContents, setSuggestedContents] = useState('');
+  const [loadingMessage, setLoadingMessage] = useState(
+    'Please wait and refrain from refreshing while we load your content...'
+  );
   const theme = useTheme();
   const currID = parseInt(lessonID);
   const editorRef = useRef(null);
+  const [fade, setFade] = useState(true); // Control the fade effect
+
+  useEffect(() => {
+    // Store the timeout IDs so we can clear them later
+    const timeouts = [];
+
+    const updateMessage = (newMessage, delay) => {
+      const timeoutId = setTimeout(() => {
+        setFade(false); // Start fading out
+        const fadeOutTimeout = setTimeout(() => {
+          setLoadingMessage(newMessage); // Change the message
+          setFade(true); // Start fading in
+        }, 1000); // Delay for 1 second to allow fading out
+
+        // Store the fade-out timeout ID so we can clear it if needed
+        timeouts.push(fadeOutTimeout);
+      }, delay);
+
+      // Store the timeout ID so we can clear it if needed
+      timeouts.push(timeoutId);
+    };
+
+    // Change messages with delays
+    updateMessage('Hang in there, it may take some time...', 7000); // 7 seconds before this message shows
+    updateMessage('Almost there, we are beautifying your content...', 14000); // 7 more seconds before this message
+
+    return () => {
+      // Clear all timeouts when component unmounts or loading is complete
+      timeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+    };
+  }, []);
 
   const handleAccept = async () => {
     // Save the suggested content
@@ -146,8 +180,9 @@ const SuggestContent = () => {
           currID,
           notif_id
         );
-        // console.log('response.data', response.data);
+
         setSuggestedContents(response.data.ai_response);
+        console.log('response.data.ai_response', response.data.ai_response);
       }
     } catch (error) {
       // Handle timeout or other errors
@@ -170,9 +205,17 @@ const SuggestContent = () => {
   const getSkeletonLoading = () => {
     return (
       <>
-        <Typography variant='body2'>
+        {/* <Typography variant='body2'>
           Please wait and refrain from refreshing while we load your content...
-        </Typography>
+        </Typography> */}
+        <Box
+          sx={{
+            opacity: fade ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out'
+          }}>
+          <Typography variant='body2'>{loadingMessage}</Typography>
+        </Box>
+        {/* loadingMessage */}
         <Skeleton
           variant='rounded'
           height={150}
