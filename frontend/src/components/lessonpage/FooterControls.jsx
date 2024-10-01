@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,12 +19,23 @@ const FooterControls = (props) => {
     handlePrevPage,
     handleEditPage,
     isFirstPage,
-    handleOpenFiles
+    handleOpenFiles,
+    setFooterHeight // This callback will be used to send the height back to Lesson component
   } = props;
   const { user } = useAuth();
 
+  const footerRef = useRef(null); // Use ref to get the footer height
+
+  useEffect(() => {
+    if (footerRef.current) {
+      const height = footerRef.current.offsetHeight; // Get the height of FooterControls
+      setFooterHeight(height); // Pass height back to the parent component
+    }
+  }, [setFooterHeight]); // Only update when the footer height changes
+
   return (
     <Paper
+      ref={footerRef}
       elevation={3}
       sx={{
         position: 'fixed',
@@ -31,7 +43,8 @@ const FooterControls = (props) => {
         left: 0,
         right: 0,
         py: 2,
-        px: 2
+        px: 2,
+        zIndex: 3000
       }}>
       <Container>
         <Box
@@ -48,14 +61,18 @@ const FooterControls = (props) => {
             {isFirstPage ? 'Dashboard' : 'Prev'}
           </Button>
           <Box display='flex' gap={1}>
+            <Button
+              onClick={handleOpenFiles}
+              variant='outlined'
+              size='large'
+              startIcon={<InsertDriveFileIcon />}>
+              Files
+            </Button>
             {user.role === 'teacher' && (
               <Button onClick={handleEditPage} variant='outlined' size='large'>
                 Edit
               </Button>
             )}
-            <Button onClick={handleOpenFiles} variant='outlined' size='large' startIcon={<InsertDriveFileIcon />}>
-              Files
-            </Button>
           </Box>
           <Button
             onClick={handleNextPage}
