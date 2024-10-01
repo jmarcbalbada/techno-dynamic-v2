@@ -11,6 +11,7 @@ import {
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import NotificationItem from './NotificationItem'; // Import the custom component
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { useTheme } from '@mui/material/styles'; // Import useTheme
 
 const NotificationIcon = ({
   countNotif,
@@ -21,6 +22,7 @@ const NotificationIcon = ({
   setAllToReadNotifications
 }) => {
   const [showNotification, setShowNotification] = useState(false);
+  const theme = useTheme(); // Access theme for responsive styles
 
   const handleClickAway = () => {
     setShowNotification(false);
@@ -41,11 +43,9 @@ const NotificationIcon = ({
       <IconButton
         sx={{
           paddingRight: {
-            xs: '1rem', // small devices
-            sm: '1.25rem', // small-medium devices
-            md: '1.5rem', // medium devices
-            lg: '1.75rem', // large devices
-            xl: '2rem' // extra large devices
+            xs: '0.25rem', // Reduce padding on small devices
+            sm: '0.5rem', // Medium devices
+            md: '1rem' // Large devices
           },
           display: 'inline',
           transition: 'transform 0.3s ease',
@@ -56,20 +56,25 @@ const NotificationIcon = ({
         }}
         onClick={handleIconButtonClick}>
         <Badge badgeContent={countNotif} color='error'>
-          <NotificationsOutlinedIcon sx={{ fontSize: 24 }} />
+          <NotificationsOutlinedIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
         </Badge>
       </IconButton>
+
       {showNotification && (
         <ClickAwayListener onClickAway={handleClickAway}>
           <Paper
             sx={{
               position: 'absolute',
               top: '40px',
-              right: '0',
-              width: '300px',
+              right: 0,
+              width: {
+                xs: '50vw',
+                sm: '300px'
+              },
               maxHeight: '400px',
               overflowY: 'auto',
-              zIndex: 1
+              zIndex: 1,
+              boxShadow: theme.shadows[3]
             }}>
             <div>
               {unreadNotif.length <= 0 ? (
@@ -82,11 +87,7 @@ const NotificationIcon = ({
                       cursor: 'default' // Set the hover cursor to normal
                     }
                   }}>
-                  <ThumbUpIcon
-                    sx={{
-                      color: '#1b5e20'
-                    }}
-                  />
+                  <ThumbUpIcon sx={{ color: '#1b5e20' }} />
                   No notifications for now.
                 </Typography>
               ) : (
@@ -95,7 +96,9 @@ const NotificationIcon = ({
                     <NotificationItem
                       key={notif.notif_id}
                       notif={notif}
-                      onClick={() => handleItemClick(notif.notif_id)} // Close panel on item click
+                      // onClick={() => handleItemClick(notif.notif_id)} // Close panel on item click
+                      onClose={() => setShowNotification(false)}
+                      // onClick={handleItemClick(notif.notif_id)} // Close panel on item click
                       setOpenedNotificationById={setOpenedNotificationById}
                       deleteNotificationById={deleteNotificationById}
                     />

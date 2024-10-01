@@ -39,7 +39,7 @@ class TeacherController(ModelViewSet):
             teacher_profile = Teacher.objects.get(id=1)
             teacher_profile.threshold = threshold_value  # Correct field name
             teacher_profile.save()
-            print("succesfully updated threshold",teacher_profile.threshold)
+            # print("succesfully updated threshold",teacher_profile.threshold)
             return Response({"success": f"Threshold updated successfully to value: {threshold_value}"})
         except Teacher.DoesNotExist:
             return Response({"error": "TeacherProfile not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -61,7 +61,7 @@ class TeacherController(ModelViewSet):
             teacher_profile = Teacher.objects.get(id=1)  # Example fixed id
             teacher_profile.suggestion = similarity
             teacher_profile.save()
-            print("Successfully set")
+            # print("Successfully set")
             return Response({"success": "Suggestion updated successfully the value is ${similarity}}"})
         except Teacher.DoesNotExist:
             return Response({"error": "TeacherProfile not found"}, status=status.HTTP_404_NOT_FOUND)

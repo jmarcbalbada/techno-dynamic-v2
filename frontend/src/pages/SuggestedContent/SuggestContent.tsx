@@ -182,7 +182,7 @@ const SuggestContent = () => {
         );
 
         setSuggestedContents(response.data.ai_response);
-        console.log('response.data.ai_response', response.data.ai_response);
+        // console.log('response.data.ai_response', response.data.ai_response);
       }
     } catch (error) {
       // Handle timeout or other errors

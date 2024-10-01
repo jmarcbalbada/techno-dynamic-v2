@@ -142,104 +142,108 @@ const VersionHistory = () => {
         </Breadcrumbs>
       </Box>
 
-      {/* Content History Accordion */}
       <Box mb={2}>
         {isError ? (
           <Typography color='error'>Error loading content history</Typography>
         ) : (
           <>
-            {/* Iterate through the content history */}
-            {histories.map((history, index) => {
-              const isCurrentVersion = currentLesson === history.content;
+            {/* Iterate through the content history in descending order */}
+            {histories
+              .slice() // Create a copy to avoid modifying the original array
+              .reverse() // Reverse the array to show latest first
+              .map((history, index) => {
+                const isCurrentVersion = currentLesson === history.content;
 
-              return (
-                <Accordion
-                  key={history.historyId}
-                  expanded={expanded === `panel${history.historyId}`}
-                  onChange={handleAccordionChange(`panel${history.historyId}`)}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls={`panel${history.historyId}-content`}
-                    id={`panel${history.historyId}-header`}>
-                    {/* Container for Version and RestoreIcon aligned horizontally */}
-                    <Box width='100%'>
-                      <Box
-                        display='flex'
-                        justifyContent='space-between'
-                        alignItems='center'
-                        sx={{
-                          paddingRight: '1rem'
-                        }}
-                        width='97%'>
-                        <Typography
-                          sx={{
-                            fontWeight: 600,
-                            color: `${theme.palette.background.darker}`
-                          }}
-                          variant='h5'>
-                          Version {history.version}
-                        </Typography>
+                return (
+                  <Accordion
+                    key={history.historyId}
+                    expanded={expanded === `panel${history.historyId}`}
+                    onChange={handleAccordionChange(
+                      `panel${history.historyId}`
+                    )}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls={`panel${history.historyId}-content`}
+                      id={`panel${history.historyId}-header`}>
+                      {/* Container for Version and RestoreIcon aligned horizontally */}
+                      <Box width='100%'>
                         <Box
                           display='flex'
+                          justifyContent='space-between'
                           alignItems='center'
                           sx={{
-                            ml: 2,
-                            color: `${theme.palette.primary.main}`,
-                            zIndex: 10,
-                            cursor: isCurrentVersion
-                              ? 'not-allowed'
-                              : 'pointer',
-                            pointerEvents: isCurrentVersion ? 'none' : 'auto'
+                            paddingRight: '1rem'
                           }}
-                          onClick={() =>
-                            !isCurrentVersion &&
-                            handleRestoreButton(lessonId, history.historyId)
-                          }>
-                          {' '}
-                          {!isCurrentVersion && (
-                            <>
-                              <RestoreIcon />
-                              <Typography sx={{ ml: 0.8 }}>
-                                Restore
-                              </Typography>{' '}
-                            </>
-                          )}
+                          width='97%'>
+                          <Typography
+                            sx={{
+                              fontWeight: 600,
+                              color: `${theme.palette.background.darker}`
+                            }}
+                            variant='h5'>
+                            Version {history.version}
+                          </Typography>
+                          <Box
+                            display='flex'
+                            alignItems='center'
+                            sx={{
+                              ml: 2,
+                              color: `${theme.palette.primary.main}`,
+                              zIndex: 10,
+                              cursor: isCurrentVersion
+                                ? 'not-allowed'
+                                : 'pointer',
+                              pointerEvents: isCurrentVersion ? 'none' : 'auto'
+                            }}
+                            onClick={() =>
+                              !isCurrentVersion &&
+                              handleRestoreButton(lessonId, history.historyId)
+                            }>
+                            {' '}
+                            {!isCurrentVersion && (
+                              <>
+                                <RestoreIcon />
+                                <Typography sx={{ ml: 0.8 }}>
+                                  Restore
+                                </Typography>{' '}
+                              </>
+                            )}
+                          </Box>
                         </Box>
-                      </Box>
 
-                      <Typography
-                        sx={{
-                          fontStyle: 'italic',
-                          mt: 1
-                        }}>
-                        {formatDate(history.updatedAt)}
-                      </Typography>
-
-                      {/* Optional: Display if it's the current version */}
-                      {isCurrentVersion && (
                         <Typography
-                          component='span'
-                          color='primary'
-                          sx={{ fontWeight: 500 }}>
-                          (Current Version)
+                          sx={{
+                            fontStyle: 'italic',
+                            mt: 1
+                          }}>
+                          {formatDate(history.updatedAt)}
+                        </Typography>
+
+                        {/* Optional: Display if it's the current version */}
+                        {isCurrentVersion && (
+                          <Typography
+                            component='span'
+                            color='primary'
+                            sx={{ fontWeight: 500 }}>
+                            (Current Version)
+                          </Typography>
+                        )}
+                      </Box>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+                      <Typography
+                        dangerouslySetInnerHTML={{ __html: history.content }}
+                      />
+                      {isCurrentVersion && (
+                        <Typography variant='caption' color='textSecondary'>
+                          This is the current version.
                         </Typography>
                       )}
-                    </Box>
-                  </AccordionSummary>
-
-                  <AccordionDetails>
-                    <Typography
-                      dangerouslySetInnerHTML={{ __html: history.content }}
-                    />
-                    {isCurrentVersion && (
-                      <Typography variant='caption' color='textSecondary'>
-                        This is the current version.
-                      </Typography>
-                    )}
-                  </AccordionDetails>
-                </Accordion>
-              );
-            })}
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
 
             {/* If no version matches the currentLesson, show an additional accordion */}
             {!currentVersionFound && (
@@ -267,6 +271,7 @@ const VersionHistory = () => {
           </>
         )}
       </Box>
+
       <Snackbar
         open={snackbarSuccessOpen}
         autoHideDuration={timer}
