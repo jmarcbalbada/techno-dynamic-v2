@@ -27,11 +27,12 @@ const FooterControls = (props) => {
   const footerRef = useRef(null); // Use ref to get the footer height
 
   useEffect(() => {
-    if (footerRef.current) {
+    if (footerRef.current && typeof setFooterHeight === 'function') {
+      // Ensure setFooterHeight is a function
       const height = footerRef.current.offsetHeight; // Get the height of FooterControls
       setFooterHeight(height); // Pass height back to the parent component
     }
-  }, [setFooterHeight]); // Only update when the footer height changes
+  }, [setFooterHeight]);
 
   return (
     <Paper
@@ -57,7 +58,26 @@ const FooterControls = (props) => {
             onClick={handlePrevPage}
             startIcon={<ArrowBackIcon />}
             variant='outlined'
-            size='large'>
+            size='large'
+            sx={{
+              fontSize: {
+                xs:
+                  isFirstPage && user.role === 'teacher' ? '0.5rem' : '0.9rem', // Custom smaller font size
+                sm: '0.875rem', // Slightly larger for small screens
+                md: '0.875rem' // Larger font for medium screens
+              },
+              padding: {
+                xs: '8px', // Reduce padding for small screens
+                sm: '8px',
+                md: '8px',
+                lg: '8px',
+                xl: '8px'
+              },
+              minWidth: {
+                xs: '80px', // Adjust minimum width for mobile
+                sm: '100px'
+              }
+            }}>
             {isFirstPage ? 'Dashboard' : 'Prev'}
           </Button>
           <Box display='flex' gap={1}>
