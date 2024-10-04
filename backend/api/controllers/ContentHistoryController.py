@@ -26,7 +26,7 @@ class ContentHistoryController(ModelViewSet):
 
 
     def createHistory(self, request, lesson_id=None):
-          
+    
         if not lesson_id:
             return Response({"error": "lesson_id is required"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -50,7 +50,11 @@ class ContentHistoryController(ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        return Response(ContentHistorySerializer(content_history).data, status=status.HTTP_201_CREATED)
+        # Return both serialized data and the historyId
+        return Response({
+            "historyId": content_history.historyId,
+            "data": ContentHistorySerializer(content_history).data
+        }, status=status.HTTP_201_CREATED)
 
 
     # Get history by historyId
@@ -149,8 +153,6 @@ class ContentHistoryController(ModelViewSet):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
-    # Update ContentHistory (for admin/dev only)
     def updateHistory(self, request, lesson_id=None, history_id=None):
 
         if not lesson_id or not history_id:
@@ -177,7 +179,6 @@ class ContentHistoryController(ModelViewSet):
             return Response({"error": "ContentHistory not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-    # Delete ContentHistory (for admin/dev only)
     def deleteHistory(self, request, lesson_id=None, history_id=None):
       if not lesson_id or not history_id:
           return Response({"error": "lesson_id and history_id are required"}, status=status.HTTP_400_BAD_REQUEST)

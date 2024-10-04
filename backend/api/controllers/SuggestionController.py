@@ -195,7 +195,8 @@ class SuggestionController(ModelViewSet):
                     {"role": "system", "content": SUGGESTION_SYSTEM_CONTENT},
                     {"role": "user", "content": input_text}
                 ],
-                max_tokens=6000, # enough tokens for now
+                # max_tokens=6000, # enough tokens for now
+                max_tokens=4000, # enough tokens for now
                 temperature=0.5, # more creative
             )
             ai_response = response['choices'][0]['message']['content'].strip()
