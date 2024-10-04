@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  useParams,
-  useNavigate,
-} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
@@ -43,7 +40,7 @@ const Lesson = () => {
   const [footerHeight, setFooterHeight] = useState(100);
   const currID = parseInt(lessonID);
   const theme = useTheme();
-  const [suggestionLoading,setSuggestionLoading] = useState(true)
+  const [suggestionLoading, setSuggestionLoading] = useState(true);
 
   useEffect(() => {
     if (notif) {
@@ -71,6 +68,7 @@ const Lesson = () => {
         'ltids',
         JSON.stringify({
           id: response?.data?.id,
+          lessonNumber: lessonNumber,
           title: response?.data?.title
         })
       );
@@ -102,9 +100,12 @@ const Lesson = () => {
       setSuggestionLoading(true); // Start loading
       const notif_id = localStorage.getItem('notification_id');
       if (notif_id) {
-        const response = await SuggestionService.create_insights(currID, notif_id);
+        const response = await SuggestionService.create_insights(
+          currID,
+          notif_id
+        );
         setLessonInsights(
-            '<i>' +
+          '<i>' +
             response.data.faq_questions +
             '</i><hr>' +
             response.data.suggestion.insights
@@ -117,7 +118,6 @@ const Lesson = () => {
       setSuggestionLoading(false); // Loading is done
     }
   };
-
 
   const handleNextPage = () => {
     if (currentPage < lesson?.pages?.length) {
@@ -242,7 +242,7 @@ const Lesson = () => {
             ) : isError ? (
               <div>Error, something went wrong!</div>
             ) : notifIdAuth === false && notif ? (
-              <div>Error, invalid access!</div>
+              <div>Error, invalid access or try again later!</div>
             ) : (
               <>
                 {notif && !insight && user.role === 'teacher' && (

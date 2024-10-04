@@ -13,8 +13,15 @@ const useNotifications = (user) => {
   }, [allNotif]);
 
   useEffect(() => {
+    // if (user.role === 'teacher') {
+    //   getCountUnreadNotifications();
+    // }
     if (user.role === 'teacher') {
-      getCountUnreadNotifications();
+      const intervalId = setInterval(() => {
+        getCountUnreadNotifications();
+      }, 3000);
+
+      return () => clearInterval(intervalId);
     }
   }, [allNotif]);
 

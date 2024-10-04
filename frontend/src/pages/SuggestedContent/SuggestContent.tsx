@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
+import { ContentHistoryService } from 'apis/ContentHistoryService';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Box, Button, Tooltip } from '@mui/material';
 import Container from '@mui/material/Container';
@@ -68,7 +69,8 @@ const SuggestContent = () => {
   const handleAccept = async () => {
     // Save the suggested content
     const newsuggestedContent = handleSave();
-
+    await handleClearNotif();
+    await handleAddVersionControl();
     // Wait for the response from handleNewContent
     await handleNewContent(newsuggestedContent);
 
@@ -78,7 +80,49 @@ const SuggestContent = () => {
         replace: true
       });
       window.history.pushState(null, null, window.location.href);
-    }, 500); // 1 second delay
+    }, 500);
+  };
+
+  const handleAddVersionControl = async () => {
+    try {
+      const response = await ContentHistoryService.createHistory(
+        currID,
+        allContents
+      );
+      console.log('historyId', response.data);
+      await localStorage.setItem('historyId', response.data.historyId);
+    } catch (error) {
+      console.log('Error', error);
+
+      setIsError(true);
+    }
+  };
+
+  const handleClearNotif = async () => {
+    try {
+      let notifId;
+      if (localStorage.getItem('notification_id')) {
+        notifId = parseInt(localStorage.getItem('notification_id'), 10);
+      }
+      if (notifId) {
+        // Delete notification by notifId
+        const response =
+          await NotificationService.deleteNotificationById(notifId);
+        console.log('notifId', notifId);
+        console.log('response.data', response.data);
+      }
+    } catch (error) {
+      setIsError(true);
+    }
+  };
+
+  const handleClearSuggestionAndFaq = async () => {
+    try {
+      const response = await SuggestionService.delete_suggestion(currID);
+      // console.log('response.data', response.data);
+    } catch (error) {
+      setIsError(true);
+    }
   };
 
   const handleSave = () => {
@@ -120,25 +164,6 @@ const SuggestContent = () => {
   const handleClearCallbackSuggestionAndNotification = async () => {
     await handleClearNotif();
     await handleClearSuggestionAndFaq();
-    navigate(`/`);
-  };
-
-  const handleClearNotif = async () => {
-    try {
-      const response = await NotificationService.deleteNotifByLessonId(currID);
-      // console.log('response.data', response.data);
-    } catch (error) {
-      setIsError(true);
-    }
-  };
-
-  const handleClearSuggestionAndFaq = async () => {
-    try {
-      const response = await SuggestionService.delete_suggestion(currID);
-      // console.log('response.data', response.data);
-    } catch (error) {
-      setIsError(true);
-    }
   };
 
   const hasFetched = useRef(false);
@@ -174,15 +199,22 @@ const SuggestContent = () => {
     try {
       const notif_id = localStorage.getItem('notification_id');
 
-      // add 3 min timeout if request is rejected
+      // Add 3-minute timeout if request is rejected
       if (notif_id) {
         const response = await SuggestionService.create_content(
           currID,
           notif_id
         );
 
-        setSuggestedContents(response.data.ai_response);
-        // console.log('response.data.ai_response', response.data.ai_response);
+        // Convert to string and replace '```html' with an empty string
+        let removeTagContents = response.data.ai_response.replace(
+          /```html/g,
+          ''
+        );
+
+        setSuggestedContents(removeTagContents);
+
+        // console.log('response.data.ai_response', aiResponse);
       }
     } catch (error) {
       // Handle timeout or other errors
@@ -316,26 +348,25 @@ const SuggestContent = () => {
           justifyContent: 'flex-end',
           marginBottom: '4px'
         }}>
-          {!isLoading && (
-              <Button
-                  variant='contained'
-                  color='primary'
-                  sx={{
-                      backgroundColor: theme.palette.background.danger,
-                      '&:hover': {
-                          backgroundColor: '#761e1e',
-                      },
-                      textTransform: 'none',
-                      paddingRight: '10px',
-                      borderRadius: '20px',
-                  }}
-                  onClick={handleIgnore}
-                  disabled={isLoading}
-              >
-                  <CloseIcon sx={{ marginRight: '10px' }} />
-                  Ignore
-              </Button>
-          )}
+        {!isLoading && (
+          <Button
+            variant='contained'
+            color='primary'
+            sx={{
+              backgroundColor: theme.palette.background.danger,
+              '&:hover': {
+                backgroundColor: '#761e1e'
+              },
+              textTransform: 'none',
+              paddingRight: '10px',
+              borderRadius: '20px'
+            }}
+            onClick={handleIgnore}
+            disabled={isLoading}>
+            <CloseIcon sx={{ marginRight: '10px' }} />
+            Ignore
+          </Button>
+        )}
         <Button
           variant='contained'
           sx={{

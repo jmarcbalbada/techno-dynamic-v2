@@ -42,8 +42,15 @@ const Dashboard = () => {
   };
 
   const deleteNotifId = async () => {
-    localStorage.removeItem('notification_id');
-    localStorage.removeItem('ltids');
+    if (localStorage.getItem('notification_id')) {
+      localStorage.removeItem('notification_id');
+    }
+    if (localStorage.getItem('ltids')) {
+      localStorage.removeItem('ltids');
+    }
+    if (localStorage.getItem('historyId')) {
+      localStorage.removeItem('historyId');
+    }
   };
 
   const getFaq = async () => {

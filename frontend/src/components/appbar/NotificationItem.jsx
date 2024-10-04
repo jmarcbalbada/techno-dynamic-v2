@@ -30,7 +30,9 @@ const NotificationItem = ({
     try {
       const response = await LessonsService.getById(notif.lesson);
       const lessonNum = response.data;
-      navigate(`/lessons/${lessonNum.lessonNumber}/1/true/${lessonNum.id}`);
+      await navigate(
+        `/lessons/${lessonNum.lessonNumber}/1/true/${lessonNum.id}`
+      );
 
       // Close the notification panel
       onClose();

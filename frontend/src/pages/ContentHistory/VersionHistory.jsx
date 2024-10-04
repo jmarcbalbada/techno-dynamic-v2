@@ -26,6 +26,7 @@ const VersionHistory = () => {
   const [currentLesson, setCurrentLesson] = useState('');
   const [expanded, setExpanded] = useState(false);
   const lessonTitle = lessonAndTitleIds?.title || 'Your lesson';
+  const lessonNumber = lessonAndTitleIds?.lessonNumber;
   const [snackbarSuccessOpen, setSnackbarSuccessOpen] = useState(false);
   const navigate = useNavigate();
   const timer = 1500;
@@ -128,7 +129,9 @@ const VersionHistory = () => {
           <Link
             underline='hover'
             color='inherit'
-            onClick={() => navigate(-1)}
+            onClick={() =>
+              navigate(`/lessons/${lessonNumber}/1/false/${lessonId}`)
+            }
             sx={{ cursor: 'pointer' }}>
             {truncateTitle(lessonTitle, 30)}
           </Link>
@@ -258,7 +261,7 @@ const VersionHistory = () => {
                       fontWeight: 600
                     }}
                     variant='body3'>
-                    Version {histories.length + 1} - Current Version
+                    Current Version
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>

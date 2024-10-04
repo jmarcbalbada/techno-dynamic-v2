@@ -45,18 +45,13 @@ const RevertContent = () => {
     getOldContent(currID);
   }, []);
 
-  const handleClearCallbackSuggestionAndNotificationAndAddToVersion =
-    async () => {
-      await handleClearNotif();
-      if (!isReverted) {
-        await handleAddVersionControl();
-      }
-      await handleClearSuggestionAndFaq();
-      navigate(`/`, { replace: true });
-      window.history.pushState(null, null, window.location.href);
-      // history.replace('/');
-      window.location.reload();
-    };
+  const handleFinished = async () => {
+    await handleClearSuggestion();
+    await navigate(`/`, { replace: true });
+    window.history.pushState(null, null, window.location.href);
+    // history.replace('/');
+    window.location.reload();
+  };
 
   const handleClearNotif = async () => {
     try {
@@ -95,7 +90,7 @@ const RevertContent = () => {
     }
   };
 
-  const handleClearSuggestionAndFaq = async () => {
+  const handleClearSuggestion = async () => {
     try {
       const response = await SuggestionService.delete_suggestion(currID);
       // setLesson(response.data);
@@ -108,9 +103,30 @@ const RevertContent = () => {
 
   const handleRevert = async () => {
     // console.log("revert clicked");
-    setReverted(true);
-    await revertContentService();
-    await getLessonLessonNumber(lessonNumber);
+    try {
+      setReverted(true);
+      await revertContentService();
+      await getLessonLessonNumber(lessonNumber);
+      await deleteVersionHistory();
+      // await ContentHistoryService.deleteHistory
+    } catch (error) {
+      console.log('Error', error);
+    }
+  };
+
+  const deleteVersionHistory = async () => {
+    try {
+      if (localStorage.getItem('historyId')) {
+        let historyId = parseInt(localStorage.getItem('historyId'), 10);
+        const response = await ContentHistoryService.deleteHistory(
+          currID,
+          historyId
+        );
+      }
+      console.log('response', response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const revertContentService = async () => {
@@ -259,9 +275,7 @@ const RevertContent = () => {
                           textTransform: 'none', // Set text to normal case
                           paddingRight: '10px' // Add padding to the right of the icon
                         }}
-                        onClick={
-                          handleClearCallbackSuggestionAndNotificationAndAddToVersion
-                        }>
+                        onClick={handleFinished}>
                         <DoneAllIcon sx={{ marginRight: '10px' }} />
                         Looks good to me!
                       </Button>
@@ -317,9 +331,7 @@ const RevertContent = () => {
                         textTransform: 'none', // Set text to normal case
                         paddingRight: '10px' // Add padding to the right of the icon
                       }}
-                      onClick={
-                        handleClearCallbackSuggestionAndNotificationAndAddToVersion
-                      }>
+                      onClick={handleFinished}>
                       <HistoryIcon sx={{ marginRight: '10px' }} />
                       Return to Dashboard
                     </Button>
