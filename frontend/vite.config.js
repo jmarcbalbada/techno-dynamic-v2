@@ -15,11 +15,11 @@ const fileNames = [
 
 // this will generate aliases for fileNames
 const filePaths = fileNames.reduce(
-  (acc, cur) => ({
-    ...acc,
-    [cur]: `/${cur === 'src' ? cur : 'src/' + cur}`
-  }),
-  ''
+    (acc, cur) => ({
+      ...acc,
+      [cur]: `/${cur === 'src' ? cur : 'src/' + cur}`
+    }),
+    ''
 );
 
 // https://vitejs.dev/config/
@@ -29,6 +29,10 @@ export default defineConfig({
     alias: {
       ...filePaths
     }
+  },
+  build: {
+    outDir: '../backend/static',  // The output directory for static files
+    emptyOutDir: true,            // Clears the directory before building
   },
   server: {
     hmr: {
