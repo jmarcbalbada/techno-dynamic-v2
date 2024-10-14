@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'akya^e5k7t@0u+h9%#a)+$*gy2^^@63x#9x4l=$g$7spm0juv5'
 # SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+# DEBUG = os.environ.get('DEBUG', default=False, cast=bool)
 
 # SECRET_KEY = secret_keys
 # print("Generated SECRET_KEY:", SECRET_KEY)
@@ -42,7 +42,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = os.environ.get('DEBUG')
-# DEBUG = True
+DEBUG = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -115,7 +115,7 @@ DATABASES = {
 #         'PORT': config('POSTGRES_PORT', default='5432'),
 #     }
     'default': dj_database_url.config(
-            default=config('DATABASE_URL',default='postgres://ucrab179jqv3dt:pbe3b14f0bb37591f74d2f21565a98274030a041863d3788e8f41eb5496d4a77b@c5hilnj7pn10vb.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d2satpte2rtaog')
+            default=os.environ.get('DATABASE_URL',default='postgres://ucrab179jqv3dt:pbe3b14f0bb37591f74d2f21565a98274030a041863d3788e8f41eb5496d4a77b@c5hilnj7pn10vb.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d2satpte2rtaog')
         )
 }
 
