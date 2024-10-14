@@ -50,7 +50,7 @@ REST_FRAMEWORK = {
 }
 
 # ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
-ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.12,192.168.1.5").split(",")
+ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.12,192.168.1.5,.vercel.app").split(",")
 
 
 # Application definition
