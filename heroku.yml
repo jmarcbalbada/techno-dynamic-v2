@@ -1,0 +1,9 @@
+build:
+  languages:
+    - python
+
+buildpacks:
+  - heroku/python
+
+run:
+  web: cd backend && gunicorn backend_django.wsgi:application
