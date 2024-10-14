@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState, useRef } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
@@ -135,11 +134,6 @@ const SuggestContent = () => {
     } else {
       finalChanges = suggestedContents;
     }
-
-    // Filter out <mark> tags with specific style or remove the <mark> tags entirely
-    finalChanges = finalChanges
-      .replace(/<mark style="background-color: lightcoral;">.*?<\/mark>/g, '') // Remove <mark> with 'lightcoral' background
-      .replace(/<\/?mark>/g, ''); // Remove any other <mark> tags, but keep content inside
 
     return finalChanges;
   };
