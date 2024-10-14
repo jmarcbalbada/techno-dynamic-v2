@@ -31,8 +31,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-# SECRET_KEY = 'akya^e5k7t@0u+h9%#a)+$*gy2^^@63x#9x4l=$g$7spm0juv5'
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = 'akya^e5k7t@0u+h9%#a)+$*gy2^^@63x#9x4l=$g$7spm0juv5'
+# SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # SECRET_KEY = secret_keys
