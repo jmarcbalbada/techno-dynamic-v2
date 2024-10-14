@@ -149,7 +149,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://techno-dynamic-learning.vercel.app",
     "https://2c18-143-44-165-161.ngrok-free.app",
     "http://localhost:8000",
-    "http://192.168.1.5:5173"
+    "http://192.168.1.5:5173",
+    "https://technodynamic.vercel.app"
 ]
 
 # CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://localhost:3000,http://localhost:5173').split(',')
