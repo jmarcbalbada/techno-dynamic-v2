@@ -50,7 +50,7 @@ REST_FRAMEWORK = {
 }
 
 # ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
-ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.12,192.168.1.5,.vercel.app").split(",")
+ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.12,192.168.1.5,.vercel.app,techno-dynamic-v2.onrender.com").split(",")
 
 
 # Application definition
@@ -157,7 +157,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://techno-learn.onrender.com",
     "http://192.168.1.12",
     "http://192.168.1.12:8000",  # Include this if you're accessing via port 8000
-    "http://192.168.1.5:5173"
+    "http://192.168.1.5:5173",
+    "https://techno-dynamic-v2.onrender.com"
 
 ]
 
