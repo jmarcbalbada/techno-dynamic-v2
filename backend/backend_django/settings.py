@@ -46,7 +46,8 @@ REST_FRAMEWORK = {
 }
 # ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 # ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.12,192.168.1.5").split(",")
-ALLOWED_HOSTS = ['.ngrok-free.app,.vercel.app']
+ALLOWED_HOSTS = ['.ngrok-free.app', '.vercel.app', 'technodynamic.vercel.app']
+
 # https://2044-143-44-165-11.ngrok-free.app
 
 
@@ -148,7 +149,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://192.168.1.5:5173",
     "https://143.44.165.11:5173",
-    "https://2044-143-44-165-11.ngrok-free.app",
+    "https://13f2-143-44-165-11.ngrok-free.app",
     "https://technodynamic.vercel.app"
 ]
 
@@ -159,7 +160,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://192.168.1.12:8000",  # Include this if you're accessing via port 8000
     "http://192.168.1.5:5173",
     "https://143.44.165.11:5173",
-    "https://2044-143-44-165-11.ngrok-free.app",
+    "https://13f2-143-44-165-11.ngrok-free.app",
     "https://technodynamic.vercel.app"
 
 ]

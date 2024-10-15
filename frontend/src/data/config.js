@@ -2,7 +2,7 @@ import { isLocal } from '../utils/destinations';
 
 // let apiUrl = 'http://localhost:8000/';
 // let apiUrl = 'https://143.44.165.11:8000/';
-let apiUrl = "https://2044-143-44-165-11.ngrok-free.app"
+let apiUrl = 'https://13f2-143-44-165-11.ngrok-free.app';
 // let apiUrl = 'http://192.168.1.12:8000/'; // on network local (still local) allow this when testing on same networks
 
 // if (!isLocal) {
