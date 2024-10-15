@@ -45,8 +45,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,  # Adjust this value as needed
 }
 # ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
-# ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.12,192.168.1.5").split(",")
-ALLOWED_HOSTS = ['.ngrok-free.app', '.vercel.app', 'technodynamic.vercel.app']
+ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,technodynamicv2-73437bf08784.herokuapp.com").split(",")
+# ALLOWED_HOSTS = ['.ngrok-free.app', '.vercel.app', 'technodynamic.vercel.app', '143.44.165.11','localhost',]
 
 # https://2044-143-44-165-11.ngrok-free.app
 
@@ -70,6 +70,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -105,22 +106,22 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 
 # Localhost
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('POSTGRES_DB'),
-#         'USER': config('POSTGRES_USER'),
-#         'PASSWORD': config('POSTGRES_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': config('POSTGRES_PORT', default='5432'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('POSTGRES_DB'),
+        'USER': config('POSTGRES_USER'),
+        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': config('POSTGRES_PORT', default='5432'),
+    }
+}
 
 # Heroku
 
-DATABASES = {
-    'default': dj_database_url.parse(config("DATABASE_URL", default="postgres://username:password@localhost:5432/database_name"))
-}
+# DATABASES = {
+#     'default': dj_database_url.parse(config("DATABASE_URL", default="postgres://username:password@localhost:5432/database_name"))
+# }
 
 
 # Password validation
@@ -141,6 +142,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'x-csrftoken',
+]
+
+
 # Whitelist for react port
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -150,7 +161,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.5:5173",
     "https://143.44.165.11:5173",
     "https://13f2-143-44-165-11.ngrok-free.app",
-    "https://technodynamic.vercel.app"
+    "https://technodynamic.vercel.app",
+    "https://143.44.165.11:5173"
 ]
 
 # CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://localhost:3000,http://localhost:5173').split(',')
@@ -161,9 +173,11 @@ CSRF_TRUSTED_ORIGINS = [
     "http://192.168.1.5:5173",
     "https://143.44.165.11:5173",
     "https://13f2-143-44-165-11.ngrok-free.app",
-    "https://technodynamic.vercel.app"
+    "https://technodynamic.vercel.app",
+    "https://143.44.165.11:5173"
 
 ]
+
 
 
 # Internationalization
@@ -182,6 +196,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Optional but recommended for compression and caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
