@@ -88,7 +88,7 @@ const SuggestContent = () => {
     try {
       const response = await ContentHistoryService.createHistory(
         currID,
-        allContents
+        suggestedContents
       );
       console.log('historyId', response.data);
       await localStorage.setItem('historyId', response.data.historyId);
