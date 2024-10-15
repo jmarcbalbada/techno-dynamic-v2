@@ -12,13 +12,12 @@ const useNotifications = (user) => {
     }
   }, [allNotif]);
 
+  // check health notif every 3 sec
   useEffect(() => {
-    // if (user.role === 'teacher') {
-    //   getCountUnreadNotifications();
-    // }
     if (user.role === 'teacher') {
       const intervalId = setInterval(() => {
         getCountUnreadNotifications();
+        getAllNotifications();
       }, 3000);
 
       return () => clearInterval(intervalId);
@@ -40,20 +39,6 @@ const useNotifications = (user) => {
       console.log('error', error);
     }
   };
-
-  //   getAllNotif
-
-  // TODO update this not good practice
-  //   useEffect(() => {
-  //     const interval = setInterval(() => {
-  //       if (user.role === 'teacher') {
-  //         getCountUnreadNotifications();
-  //       }
-  //     }, 3000); // Run every 3 seconds
-
-  //     // Clean up the interval on component unmount
-  //     return () => clearInterval(interval);
-  //   }, [user.role]);
 
   const getUnreadNotifications = async () => {
     try {

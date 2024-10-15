@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState, useRef } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
@@ -68,11 +69,11 @@ const SuggestContent = () => {
 
   const handleAccept = async () => {
     // Save the suggested content
-    const newsuggestedContent = handleSave();
+    handleSave();
     await handleClearNotif();
     await handleAddVersionControl();
     // Wait for the response from handleNewContent
-    await handleNewContent(newsuggestedContent);
+    await handleNewContent(suggestedContents);
 
     // Add a delay of 1 second before navigating
     setTimeout(() => {
@@ -135,7 +136,10 @@ const SuggestContent = () => {
       finalChanges = suggestedContents;
     }
 
-    return finalChanges;
+    // set suggested contents
+    setSuggestedContents(finalChanges);
+
+    // return finalChanges
   };
 
   const handleEditedChanges = () => {

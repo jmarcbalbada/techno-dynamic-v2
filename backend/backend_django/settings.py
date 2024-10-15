@@ -101,20 +101,24 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB'),
-        'USER': config('POSTGRES_USER'),
-        'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': config('POSTGRES_PORT', default='5432'),
-    }
-}
+# Localhost
 
 # DATABASES = {
-#     'default': dj_database_url.parse(config("DATABASE_URL", default="postgres://username:password@localhost:5432/database_name"))
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('POSTGRES_DB'),
+#         'USER': config('POSTGRES_USER'),
+#         'PASSWORD': config('POSTGRES_PASSWORD'),
+#         'HOST': 'localhost',
+#         'PORT': config('POSTGRES_PORT', default='5432'),
+#     }
 # }
+
+# Heroku
+
+DATABASES = {
+    'default': dj_database_url.parse(config("DATABASE_URL", default="postgres://username:password@localhost:5432/database_name"))
+}
 
 
 # Password validation
@@ -140,9 +144,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
     "https://techno-dynamic-learning.vercel.app",
-    "https://2c18-143-44-165-161.ngrok-free.app",
     "http://localhost:8000",
-    "http://192.168.1.5:5173"
+    "http://192.168.1.5:5173",
 ]
 
 # CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://localhost:3000,http://localhost:5173').split(',')
@@ -150,7 +153,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://techno-learn.onrender.com",
     "http://192.168.1.12",
     "http://192.168.1.12:8000",  # Include this if you're accessing via port 8000
-    "http://192.168.1.5:5173"
+    "http://192.168.1.5:5173",
 
 ]
 
