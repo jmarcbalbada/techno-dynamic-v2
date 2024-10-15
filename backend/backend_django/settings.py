@@ -44,10 +44,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,  # Adjust this value as needed
 }
-
 # ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 # ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.12,192.168.1.5").split(",")
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['143.44.165.11']
 
 
 # Application definition
@@ -147,7 +146,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://techno-dynamic-learning.vercel.app",
     "http://localhost:8000",
     "http://192.168.1.5:5173",
-    "*",
+    "http://143.44.165.11:5173",
 ]
 
 # CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://localhost:3000,http://localhost:5173').split(',')
@@ -156,7 +155,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://192.168.1.12",
     "http://192.168.1.12:8000",  # Include this if you're accessing via port 8000
     "http://192.168.1.5:5173",
-    "*",
+    "http://143.44.165.11:5173",
 
 ]
 
