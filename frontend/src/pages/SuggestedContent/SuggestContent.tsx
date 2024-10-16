@@ -554,7 +554,10 @@ const SuggestContent = () => {
           {/* Conditional rendering based on isLoading and suggestedContents */}
           {isError ? (
             <div>
-              <p>Something went wrong, please refresh or try again later.</p>
+              <p>
+                Something went wrong with your internet connection. Please try
+                again later.
+              </p>
             </div>
           ) : isLoading ? (
             getSkeletonLoading()
