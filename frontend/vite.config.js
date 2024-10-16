@@ -30,6 +30,7 @@ export default defineConfig({
       ...filePaths
     }
   },
+  base: '/',
   server: {
     hmr: {
       overlay: true

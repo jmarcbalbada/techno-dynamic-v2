@@ -73,7 +73,8 @@ const SuggestContent = () => {
     await handleClearNotif();
     await handleAddVersionControl();
     // Wait for the response from handleNewContent
-    await handleNewContent(suggestedContents);
+    await handleNewContent(allContents);
+    // await handleNewContent(suggestedContents);
 
     // Add a delay of 1 second before navigating
     setTimeout(() => {
@@ -136,11 +137,47 @@ const SuggestContent = () => {
       finalChanges = suggestedContents;
     }
 
+    // Clean the content in the handleSave function
+
+    // 1. Remove <mark> tags with 'lightcoral' background and their content
+    finalChanges = finalChanges.replace(
+      /<mark\s+style\s*=\s*"background-color\s*:\s*lightcoral\s*;">.*?<\/mark>/gi,
+      ''
+    );
+
+    // 2. Remove <mark> and </mark> tags but retain the content inside them (for yellow marks)
+    finalChanges = finalChanges.replace(/<\/?mark(?:\s+[^>]+)?>/gi, '');
+
+    // 3. Remove newline characters
+    finalChanges = finalChanges.replace(/\n/g, '');
+
+    // 4. Remove any instances of '**'
+    finalChanges = finalChanges.replace(/\*\*/g, '');
+
+    // 5. Remove any instances of '```html'
+    finalChanges = finalChanges.replace(/```html/g, '');
+
     // set suggested contents
     setSuggestedContents(finalChanges);
 
-    // return finalChanges
+    // return finalChanges if needed
   };
+
+  // const handleSave = () => {
+  //   let finalChanges = '';
+
+  //   // if edit and save right away
+  //   if (isEditing) {
+  //     finalChanges = editorRef.current.getHTMLContent();
+  //   } else {
+  //     finalChanges = suggestedContents;
+  //   }
+
+  //   // set suggested contents
+  //   setSuggestedContents(finalChanges);
+
+  //   // return finalChanges
+  // };
 
   const handleEditedChanges = () => {
     setIsEditing(false);
