@@ -29,8 +29,7 @@ export const SuggestionService = {
       {
         timeout: 180000, // Set timeout to 3 minutes (180000 milliseconds)
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*' // Set the allowed origin (This might not be needed; the server should handle this)
+          'Content-Type': 'application/json'
         }
         // withCredentials: true // Include credentials if you are using cookies or sessions
       }
