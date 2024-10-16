@@ -36,14 +36,7 @@ export const SuggestionService = {
   //   ),
 
   create_content: (lesson_id, notification_id) =>
-    axios
-      .post(`${BASE_URL}/contents/`, { lesson_id, notification_id })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      }),
+    axios.post(`${BASE_URL}/contents/`, { lesson_id, notification_id }),
 
   accept_content: (lesson_id, new_content) =>
     axios.put(

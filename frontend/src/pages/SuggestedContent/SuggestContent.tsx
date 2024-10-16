@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState, useRef } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
@@ -247,6 +246,8 @@ const SuggestContent = () => {
           notif_id
         );
 
+        console.log('ai_response', response.data.ai_response);
+
         // Convert to string and replace '```html' with an empty string
         let removeTagContents = response.data.ai_response.replace(
           /```html/g,
@@ -258,12 +259,7 @@ const SuggestContent = () => {
         // console.log('response.data.ai_response', aiResponse);
       }
     } catch (error) {
-      // Handle timeout or other errors
-      if (error.code === 'ECONNABORTED') {
-        console.log('Request timed out');
-      } else {
-        console.log('error', error);
-      }
+      console.log('error', error);
       setIsError(true);
     } finally {
       setIsLoading(false);
