@@ -69,12 +69,12 @@ const SuggestContent = () => {
 
   const handleAccept = async () => {
     // Save the suggested content
-    handleSave();
+    await handleSave();
     await handleClearNotif();
     await handleAddVersionControl();
     // Wait for the response from handleNewContent
-    await handleNewContent(allContents);
-    // await handleNewContent(suggestedContents);
+    // await handleNewContent(allContents);
+    await handleNewContent(suggestedContents);
 
     // Add a delay of 1 second before navigating
     setTimeout(() => {
@@ -89,7 +89,7 @@ const SuggestContent = () => {
     try {
       const response = await ContentHistoryService.createHistory(
         currID,
-        suggestedContents
+        allContents
       );
       console.log('historyId', response.data);
       await localStorage.setItem('historyId', response.data.historyId);
