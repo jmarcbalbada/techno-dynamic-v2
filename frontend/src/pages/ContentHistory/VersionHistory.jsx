@@ -17,14 +17,16 @@ import { useTheme } from '@mui/material/styles';
 import RestoreIcon from '@mui/icons-material/Restore';
 import Snackbar from '@mui/material/Snackbar';
 import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
+import VersionHistoryLayout from './VersionHistoryLayout';
 
 const VersionHistory = () => {
   const lessonAndTitleIds = JSON.parse(localStorage.getItem('ltids'));
   const lessonId = lessonAndTitleIds?.id;
   const [isError, setIsError] = useState(false);
-  const [histories, setHistories] = useState([]);
+  const [histories, setHistories] = useState([]); // Default to an empty array
   const [currentLesson, setCurrentLesson] = useState('');
   const [expanded, setExpanded] = useState(false);
+  const [expandedChild, setExpandedChild] = useState(false);
   const lessonTitle = lessonAndTitleIds?.title || 'Your lesson';
   const lessonNumber = lessonAndTitleIds?.lessonNumber;
   const [snackbarSuccessOpen, setSnackbarSuccessOpen] = useState(false);
@@ -40,10 +42,13 @@ const VersionHistory = () => {
     try {
       const response =
         await ContentHistoryService.getHistoryByLessonId(lessonId);
-      // console.log('response history', response.data);
+      console.log('response', response.data);
 
-      setHistories(response.data.content_history);
-      setCurrentLesson(response.data.current_lesson);
+      const fetchedHistories = response.data.content_histories || [];
+      const fetchedCurrentLesson = response.data.current_lesson || '';
+
+      setHistories(fetchedHistories);
+      setCurrentLesson(fetchedCurrentLesson);
     } catch (error) {
       setIsError(true);
       console.error(error);
@@ -57,7 +62,7 @@ const VersionHistory = () => {
   const handleRestoreButton = async (lesson_id = lessonId, history_id) => {
     try {
       const confirmation = window.confirm(
-        `Are you sure you want to restore this version? You won't be able to revert to the current version afterward.`
+        "Are you sure you want to restore this version? You won't be able to revert to the current version afterward."
       );
 
       if (confirmation) {
@@ -67,12 +72,10 @@ const VersionHistory = () => {
         );
 
         if (response.status === 200) {
-          // Get the restored content from the selected history
           const restoredContent = histories.find(
             (history) => history.historyId === history_id
           )?.content;
 
-          // Set the restored content as the current lesson
           setCurrentLesson(restoredContent);
           setExpanded(false);
           setSnackbarSuccessOpen(true);
@@ -97,26 +100,240 @@ const VersionHistory = () => {
     setSnackbarSuccessOpen(false);
   };
 
-  // Format the date as "Month Day, Year at 11:59 PM"
   const formatDate = (dateString) => {
-    return format(new Date(dateString), "MMMM dd, yyyy 'at' hh:mm a");
+    if (!dateString) {
+      return 'Invalid Date'; // Fallback if date is missing
+    }
+
+    const date = new Date(dateString);
+    if (isNaN(date)) {
+      return 'Invalid Date'; // Fallback if date is invalid
+    }
+
+    return format(date, "MMMM dd, yyyy 'at' hh:mm a");
   };
 
-  // Function to check if the current version matches any history content
-  const currentVersionFound = histories.some(
-    (history) => currentLesson === history.content
-  );
+  // Function to recursively render children inside the parent accordion
+  const renderChildren = (children) => {
+    return (
+      children &&
+      children.map((child) => {
+        const isChildCurrentVersion = currentLesson === child.content;
 
-  // Function to truncate the lesson title if it's too long
-  const truncateTitle = (title, maxLength) => {
-    if (title.length > maxLength) {
-      return title.substring(0, maxLength) + '...';
-    }
-    return title;
+        return (
+          <Accordion
+            key={child.historyId}
+            expanded={expandedChild === `panel${child.historyId}`}
+            onChange={(event, isExpanded) =>
+              setExpandedChild(isExpanded ? `panel${child.historyId}` : false)
+            }
+            sx={{ ml: 4, mt: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.35)' }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${child.historyId}-content`}
+              id={`panel${child.historyId}-header`}>
+              <Box width='100%' display='flex' justifyContent='space-between'>
+                <Box display='flex'>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      color: `${theme.palette.background.darker}`
+                    }}>
+                    Child Version {child.version}
+                  </Typography>
+                  {isChildCurrentVersion && (
+                    <Typography
+                      color='primary'
+                      sx={{ fontWeight: 500, marginLeft: '0.5rem' }}>
+                      - Current Version
+                    </Typography>
+                  )}
+                </Box>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  justifyContent='space-between'>
+                  {!isChildCurrentVersion && (
+                    <Box
+                      display='flex'
+                      alignItems='center'
+                      sx={{
+                        color: `${theme.palette.primary.main}`,
+                        zIndex: 10,
+                        cursor: 'pointer'
+                      }}
+                      onClick={() =>
+                        handleRestoreButton(lessonId, child.historyId)
+                      }>
+                      <RestoreIcon />
+                      <Typography sx={{ ml: 0.8 }}>Restore</Typography>
+                    </Box>
+                  )}
+                  <Typography sx={{ fontStyle: 'italic', mr: 1, ml: 3 }}>
+                    {formatDate(child.updatedAt)}
+                  </Typography>
+                </Box>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography dangerouslySetInnerHTML={{ __html: child.content }} />
+            </AccordionDetails>
+          </Accordion>
+        );
+      })
+    );
+  };
+
+  // Function to render the main parent history
+  // Function to render the main parent history
+  const renderHistory = (history) => {
+    const isCurrentVersion = currentLesson === history.parent_history?.content;
+    const updatedAt = history.parent_history
+      ? history.parent_history.updatedAt
+      : null;
+
+    // Check if one of the children has the current lesson content
+    const isChildCurrent = history.children?.some(
+      (child) => currentLesson === child.content
+    );
+
+    return (
+      <Accordion
+        sx={{
+          boxShadow: '0px 3px 4px rgba(0, 0, 0, 0.35)'
+        }}
+        key={history.parent_history?.historyId}
+        expanded={expanded === `panel${history.parent_history?.historyId}`}
+        onChange={handleAccordionChange(
+          `panel${history.parent_history?.historyId}`
+        )}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls={`panel${history.parent_history?.historyId}-content`}
+          id={`panel${history.parent_history?.historyId}-header`}>
+          <Box
+            width='100%'
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'>
+            <Box display='flex' alignItems='center'>
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  color: `${theme.palette.background.darker}`
+                }}
+                variant='h6'>
+                Version {history.parent_history?.version}
+              </Typography>
+
+              {isCurrentVersion && (
+                <Typography
+                  component='span'
+                  color='primary'
+                  sx={{ fontWeight: 500, ml: 1 }}>
+                  - (Current Version)
+                </Typography>
+              )}
+
+              {!isCurrentVersion && isChildCurrent && (
+                <Typography
+                  component='span'
+                  color='primary'
+                  sx={{ fontWeight: 500, ml: 1 }}>
+                  - (The child under this version is the current)
+                </Typography>
+              )}
+            </Box>
+
+            <Box
+              display='flex'
+              alignItems='center'
+              sx={{
+                color: `${theme.palette.primary.main}`,
+                zIndex: 10,
+                cursor: 'pointer'
+              }}>
+              {!isCurrentVersion && !isChildCurrent && (
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  onClick={() =>
+                    handleRestoreButton(
+                      lessonId,
+                      history.parent_history.historyId
+                    )
+                  }>
+                  <RestoreIcon />
+                  <Typography sx={{ ml: 0.8 }}>Restore</Typography>
+                </Box>
+              )}
+              <Typography sx={{ fontStyle: 'italic', ml: 2 }}>
+                {formatDate(updatedAt)}
+              </Typography>
+            </Box>
+          </Box>
+        </AccordionSummary>
+
+        <AccordionDetails>
+          {history.parent_history && history.parent_history.content ? (
+            <Typography
+              dangerouslySetInnerHTML={{
+                __html: history.parent_history.content
+              }}
+            />
+          ) : (
+            <Typography color='error'>Content not available</Typography>
+          )}
+
+          {history.children && history.children.length > 0 ? (
+            <>
+              <Box
+                sx={{
+                  width: '100%',
+                  height: '2px',
+                  backgroundColor: theme.palette.background.darker,
+                  marginBottom: '1.3rem'
+                }}
+              />
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  color: `${theme.palette.background.darker}`
+                }}
+                variant='h6'>
+                Children Versions
+              </Typography>
+              {renderChildren(history.children)}{' '}
+              {/* Only render children here */}
+            </>
+          ) : (
+            <>
+              <Box
+                sx={{
+                  width: '100%',
+                  height: '2px',
+                  backgroundColor: theme.palette.background.darker,
+                  marginBottom: '8px'
+                }}
+              />
+              <Typography
+                sx={{
+                  fontWeight: 400,
+                  color: `${theme.palette.background.darker}`
+                }}
+                variant='h7'>
+                This version has no children.
+              </Typography>
+            </>
+          )}
+        </AccordionDetails>
+      </Accordion>
+    );
   };
 
   return (
     <Container>
+      <VersionHistoryLayout />
       <Box
         sx={{
           marginTop: '1rem',
@@ -133,7 +350,7 @@ const VersionHistory = () => {
               navigate(`/lessons/${lessonNumber}/1/false/${lessonId}`)
             }
             sx={{ cursor: 'pointer' }}>
-            {truncateTitle(lessonTitle, 30)}
+            {lessonTitle}
           </Link>
           <Link
             underline='hover'
@@ -144,132 +361,18 @@ const VersionHistory = () => {
           </Link>
         </Breadcrumbs>
       </Box>
-
       <Box mb={2}>
         {isError ? (
           <Typography color='error'>Error loading content history</Typography>
         ) : (
           <>
-            {/* Iterate through the content history in descending order */}
-            {histories
-              .slice() // Create a copy to avoid modifying the original array
-              .reverse() // Reverse the array to show latest first
-              .map((history, index) => {
-                const isCurrentVersion = currentLesson === history.content;
-
-                return (
-                  <Accordion
-                    key={history.historyId}
-                    expanded={expanded === `panel${history.historyId}`}
-                    onChange={handleAccordionChange(
-                      `panel${history.historyId}`
-                    )}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls={`panel${history.historyId}-content`}
-                      id={`panel${history.historyId}-header`}>
-                      {/* Container for Version and RestoreIcon aligned horizontally */}
-                      <Box width='100%'>
-                        <Box
-                          display='flex'
-                          justifyContent='space-between'
-                          alignItems='center'
-                          sx={{
-                            paddingRight: '1rem'
-                          }}
-                          width='97%'>
-                          <Typography
-                            sx={{
-                              fontWeight: 600,
-                              color: `${theme.palette.background.darker}`
-                            }}
-                            variant='h5'>
-                            Version {history.version}
-                          </Typography>
-                          <Box
-                            display='flex'
-                            alignItems='center'
-                            sx={{
-                              ml: 2,
-                              color: `${theme.palette.primary.main}`,
-                              zIndex: 10,
-                              cursor: isCurrentVersion
-                                ? 'not-allowed'
-                                : 'pointer',
-                              pointerEvents: isCurrentVersion ? 'none' : 'auto'
-                            }}
-                            onClick={() =>
-                              !isCurrentVersion &&
-                              handleRestoreButton(lessonId, history.historyId)
-                            }>
-                            {' '}
-                            {!isCurrentVersion && (
-                              <>
-                                <RestoreIcon />
-                                <Typography sx={{ ml: 0.8 }}>
-                                  Restore
-                                </Typography>{' '}
-                              </>
-                            )}
-                          </Box>
-                        </Box>
-
-                        <Typography
-                          sx={{
-                            fontStyle: 'italic',
-                            mt: 1
-                          }}>
-                          {formatDate(history.updatedAt)}
-                        </Typography>
-
-                        {/* Optional: Display if it's the current version */}
-                        {isCurrentVersion && (
-                          <Typography
-                            component='span'
-                            color='primary'
-                            sx={{ fontWeight: 500 }}>
-                            (Current Version)
-                          </Typography>
-                        )}
-                      </Box>
-                    </AccordionSummary>
-
-                    <AccordionDetails>
-                      <Typography
-                        dangerouslySetInnerHTML={{ __html: history.content }}
-                      />
-                      {isCurrentVersion && (
-                        <Typography variant='caption' color='textSecondary'>
-                          This is the current version.
-                        </Typography>
-                      )}
-                    </AccordionDetails>
-                  </Accordion>
-                );
-              })}
-
-            {/* If no version matches the currentLesson, show an additional accordion */}
-            {!currentVersionFound && (
-              <Accordion key={'current-version'}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel-current-version-content`}
-                  id={`panel-current-version-header`}>
-                  <Typography
-                    sx={{
-                      color: `${theme.palette.primary.main}`,
-                      fontWeight: 600
-                    }}
-                    variant='body3'>
-                    Current Version
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography
-                    dangerouslySetInnerHTML={{ __html: currentLesson }}
-                  />
-                </AccordionDetails>
-              </Accordion>
+            {Array.isArray(histories) && histories.length > 0 ? (
+              histories
+                .slice() // Create a copy to avoid modifying the original array
+                .reverse() // Reverse the array to show the latest first
+                .map((history) => renderHistory(history)) // Render parent/children structure recursively
+            ) : (
+              <Typography>No version history available</Typography>
             )}
           </>
         )}
@@ -283,9 +386,7 @@ const VersionHistory = () => {
         <SnackBarAlert
           onClose={handleSnackbarSuccessClose}
           severity='success'
-          sx={{
-            width: '100%'
-          }}>
+          sx={{ width: '100%' }}>
           Restored successfully!
         </SnackBarAlert>
       </Snackbar>
