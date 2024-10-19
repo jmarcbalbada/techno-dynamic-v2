@@ -115,7 +115,7 @@ DATABASES = {
 #         'PORT': config('POSTGRES_PORT', default='5432'),
 #     }
     'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL',default='postgres://ucrab179jqv3dt:pbe3b14f0bb37591f74d2f21565a98274030a041863d3788e8f41eb5496d4a77b@c5hilnj7pn10vb.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d2satpte2rtaog')
+            default=os.environ.get('DATABASE_URL',default='postgres://u2cpo6kfhdujqq:p6fca236709f78c1b9a119119860da4cf270da0ab6e696b383102cb98b51791b0@c5hilnj7pn10vb.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d4lcpsfci218o')
         )
 }
 

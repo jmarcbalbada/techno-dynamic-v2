@@ -35,6 +35,7 @@ const LessonCard = (props) => {
   const handleEditClick = () => {
     navigate(`/lessons/${lessonNumber}/edit`);
   };
+  console.log('winson image', )
 
   return (
     <Card

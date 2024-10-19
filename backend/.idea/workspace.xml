@@ -7,6 +7,7 @@
     <list default="true" id="30e99439-aee7-48ff-9ef1-f9a0bf816668" name="Changes" comment="[Winson] Making Dependencies Unlabeled">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend_django/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend_django/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,14 +29,12 @@
     &quot;state&quot;: &quot;OPEN&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="f0de8ccb-aab5-4f93-a919-d5da67b56f3a" />
-        <option name="url" value="https://github.com/sebastianyebes/Techno-Dynamic-Learning" />
-      </UrlAndAccount>
-    </option>
-  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jmarcbalbada/techno-dynamic-v2.git&quot;,
+    &quot;accountId&quot;: &quot;850649e2-49ff-47c6-a976-31db2334437a&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/backend_django/settings.py" root0="SKIP_INSPECTION" />
   </component>
@@ -101,8 +100,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.17011.127" />
-        <option value="bundled-python-sdk-48aec45f0201-7e9c3bbb6e34-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.17011.127" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-PY-242.21829.153" />
+        <option value="bundled-python-sdk-464836ebc622-b74155a9e76b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.21829.153" />
       </set>
     </attachedChunks>
   </component>
@@ -128,6 +127,9 @@
       <workItem from="1717892470947" duration="8359000" />
       <workItem from="1718156100999" duration="1950000" />
       <workItem from="1718266987787" duration="2357000" />
+      <workItem from="1728967867907" duration="3326000" />
+      <workItem from="1728974548503" duration="2133000" />
+      <workItem from="1729049591213" duration="229000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize Django Files">
       <created>1685124323751</created>

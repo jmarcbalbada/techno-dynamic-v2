@@ -111,21 +111,22 @@ const Dashboard = () => {
               </Grid>
             </>
           )}
-          {lessons.map((lesson, index) => (
-            <Grid item xs={12} md={6} lg={4} key={index}>
-              {/*{lesson.coverImage}*/}
-
-              <LessonCard
-                id={lesson.id}
-                lessonNumber={lesson.lessonNumber}
-                title={lesson.title}
-                description={lesson.subtitle}
-                pageCount={lesson.pages.length}
-                image={lesson.coverImage}
-                fileCount={lesson.lesson_files.length}
-              />
-            </Grid>
-          ))}
+          {lessons.map((lesson, index) => {
+            console.log('This is the lesson:', lesson);  // Moved outside the return
+            return (
+                <Grid item xs={12} md={6} lg={4} key={index}>
+                  <LessonCard
+                      id={lesson.id}
+                      lessonNumber={lesson.lessonNumber}
+                      title={lesson.title}
+                      description={lesson.subtitle}
+                      pageCount={lesson.pages ? lesson.pages.length : 0}  // Handle undefined or empty arrays
+                      image={lesson.coverImage}  // Make sure the coverImage is valid
+                      fileCount={lesson.lesson_files ? lesson.lesson_files.length : 0}  // Handle undefined or empty arrays
+                  />
+                </Grid>
+            );
+          })}
         </Grid>
       </Box>
     </Container>
