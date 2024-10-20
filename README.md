@@ -5,58 +5,17 @@ Techno-Dynamic-Learning V2 is an advanced learning management system designed sp
 
 ## Features
 
-- User-friendly interface
-- AI Chatbot assistant for personalized support
-- Dynamic content generation based on student inquiries
-- Insights and suggestions derived from FAQ data
-- Enhanced learning experience for both educators and students
+- **User-friendly Interface**: Intuitive and accessible interface for seamless user interactions.
+- **AI Chatbot Assistant**: Provides personalized support, addressing student inquiries with real-time responses.
+- **Dynamic Content Generation**: Automatically generates and updates content based on student inquiries and interactions.
+- **Insights and Suggestions**: Analyzes FAQ data to offer actionable insights and suggestions for educators and students.
+- **Content Versioning**: Allows users to create, manage, and restore different content versions, enabling easy rollback to previous versions for effective lesson management.
 
 ## Project Instructions
 
 > Backend - Django
 
-1. Move directory (from root directory)
-
-```bash
-  cd backend
-```
-
-2. Create a virtual environment
-
-```bash
-  python -m venv venv
-```
-
-3. Activate a virtual environment
-
-```bash
-  source venv/bin/activate
-```
-
-4. Install dependencies
-
-```bash
-  pip install -r requirements.txt
-```
-
-5. Run PostgreSQL db via Docker
-
-```bash
-  docker compose up
-```
-
-6. Run migration
-
-```bash
-  python manage.py makemigrations
-  python manage.py migrate
-```
-
-7. Run backend server
-
-```bash
-  python3 manage.py runserver / python manage.py runserver
-```
+The backend for this project is built using Django and is hosted in a separate repository. You can find the complete backend setup and deployment instructions [here](https://github.com/jmarcbalbada/technodynamicAPI).
 
 > Frontend - ViteJS
 
