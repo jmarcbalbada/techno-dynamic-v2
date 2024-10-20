@@ -1,0 +1,11 @@
+*.log
+*.md
+*.csv
+*.mp4
+*.avi
+*.zip
+venv/
+__pycache__/
+node_modules/
+media/
+static/

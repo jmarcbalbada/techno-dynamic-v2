@@ -30,7 +30,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/s
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = 'akya^e5k7t@0u+h9%#a)+$*gy2^^@63x#9x4l=$g$7spm0juv5'
+# SECRET_KEY = config('SECRET_KEY')
+# DEBUG = os.environ.get('DEBUG', default=False, cast=bool)
+
 # SECRET_KEY = secret_keys
 # print("Generated SECRET_KEY:", SECRET_KEY)
 # SECRET_KEY ="django-insecure-=m=*xj8xoy99#25^6_fl=4wkllzn48dsrp77q6+3-$69=y(z71"
@@ -47,8 +51,6 @@ REST_FRAMEWORK = {
 # ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,technodynamicv2-73437bf08784.herokuapp.com").split(",")
 # ALLOWED_HOSTS = ['.ngrok-free.app', '.vercel.app', 'technodynamic.vercel.app', '143.44.165.11','localhost',]
-
-# https://2044-143-44-165-11.ngrok-free.app
 
 
 # Application definition
@@ -107,14 +109,17 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Localhost
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB'),
-        'USER': config('POSTGRES_USER'),
-        'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': config('POSTGRES_PORT', default='5432'),
-    }
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('POSTGRES_DB'),
+#         'USER': config('POSTGRES_USER'),
+#         'PASSWORD': config('POSTGRES_PASSWORD'),
+#         'HOST': 'localhost',
+#         'PORT': config('POSTGRES_PORT', default='5432'),
+#     }
+    'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL',default='postgres://ucrab179jqv3dt:pbe3b14f0bb37591f74d2f21565a98274030a041863d3788e8f41eb5496d4a77b@c5hilnj7pn10vb.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d2satpte2rtaog')
+        )
 }
 
 # Heroku
@@ -159,10 +164,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://techno-dynamic-learning.vercel.app",
     "http://localhost:8000",
     "http://192.168.1.5:5173",
-    "https://143.44.165.11:5173",
-    "https://13f2-143-44-165-11.ngrok-free.app",
-    "https://technodynamic.vercel.app",
-    "https://143.44.165.11:5173"
+    "https://technodynamic.vercel.app"
 ]
 
 # CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://localhost:3000,http://localhost:5173').split(',')
@@ -171,10 +173,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://192.168.1.12",
     "http://192.168.1.12:8000",  # Include this if you're accessing via port 8000
     "http://192.168.1.5:5173",
-    "https://143.44.165.11:5173",
-    "https://13f2-143-44-165-11.ngrok-free.app",
     "https://technodynamic.vercel.app",
-    "https://143.44.165.11:5173"
 
 ]
 
