@@ -30,9 +30,7 @@ export default defineConfig({
       ...filePaths
     }
   },
-  build: {
-    outDir: 'dist'
-  },
+  base: '/',
   server: {
     hmr: {
       overlay: true

@@ -48,9 +48,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,  # Adjust this value as needed
 }
-
 # ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
-ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.12,192.168.1.5,.vercel.app,techno-dynamic-v2.onrender.com").split(",")
+ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1,technodynamicv2-73437bf08784.herokuapp.com").split(",")
+# ALLOWED_HOSTS = ['.ngrok-free.app', '.vercel.app', 'technodynamic.vercel.app', '143.44.165.11','localhost',]
 
 
 # Application definition
@@ -72,6 +72,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -105,6 +106,8 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# Localhost
+
 DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
@@ -118,6 +121,8 @@ DATABASES = {
             default=os.environ.get('DATABASE_URL',default='postgres://ucrab179jqv3dt:pbe3b14f0bb37591f74d2f21565a98274030a041863d3788e8f41eb5496d4a77b@c5hilnj7pn10vb.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d2satpte2rtaog')
         )
 }
+
+# Heroku
 
 # DATABASES = {
 #     'default': dj_database_url.parse(config("DATABASE_URL", default="postgres://username:password@localhost:5432/database_name"))
@@ -142,12 +147,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'x-csrftoken',
+]
+
+
 # Whitelist for react port
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
     "https://techno-dynamic-learning.vercel.app",
-    "https://2c18-143-44-165-161.ngrok-free.app",
     "http://localhost:8000",
     "http://192.168.1.5:5173",
     "https://technodynamic.vercel.app"
@@ -159,9 +173,10 @@ CSRF_TRUSTED_ORIGINS = [
     "http://192.168.1.12",
     "http://192.168.1.12:8000",  # Include this if you're accessing via port 8000
     "http://192.168.1.5:5173",
-    "https://techno-dynamic-v2.onrender.com"
+    "https://technodynamic.vercel.app",
 
 ]
+
 
 
 # Internationalization
@@ -180,6 +195,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Optional but recommended for compression and caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

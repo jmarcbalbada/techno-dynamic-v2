@@ -13,14 +13,30 @@ export const SuggestionService = {
     axios.get(`${BASE_URL}/getoldcontent/${lesson_id}`),
 
   // create content with a 3-minute timeout
+  // create_content: (lesson_id, notification_id) =>
+  //   axios.post(
+  //     `${BASE_URL}/contents/`,
+  //     { lesson_id, notification_id },
+  //     {
+  //       timeout: 180000 // Set timeout to 3 minutes (180000 milliseconds)
+  //     }
+  //   ),
+
+  // create_content: (lesson_id, notification_id) =>
+  //   axios.post(
+  //     `${BASE_URL}/contents/`,
+  //     { lesson_id, notification_id },
+  //     {
+  //       timeout: 180000, // Set timeout to 3 minutes (180000 milliseconds)
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       }
+  //       // withCredentials: true // Include credentials if you are using cookies or sessions
+  //     }
+  //   ),
+
   create_content: (lesson_id, notification_id) =>
-    axios.post(
-      `${BASE_URL}/contents/`,
-      { lesson_id, notification_id },
-      {
-        timeout: 180000 // Set timeout to 3 minutes (180000 milliseconds)
-      }
-    ),
+    axios.post(`${BASE_URL}/contents/`, { lesson_id, notification_id }),
 
   accept_content: (lesson_id, new_content) =>
     axios.put(

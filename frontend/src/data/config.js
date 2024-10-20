@@ -1,7 +1,9 @@
 import { isLocal } from '../utils/destinations';
 
-let apiUrl = 'http://localhost:8000/';
-// let apiUrl = 'http://192.168.1.5:8000/'
+// let apiUrl = 'http://localhost:8000/';
+// let apiUrl = 'https://143.44.165.11:8000/';
+let apiUrl = 'https://technodynamicv2-73437bf08784.herokuapp.com/';
+// let apiUrl = "https://143.44.165.11:8000/"
 // let apiUrl = 'http://192.168.1.12:8000/'; // on network local (still local) allow this when testing on same networks
 
 // if (!isLocal) {
