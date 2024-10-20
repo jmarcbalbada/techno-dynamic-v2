@@ -17,6 +17,7 @@ import { clsx } from 'clsx';
 import CreateIcon from '@mui/icons-material/Create';
 import Editor from 'components/editor/Editor';
 import { NotificationService } from 'apis/NotificationService';
+import { CleanMarkAiContent } from '../../helpers/CleanMarkAiContent';
 
 const SuggestContent = () => {
   const { lessonNumber, pageNumber, lessonID } = useParams();
@@ -137,24 +138,25 @@ const SuggestContent = () => {
     }
 
     // Clean the content in the handleSave function
+    finalChanges = CleanMarkAiContent(finalChanges);
 
-    // 1. Remove <mark> tags with 'lightcoral' background and their content
-    finalChanges = finalChanges.replace(
-      /<mark\s+style\s*=\s*"background-color\s*:\s*lightcoral\s*;">.*?<\/mark>/gi,
-      ''
-    );
+    // // 1. Remove <mark> tags with 'lightcoral' background and their content
+    // finalChanges = finalChanges.replace(
+    //   /<mark\s+style\s*=\s*"background-color\s*:\s*lightcoral\s*;">.*?<\/mark>/gi,
+    //   ''
+    // );
 
-    // 2. Remove <mark> and </mark> tags but retain the content inside them (for yellow marks)
-    finalChanges = finalChanges.replace(/<\/?mark(?:\s+[^>]+)?>/gi, '');
+    // // 2. Remove <mark> and </mark> tags but retain the content inside them (for yellow marks)
+    // finalChanges = finalChanges.replace(/<\/?mark(?:\s+[^>]+)?>/gi, '');
 
-    // 3. Remove newline characters
-    finalChanges = finalChanges.replace(/\n/g, '');
+    // // 3. Remove newline characters
+    // finalChanges = finalChanges.replace(/\n/g, '');
 
-    // 4. Remove any instances of '**'
-    finalChanges = finalChanges.replace(/\*\*/g, '');
+    // // 4. Remove any instances of '**'
+    // finalChanges = finalChanges.replace(/\*\*/g, '');
 
-    // 5. Remove any instances of '```html'
-    finalChanges = finalChanges.replace(/```html/g, '');
+    // // 5. Remove any instances of '```html'
+    // finalChanges = finalChanges.replace(/```html/g, '');
 
     // set suggested contents
     setSuggestedContents(finalChanges);

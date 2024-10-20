@@ -32,6 +32,7 @@ const LessonCard = (props) => {
     navigate(`/lessons/${lessonNumber}/1/false/${id}`);
   };
 
+  // deprecated
   const handleEditClick = () => {
     navigate(`/lessons/${lessonNumber}/edit`);
   };
@@ -98,13 +99,13 @@ const LessonCard = (props) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      {user?.role === 'teacher' && (
+      {/* {user?.role === 'teacher' && (
         <CardActions>
           <Button onClick={handleEditClick} startIcon={<EditIcon />} fullWidth>
             Edit
           </Button>
         </CardActions>
-      )}
+      )} */}
     </Card>
   );
 };

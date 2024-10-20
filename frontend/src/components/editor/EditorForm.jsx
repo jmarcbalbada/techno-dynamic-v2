@@ -15,7 +15,7 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
+import { ContentHistoryService } from 'apis/ContentHistoryService.js';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
 
@@ -25,52 +25,27 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
   );
   const [files, setFiles] = useState(lesson ? lesson.lesson_files : []);
   const [filesToDelete, setFilesToDelete] = useState([]);
+  const [lessonId, setLessonId] = useState(null);
+  const [versionInfo, setVersionInfo] = useState(null); // Store version info
 
-  useEffect(() => {
-    // console.log('files', files);
-  }, [files]);
-  const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const confirmNavigation = (e) => {
-      // If there are unsaved changes, show a confirmation message
-
-      e.preventDefault();
-      e.returnValue = ''; // This is necessary for Chrome
-      return 'You have unsaved changes. Are you sure you want to leave this page?';
-    };
-
-    // Listen for the beforeunload event to trigger the confirmation message
-    window.addEventListener('beforeunload', confirmNavigation);
-
-    // Remove the event listener when the component unmounts
-    return () => {
-      window.removeEventListener('beforeunload', confirmNavigation);
-    };
+    const lessonIdLocalStorage = localStorage.getItem('ltids');
+    if (lessonIdLocalStorage) {
+      const parsedData = JSON.parse(lessonIdLocalStorage);
+      setLessonId(+parsedData?.id); // Ensure ID is a number
+      getCurrentVersionAndItsParentIfExist(+parsedData.id);
+    }
   }, []);
 
-  const handleUploadFiles = (event) => {
-    const uploadedFiles = event.currentTarget.files;
-    const uploadedFilesArray = Array.from(uploadedFiles).map((file) => ({
-      lesson: lesson?.lessonNumber || initialLessonNumber,
-      file: file
-    }));
-
-    // Check if the file has an id property to determine if it's an existing file or a new one
-    const newFiles = uploadedFilesArray.filter((fileObj) => !fileObj.id);
-    setFiles((existingFiles) => [...existingFiles, ...newFiles]);
-  };
-
-  const handleDeleteFile = (fileToDelete) => {
-    setFiles((files) => files.filter((file) => file !== fileToDelete));
-
-    // If the file is an existing file (has an ID), add it to the filesToDelete array
-    if (fileToDelete.id) {
-      setFilesToDelete((prevFilesToDelete) => [
-        ...prevFilesToDelete,
-        fileToDelete.id
-      ]);
+  const getCurrentVersionAndItsParentIfExist = async (receivedId) => {
+    try {
+      const response =
+        await ContentHistoryService.getCurrentVersionAndParent(receivedId);
+      setVersionInfo(response.data); // Store the response in state
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -94,7 +69,6 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
           formData.append('lesson_files', file.file);
         }
 
-        // If filesToDelete is not empty, add the files_to_delete field to formData
         if (filesToDelete.length > 0) {
           formData.append('files_to_delete', JSON.stringify(filesToDelete));
         }
@@ -107,19 +81,67 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
           }
         }
 
-        // TODO: add error handling
-        if (lesson) {
-          const response = await LessonsService.update(lesson.id, formData);
+        // Handle content history creation based on version info
+        const content = pages
+          .map((page) => `${page.contents}<!-- delimiter -->`)
+          .join('');
+
+        if (versionInfo?.currentHistoryId) {
+          if (versionInfo.parentHistoryId) {
+            // If there is a parent, create a child version
+            await ContentHistoryService.createHistoryWithParent(
+              lessonId,
+              content,
+              versionInfo.parentHistoryId
+            );
+          } else {
+            // If no parent, create a new parent version
+            await ContentHistoryService.createHistoryWithParent(
+              lessonId,
+              content,
+              versionInfo.currentHistoryId
+            );
+          }
         } else {
-          const response = await LessonsService.create(formData);
+          // If no version exists, create a new history
+          await ContentHistoryService.createHistory(lessonId, content);
         }
-        // navigate('/', { replace: true });
+
+        // If updating, call update endpoint
+        if (lesson) {
+          await LessonsService.update(lesson.id, formData);
+        } else {
+          await LessonsService.create(formData);
+        }
+
         navigate(-1, { replace: true });
       } catch (error) {
-        console.log('error', error);
+        console.log('Error:', error);
       }
     }
   });
+
+  const handleUploadFiles = (event) => {
+    const uploadedFiles = event.currentTarget.files;
+    const uploadedFilesArray = Array.from(uploadedFiles).map((file) => ({
+      lesson: lesson?.lessonNumber || initialLessonNumber,
+      file: file
+    }));
+
+    const newFiles = uploadedFilesArray.filter((fileObj) => !fileObj.id);
+    setFiles((existingFiles) => [...existingFiles, ...newFiles]);
+  };
+
+  const handleDeleteFile = (fileToDelete) => {
+    setFiles((files) => files.filter((file) => file !== fileToDelete));
+
+    if (fileToDelete.id) {
+      setFilesToDelete((prevFilesToDelete) => [
+        ...prevFilesToDelete,
+        fileToDelete.id
+      ]);
+    }
+  };
 
   const handleClose = useCallback(() => {
     const confirmed = window.confirm(
@@ -143,8 +165,24 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
       await LessonsService.delete(lesson.id);
       navigate('/', { replace: true });
     } catch (error) {
-      console.log('error', error);
+      console.log('Error:', error);
     }
+  }, []);
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  useEffect(() => {
+    const confirmNavigation = (e) => {
+      e.preventDefault();
+      e.returnValue = '';
+      return 'You have unsaved changes. Are you sure you want to leave this page?';
+    };
+
+    window.addEventListener('beforeunload', confirmNavigation);
+
+    return () => {
+      window.removeEventListener('beforeunload', confirmNavigation);
+    };
   }, []);
 
   return (

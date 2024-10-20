@@ -7,13 +7,15 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Link
+  Link,
+  Tooltip
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ContentHistoryService } from 'apis/ContentHistoryService.js';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { format } from 'date-fns';
 import { useTheme } from '@mui/material/styles';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import RestoreIcon from '@mui/icons-material/Restore';
 import Snackbar from '@mui/material/Snackbar';
 import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
@@ -23,7 +25,7 @@ const VersionHistory = () => {
   const lessonAndTitleIds = JSON.parse(localStorage.getItem('ltids'));
   const lessonId = lessonAndTitleIds?.id;
   const [isError, setIsError] = useState(false);
-  const [histories, setHistories] = useState([]); // Default to an empty array
+  const [histories, setHistories] = useState([]);
   const [currentLesson, setCurrentLesson] = useState('');
   const [expanded, setExpanded] = useState(false);
   const [expandedChild, setExpandedChild] = useState(false);
@@ -43,7 +45,6 @@ const VersionHistory = () => {
       const response =
         await ContentHistoryService.getHistoryByLessonId(lessonId);
       console.log('response', response.data);
-
       const fetchedHistories = response.data.content_histories || [];
       const fetchedCurrentLesson = response.data.current_lesson || '';
 
@@ -72,17 +73,18 @@ const VersionHistory = () => {
         );
 
         if (response.status === 200) {
-          const restoredContent = histories.find(
-            (history) => history.historyId === history_id
-          )?.content;
-
-          setCurrentLesson(restoredContent);
+          // Reset expanded state to close all accordions
           setExpanded(false);
+          setExpandedChild(false);
+
+          // Reload history to reflect changes
+          await getHistoryLessonByLessonId();
+
+          // Open a success snackbar
           setSnackbarSuccessOpen(true);
         } else {
           alert('Failed to restore version.');
         }
-        return response;
       } else {
         alert('Restore action canceled.');
       }
@@ -113,7 +115,45 @@ const VersionHistory = () => {
     return format(date, "MMMM dd, yyyy 'at' hh:mm a");
   };
 
-  // Function to recursively render children inside the parent accordion
+  const isCurrentLessonInVersions = histories.some(
+    (history) =>
+      history.parent_history?.content === currentLesson ||
+      history.children?.some((child) => child.content === currentLesson)
+  );
+
+  const renderCurrentLessonAccordion = () => (
+    <Accordion
+      expanded={expanded === 'currentLesson'}
+      onChange={handleAccordionChange('currentLesson')}
+      sx={{
+        boxShadow: '0px 3px 4px rgba(0, 0, 0, 0.35)',
+        marginBottom: '1rem'
+      }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls='currentLesson-content'
+        id='currentLesson-header'>
+        <Typography
+          sx={{
+            fontWeight: 600,
+            color: `${theme.palette.primary.main}`,
+            mr: '0.3rem'
+          }}
+          variant='h6'>
+          Current Lesson
+        </Typography>
+        <Tooltip title='This lesson is not in any of your versions.'>
+          <HelpOutlineIcon
+            sx={{ color: 'green', fontSize: '1.0rem', marginTop: '0.3rem' }}
+          />
+        </Tooltip>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography dangerouslySetInnerHTML={{ __html: currentLesson }} />
+      </AccordionDetails>
+    </Accordion>
+  );
+
   const renderChildren = (children) => {
     return (
       children &&
@@ -184,24 +224,18 @@ const VersionHistory = () => {
     );
   };
 
-  // Function to render the main parent history
-  // Function to render the main parent history
   const renderHistory = (history) => {
     const isCurrentVersion = currentLesson === history.parent_history?.content;
     const updatedAt = history.parent_history
       ? history.parent_history.updatedAt
       : null;
-
-    // Check if one of the children has the current lesson content
     const isChildCurrent = history.children?.some(
       (child) => currentLesson === child.content
     );
 
     return (
       <Accordion
-        sx={{
-          boxShadow: '0px 3px 4px rgba(0, 0, 0, 0.35)'
-        }}
+        sx={{ boxShadow: '0px 3px 4px rgba(0, 0, 0, 0.35)' }}
         key={history.parent_history?.historyId}
         expanded={expanded === `panel${history.parent_history?.historyId}`}
         onChange={handleAccordionChange(
@@ -240,23 +274,20 @@ const VersionHistory = () => {
                   component='span'
                   color='primary'
                   sx={{ fontWeight: 500, ml: 1 }}>
-                  - (The child under this version is the current)
+                  - (The child under this version is the current one)
                 </Typography>
               )}
             </Box>
 
-            <Box
-              display='flex'
-              alignItems='center'
-              sx={{
-                color: `${theme.palette.primary.main}`,
-                zIndex: 10,
-                cursor: 'pointer'
-              }}>
+            <Box display='flex' alignItems='center'>
               {!isCurrentVersion && !isChildCurrent && (
                 <Box
                   display='flex'
                   alignItems='center'
+                  sx={{
+                    cursor: 'pointer',
+                    color: `${theme.palette.primary.main}`
+                  }}
                   onClick={() =>
                     handleRestoreButton(
                       lessonId,
@@ -303,8 +334,7 @@ const VersionHistory = () => {
                 variant='h6'>
                 Children Versions
               </Typography>
-              {renderChildren(history.children)}{' '}
-              {/* Only render children here */}
+              {renderChildren(history.children)}
             </>
           ) : (
             <>
@@ -366,11 +396,12 @@ const VersionHistory = () => {
           <Typography color='error'>Error loading content history</Typography>
         ) : (
           <>
+            {!isCurrentLessonInVersions && renderCurrentLessonAccordion()}
             {Array.isArray(histories) && histories.length > 0 ? (
               histories
-                .slice() // Create a copy to avoid modifying the original array
-                .reverse() // Reverse the array to show the latest first
-                .map((history) => renderHistory(history)) // Render parent/children structure recursively
+                .slice()
+                .reverse()
+                .map((history) => renderHistory(history))
             ) : (
               <Typography>No version history available</Typography>
             )}

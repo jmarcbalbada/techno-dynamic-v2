@@ -12,6 +12,7 @@ const Edit = () => {
   const [lesson, setLesson] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [lessonId, setLessonId] = useState(null);
 
   useEffect(() => {
     getLessonLessonNumber(lessonNumber);

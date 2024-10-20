@@ -25,6 +25,7 @@ import { SuggestionService } from 'apis/SuggestionService';
 import { ContentHistoryService } from 'apis/ContentHistoryService';
 import { NotificationService } from '../../apis/NotificationService';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { CleanMarkAiContent } from '../../helpers/CleanMarkAiContent';
 
 const RevertContent = () => {
   const { lessonNumber, pageNumber, lessonID } = useParams();
