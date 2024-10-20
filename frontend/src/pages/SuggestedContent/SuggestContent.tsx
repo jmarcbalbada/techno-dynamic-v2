@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState, useRef } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
@@ -139,24 +140,6 @@ const SuggestContent = () => {
 
     // Clean the content in the handleSave function
     finalChanges = CleanMarkAiContent(finalChanges);
-
-    // // 1. Remove <mark> tags with 'lightcoral' background and their content
-    // finalChanges = finalChanges.replace(
-    //   /<mark\s+style\s*=\s*"background-color\s*:\s*lightcoral\s*;">.*?<\/mark>/gi,
-    //   ''
-    // );
-
-    // // 2. Remove <mark> and </mark> tags but retain the content inside them (for yellow marks)
-    // finalChanges = finalChanges.replace(/<\/?mark(?:\s+[^>]+)?>/gi, '');
-
-    // // 3. Remove newline characters
-    // finalChanges = finalChanges.replace(/\n/g, '');
-
-    // // 4. Remove any instances of '**'
-    // finalChanges = finalChanges.replace(/\*\*/g, '');
-
-    // // 5. Remove any instances of '```html'
-    // finalChanges = finalChanges.replace(/```html/g, '');
 
     // set suggested contents
     setSuggestedContents(finalChanges);

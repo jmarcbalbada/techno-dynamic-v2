@@ -78,6 +78,7 @@ const QueriesTable = () => {
   const getQueries = async () => {
     try {
       const queryResponse = await QueriesService.list();
+      console.log('response', queryResponse.data);
 
       if (queryResponse) {
         const formattedQueries = queryResponse.data.map((query) => {
@@ -90,7 +91,11 @@ const QueriesTable = () => {
 
           return {
             id: query.id,
+            lessonNumber: query.lesson.lessonNumber,
             lessonInfo: `${query.lesson.lessonNumber} - ${query.lesson.title}`,
+            title: query.lesson.title,
+            year: query.user.year,
+            course: query.user.course,
             fullName: `${query.user.first_name} ${query.user.last_name}`,
             preview: query.subqueries[0]?.question || 'No question available',
             createdAt: formattedDate

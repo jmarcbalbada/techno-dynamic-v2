@@ -20,6 +20,7 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import Snackbar from '@mui/material/Snackbar';
 import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
 import VersionHistoryLayout from './VersionHistoryLayout';
+import { CleanMarkAiContent } from '../../helpers/CleanMarkAiContent';
 
 const VersionHistory = () => {
   const lessonAndTitleIds = JSON.parse(localStorage.getItem('ltids'));
@@ -44,11 +45,26 @@ const VersionHistory = () => {
     try {
       const response =
         await ContentHistoryService.getHistoryByLessonId(lessonId);
-      console.log('response', response.data);
+      // console.log('response', response.data);
       const fetchedHistories = response.data.content_histories || [];
-      const fetchedCurrentLesson = response.data.current_lesson || '';
+      const fetchedCurrentLesson = CleanMarkAiContent(
+        response.data.current_lesson || ''
+      );
 
-      setHistories(fetchedHistories);
+      // Clean the content of each parent and child
+      const cleanedHistories = fetchedHistories.map((history) => ({
+        ...history,
+        parent_history: {
+          ...history.parent_history,
+          content: CleanMarkAiContent(history.parent_history?.content || '')
+        },
+        children: history.children?.map((child) => ({
+          ...child,
+          content: CleanMarkAiContent(child.content || '')
+        }))
+      }));
+
+      setHistories(cleanedHistories);
       setCurrentLesson(fetchedCurrentLesson);
     } catch (error) {
       setIsError(true);
@@ -149,7 +165,11 @@ const VersionHistory = () => {
         </Tooltip>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography dangerouslySetInnerHTML={{ __html: currentLesson }} />
+        <Typography
+          dangerouslySetInnerHTML={{
+            __html: CleanMarkAiContent(currentLesson)
+          }}
+        />
       </AccordionDetails>
     </Accordion>
   );
@@ -216,7 +236,11 @@ const VersionHistory = () => {
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography dangerouslySetInnerHTML={{ __html: child.content }} />
+              <Typography
+                dangerouslySetInnerHTML={{
+                  __html: CleanMarkAiContent(child.content)
+                }}
+              />
             </AccordionDetails>
           </Accordion>
         );
@@ -278,9 +302,9 @@ const VersionHistory = () => {
                 </Typography>
               )}
             </Box>
-
             <Box display='flex' alignItems='center'>
-              {!isCurrentVersion && !isChildCurrent && (
+              {/* Show the Restore button if it's not the current version OR if it's the child current */}
+              {!isCurrentVersion && (
                 <Box
                   display='flex'
                   alignItems='center'
@@ -309,7 +333,7 @@ const VersionHistory = () => {
           {history.parent_history && history.parent_history.content ? (
             <Typography
               dangerouslySetInnerHTML={{
-                __html: history.parent_history.content
+                __html: CleanMarkAiContent(history.parent_history.content)
               }}
             />
           ) : (

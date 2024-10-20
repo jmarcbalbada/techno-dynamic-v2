@@ -32,7 +32,11 @@ const Edit = () => {
   return (
     <Container component='main'>
       <Box>
-        {isLoading ? <div>Loading...</div> : <EditorForm lesson={lesson} />}
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <EditorForm lesson={lesson} isEdit={true} />
+        )}
       </Box>
     </Container>
   );

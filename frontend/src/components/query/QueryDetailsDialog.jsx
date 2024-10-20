@@ -73,17 +73,17 @@ const QueryDetailsDialog = ({ isOpen, onClose, selectedRow }) => {
             <Box display='flex' flexDirection='row'>
               <Box className='box-container'>
                 <Typography variant='subtitle2'>
-                  Lesson {selectedRow.lessonNumber} - {selectedRow.title}
+                  Lesson {selectedRow?.lessonNumber} - {selectedRow?.title}
                 </Typography>
               </Box>
               <Box className='box-container'>
                 <Typography variant='subtitle2'>
-                  {selectedRow.firstName} {selectedRow.lastName}
+                  {selectedRow?.fullName}
                 </Typography>
               </Box>
               <Box className='box-container'>
                 <Typography variant='subtitle2'>
-                  {selectedRow.year} - {selectedRow.course}
+                  {selectedRow?.year} - {selectedRow?.course}
                 </Typography>
               </Box>
             </Box>
@@ -134,8 +134,7 @@ const QueryDetailsDialog = ({ isOpen, onClose, selectedRow }) => {
                     variant='subtitle1'
                     sx={{
                       whiteSpace: 'pre-line'
-                    }}
-                    >
+                    }}>
                     {subquery.response}
                   </Typography>
                 </Paper>
@@ -147,11 +146,11 @@ const QueryDetailsDialog = ({ isOpen, onClose, selectedRow }) => {
         )}
       </DialogContent>
       <Divider />
-      <DialogActions>
+      {/* <DialogActions>
         <Button onClick={handleEditLesson} startIcon={<EditIcon />} fullWidth>
           Edit Lesson
         </Button>
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 };

@@ -19,7 +19,7 @@ import { ContentHistoryService } from 'apis/ContentHistoryService.js';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
 
-const EditorForm = ({ lesson, initialLessonNumber }) => {
+const EditorForm = ({ lesson, initialLessonNumber, isEdit = false }) => {
   const [pages, setPages] = useState(
     lesson ? lesson.pages : [{ contents: '' }]
   );
@@ -81,30 +81,32 @@ const EditorForm = ({ lesson, initialLessonNumber }) => {
           }
         }
 
-        // Handle content history creation based on version info
-        const content = pages
-          .map((page) => `${page.contents}<!-- delimiter -->`)
-          .join('');
+        if (isEdit) {
+          // Handle content history creation based on version info
+          const content = pages
+            .map((page) => `${page.contents}<!-- delimiter -->`)
+            .join('');
 
-        if (versionInfo?.currentHistoryId) {
-          if (versionInfo.parentHistoryId) {
-            // If there is a parent, create a child version
-            await ContentHistoryService.createHistoryWithParent(
-              lessonId,
-              content,
-              versionInfo.parentHistoryId
-            );
+          if (versionInfo?.currentHistoryId) {
+            if (versionInfo.parentHistoryId) {
+              // If there is a parent, create a child version
+              await ContentHistoryService.createHistoryWithParent(
+                lessonId,
+                content,
+                versionInfo.parentHistoryId
+              );
+            } else {
+              // If no parent, create a new parent version
+              await ContentHistoryService.createHistoryWithParent(
+                lessonId,
+                content,
+                versionInfo.currentHistoryId
+              );
+            }
           } else {
-            // If no parent, create a new parent version
-            await ContentHistoryService.createHistoryWithParent(
-              lessonId,
-              content,
-              versionInfo.currentHistoryId
-            );
+            // If no version exists, create a new history
+            await ContentHistoryService.createHistory(lessonId, content);
           }
-        } else {
-          // If no version exists, create a new history
-          await ContentHistoryService.createHistory(lessonId, content);
         }
 
         // If updating, call update endpoint
