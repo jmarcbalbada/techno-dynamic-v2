@@ -83,7 +83,18 @@ const EditorForm = ({ lesson, initialLessonNumber, isEdit = false }) => {
 
         if (isEdit) {
           // Handle content history creation based on version info
-          const content = pages.map((page) => page.contents).join('');
+          const content = pages
+            .map((page) => {
+              let pageContent = page.contents.trim();
+
+              // Check if the page content ends with '<!-- delimiter -->'
+              if (!pageContent.endsWith('<!-- delimiter -->')) {
+                pageContent += '<!-- delimiter -->';
+              }
+
+              return pageContent;
+            })
+            .join('');
 
           if (versionInfo?.currentHistoryId) {
             if (versionInfo.parentHistoryId) {

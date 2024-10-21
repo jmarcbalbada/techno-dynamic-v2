@@ -131,10 +131,18 @@ const VersionHistory = () => {
     return format(date, "MMMM dd, yyyy 'at' hh:mm a");
   };
 
+  // Remove <!-- delimiter --> from content for comparison
+  const cleanContent = (content) => {
+    return content?.replace(/<!-- delimiter -->/g, '').trim();
+  };
+
   const isCurrentLessonInVersions = histories.some(
     (history) =>
-      history.parent_history?.content === currentLesson ||
-      history.children?.some((child) => child.content === currentLesson)
+      cleanContent(history.parent_history?.content) ===
+        cleanContent(currentLesson) ||
+      history.children?.some(
+        (child) => cleanContent(child.content) === cleanContent(currentLesson)
+      )
   );
 
   const renderCurrentLessonAccordion = () => (
@@ -178,7 +186,8 @@ const VersionHistory = () => {
     return (
       children &&
       children.map((child) => {
-        const isChildCurrentVersion = currentLesson === child.content;
+        const isChildCurrentVersion =
+          cleanContent(currentLesson) === cleanContent(child.content);
 
         return (
           <Accordion
@@ -199,7 +208,7 @@ const VersionHistory = () => {
                       fontWeight: 600,
                       color: `${theme.palette.background.darker}`
                     }}>
-                    Child Version {child.version}
+                    Version {child.version}
                   </Typography>
                   {isChildCurrentVersion && (
                     <Typography
@@ -249,12 +258,14 @@ const VersionHistory = () => {
   };
 
   const renderHistory = (history) => {
-    const isCurrentVersion = currentLesson === history.parent_history?.content;
+    const isCurrentVersion =
+      cleanContent(currentLesson) ===
+      cleanContent(history.parent_history?.content);
     const updatedAt = history.parent_history
       ? history.parent_history.updatedAt
       : null;
     const isChildCurrent = history.children?.some(
-      (child) => currentLesson === child.content
+      (child) => cleanContent(currentLesson) === cleanContent(child.content)
     );
 
     return (
@@ -289,7 +300,7 @@ const VersionHistory = () => {
                   component='span'
                   color='primary'
                   sx={{ fontWeight: 500, ml: 1 }}>
-                  - (Current Version)
+                  - Current Version
                 </Typography>
               )}
 
@@ -298,7 +309,7 @@ const VersionHistory = () => {
                   component='span'
                   color='primary'
                   sx={{ fontWeight: 500, ml: 1 }}>
-                  - (The child under this version is the current one)
+                  - Child version is active
                 </Typography>
               )}
             </Box>
