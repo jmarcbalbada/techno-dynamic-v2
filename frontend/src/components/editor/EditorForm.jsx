@@ -83,9 +83,7 @@ const EditorForm = ({ lesson, initialLessonNumber, isEdit = false }) => {
 
         if (isEdit) {
           // Handle content history creation based on version info
-          const content = pages
-            .map((page) => `${page.contents}<!-- delimiter -->`)
-            .join('');
+          const content = pages.map((page) => page.contents).join('');
 
           if (versionInfo?.currentHistoryId) {
             if (versionInfo.parentHistoryId) {
