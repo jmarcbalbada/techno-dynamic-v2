@@ -64,11 +64,7 @@ const LessonCard = (props) => {
           component='img'
           height='140'
           image={
-            image
-              ? image.includes('null')
-                ? `/office/office${randomImageSuffix}`
-                : `${imageUrl}${image}`
-              : `/office/office${randomImageSuffix}`
+              image ? `${image}` : `/office/office${randomImageSuffix}`
           }
         />
         <CardContent
