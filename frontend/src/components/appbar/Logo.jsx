@@ -9,7 +9,9 @@ const Logo = () => {
   const theme = useTheme();
 
   const handleNavigateToDashboard = () => {
-    navigate('/');
+    // window.location.href = '/'; // Set the URL to root and reload the page
+    window.location.replace('/'); // Replaces the current URL and reloads the page
+    // navigate('/');
   };
 
   return (

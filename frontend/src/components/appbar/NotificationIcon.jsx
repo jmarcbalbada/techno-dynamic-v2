@@ -73,7 +73,7 @@ const NotificationIcon = ({
               },
               maxHeight: '400px',
               overflowY: 'auto',
-              zIndex: 1,
+              zIndex: 1300, // Set a higher z-index value
               boxShadow: theme.shadows[3]
             }}>
             <div>
@@ -96,9 +96,7 @@ const NotificationIcon = ({
                     <NotificationItem
                       key={notif.notif_id}
                       notif={notif}
-                      // onClick={() => handleItemClick(notif.notif_id)} // Close panel on item click
                       onClose={() => setShowNotification(false)}
-                      // onClick={handleItemClick(notif.notif_id)} // Close panel on item click
                       setOpenedNotificationById={setOpenedNotificationById}
                       deleteNotificationById={deleteNotificationById}
                     />

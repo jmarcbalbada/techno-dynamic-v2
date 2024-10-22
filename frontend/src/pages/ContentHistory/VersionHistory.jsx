@@ -136,13 +136,19 @@ const VersionHistory = () => {
     return content?.replace(/<!-- delimiter -->/g, '').trim();
   };
 
+  // const isCurrentLessonInVersions = histories.some(
+  //   (history) =>
+  //     cleanContent(history.parent_history?.content) ===
+  //       cleanContent(currentLesson) ||
+  //     history.children?.some(
+  //       (child) => cleanContent(child.content) === cleanContent(currentLesson)
+  //     )
+  // );
+
   const isCurrentLessonInVersions = histories.some(
     (history) =>
-      cleanContent(history.parent_history?.content) ===
-        cleanContent(currentLesson) ||
-      history.children?.some(
-        (child) => cleanContent(child.content) === cleanContent(currentLesson)
-      )
+      history.parent_history?.content === currentLesson ||
+      history.children?.some((child) => child.content === currentLesson)
   );
 
   const renderCurrentLessonAccordion = () => (
@@ -186,8 +192,10 @@ const VersionHistory = () => {
     return (
       children &&
       children.map((child) => {
-        const isChildCurrentVersion =
-          cleanContent(currentLesson) === cleanContent(child.content);
+        // const isChildCurrentVersion =
+        //   cleanContent(currentLesson) === cleanContent(child.content);
+
+        const isChildCurrentVersion = currentLesson === child.content;
 
         return (
           <Accordion
@@ -258,14 +266,20 @@ const VersionHistory = () => {
   };
 
   const renderHistory = (history) => {
-    const isCurrentVersion =
-      cleanContent(currentLesson) ===
-      cleanContent(history.parent_history?.content);
+    // const isCurrentVersion =
+    //   cleanContent(currentLesson) ===
+    //   cleanContent(history.parent_history?.content);
+
+    const isCurrentVersion = currentLesson === history.parent_history?.content;
     const updatedAt = history.parent_history
       ? history.parent_history.updatedAt
       : null;
+    // const isChildCurrent = history.children?.some(
+    //   (child) => cleanContent(currentLesson) === cleanContent(child.content)
+    // );
+
     const isChildCurrent = history.children?.some(
-      (child) => cleanContent(currentLesson) === cleanContent(child.content)
+      (child) => currentLesson === child.content
     );
 
     return (
