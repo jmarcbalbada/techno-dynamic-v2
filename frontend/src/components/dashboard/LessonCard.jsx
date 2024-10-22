@@ -14,6 +14,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 import EditIcon from '@mui/icons-material/Edit';
+import { encryptValue, decryptValue } from '../../helpers/EncryptDecryptor';
 
 const LessonCard = (props) => {
   const { user } = useAuth();
@@ -29,7 +30,9 @@ const LessonCard = (props) => {
   const randomImageSuffix = Math.random() < 0.5 ? '1.jpg' : '2.jpg';
 
   const handleLessonClick = () => {
-    navigate(`/lessons/${lessonNumber}/1/false/${id}`);
+    const encryptedIsNotif = encodeURIComponent(encryptValue('false'));
+    // console.log('Encrypted in LessonCard: ', encryptedIsNotif);
+    navigate(`/lessons/${lessonNumber}/1/${encryptedIsNotif}/${id}`);
   };
 
   // deprecated

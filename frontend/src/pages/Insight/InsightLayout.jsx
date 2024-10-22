@@ -11,7 +11,11 @@ import {
   Navigate
 } from 'react-router-dom';
 
-const InsightLayout = ({ handleSuggest, sampleContentReal,suggestionLoading }) => {
+const InsightLayout = ({
+  handleSuggest,
+  sampleContentReal,
+  suggestionLoading
+}) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -56,23 +60,20 @@ const InsightLayout = ({ handleSuggest, sampleContentReal,suggestionLoading }) =
             Here's how to strengthen your content ...
           </Typography>
           <Box sx={{ display: 'flex' }}>
-              {suggestionLoading ? (
-                  "Loading..." // Display loading indicator when data is being fetched
-              ) : (
-                  <Button
-                      variant='contained'
-                      sx={{
-                          ml: 1,
-                          backgroundColor: '#1b5e20',
-                          textTransform: 'none',
-                          paddingRight: '10px'
-                      }}
-                      onClick={handleSuggest}
-                  >
-                      <HandshakeOutlinedIcon sx={{ marginRight: '10px' }} />
-                      Suggest Content
-                  </Button>
-              )}
+            <Button
+              variant='contained'
+              sx={{
+                ml: 1,
+                backgroundColor: '#1b5e20',
+                textTransform: 'none',
+                paddingRight: '10px'
+              }}
+              onClick={handleSuggest}
+              disabled={suggestionLoading} // Disable when suggestionLoading is true
+            >
+              <HandshakeOutlinedIcon sx={{ marginRight: '10px' }} />
+              Suggest Content
+            </Button>
           </Box>
         </div>
       </Box>
