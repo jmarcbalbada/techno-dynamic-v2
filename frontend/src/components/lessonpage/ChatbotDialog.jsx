@@ -74,121 +74,121 @@ const ChatbotDialog = (props) => {
   };
 
   return (
-      <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth='md'>
-        <DialogTitle sx={{ cursor: 'default' }}>Ask {robotName}!</DialogTitle>
-        <DialogContent dividers>
-          <Box display='flex' flexDirection='column' width={1}>
-            {messages.map((message, index) => {
-              const isBot = message.sender === 'bot';
+    <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth='md'>
+      <DialogTitle sx={{ cursor: 'default' }}>Ask {robotName}!</DialogTitle>
+      <DialogContent dividers>
+        <Box display='flex' flexDirection='column' width={1}>
+          {messages.map((message, index) => {
+            const isBot = message.sender === 'bot';
 
-              return (
-                  <Paper
-                      variant='outlined'
-                      key={index}
-                      sx={{
-                        p: 1,
-                        mb: 1,
-                        maxWidth: '60%',
-                        alignSelf: isBot ? 'flex-start' : 'flex-end',
-                        overflowWrap: 'break-word',
-                        bgcolor: isBot
-                            ? 'rgba(240, 240, 240, 0.1)'
-                            : 'rgba(27, 94, 32, 0.1)',
-                        borderColor: isBot ? 'initial' : 'primary.main',
-                        borderRadius: '15px',
-                        borderBottomLeftRadius: isBot ? '0px' : '15px',
-                        borderBottomRightRadius: isBot ? '15px' : '0px',
-                        whiteSpace: 'pre-line'
-                      }}>
-                    {isBot && (
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <BsRobot
-                              size={24}
-                              color='#4c80d4'
-                              style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
-                          />
-                          <Typography
-                              variant='subtitle2'
-                              color='primary'
-                              sx={{ cursor: 'default' }}>
-                            {robotName}
-                          </Typography>
-                        </Box>
-                    )}
-                    {!isBot && (
-                        <Typography
-                            align='right'
-                            variant='subtitle2'
-                            color='primary'
-                            sx={{ cursor: 'default' }}>
-                          {message.sender}
-                        </Typography>
-                    )}
-                    <Typography variant='body2'>{message.message}</Typography>
-                  </Paper>
-              );
-            })}
+            return (
+              <Paper
+                variant='outlined'
+                key={index}
+                sx={{
+                  p: 1,
+                  mb: 1,
+                  maxWidth: '60%',
+                  alignSelf: isBot ? 'flex-start' : 'flex-end',
+                  overflowWrap: 'break-word',
+                  bgcolor: isBot
+                    ? 'rgba(240, 240, 240, 0.1)'
+                    : 'rgba(27, 94, 32, 0.1)',
+                  borderColor: isBot ? 'initial' : 'primary.main',
+                  borderRadius: '15px',
+                  borderBottomLeftRadius: isBot ? '0px' : '15px',
+                  borderBottomRightRadius: isBot ? '15px' : '0px',
+                  whiteSpace: 'pre-line'
+                }}>
+                {isBot && (
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <BsRobot
+                      size={24}
+                      color='#4c80d4'
+                      style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
+                    />
+                    <Typography
+                      variant='subtitle2'
+                      color='primary'
+                      sx={{ cursor: 'default' }}>
+                      {robotName}
+                    </Typography>
+                  </Box>
+                )}
+                {!isBot && (
+                  <Typography
+                    align='right'
+                    variant='subtitle2'
+                    color='primary'
+                    sx={{ cursor: 'default' }}>
+                    {message.sender}
+                  </Typography>
+                )}
+                <Typography variant='body2'>{message.message}</Typography>
+              </Paper>
+            );
+          })}
 
-            {isGettingResponse && (
-                <Typography
-                    variant='body2'
-                    sx={{
-                      mb: 1
-                    }}>
-                  Getting response...
-                </Typography>
-            )}
+          {isGettingResponse && (
+            <Typography
+              variant='body2'
+              sx={{
+                mb: 1
+              }}>
+              Getting response...
+            </Typography>
+          )}
 
-            {/* Auto scroll target */}
-            <div ref={messagesEndRef} />
-          </Box>
-          <Box>
-            {messages.length === 1 && (
-                <Box display='flex' flexWrap='wrap' gap={1} mt={2}>
-                  {suggestedQuestions.map((question, index) => (
-                      <Chip
-                          key={index}
-                          label={question.placeholder}
-                          onClick={() => setMessageInput(question.question)}
-                          variant='outlined'
-                          color='primary'
-                      />
-                  ))}
-                </Box>
-            )}
-          </Box>
-          <Box display='flex' gap={1}>
-            <TextField
-                variant='standard'
-                fullWidth
-                label='Message'
-                multiline
-                maxRows={3}
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (
-                      e.key === 'Enter' &&
-                      !e.shiftKey &&
-                      !isGettingResponse &&
-                      messageInput.trim()
-                  ) {
-                    e.preventDefault(); // Prevent newline from being added
-                    handleSend();
-                  }
-                }}
-            />
-            <Button
-                onClick={handleSend}
-                variant='contained'
-                color='primary'
-                disabled={isGettingResponse || !messageInput.trim()}
-                endIcon={<SendIcon />}>
-              Send
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
+          {/* Auto scroll target */}
+          <div ref={messagesEndRef} />
+        </Box>
+        <Box>
+          {messages.length === 1 && (
+            <Box display='flex' flexWrap='wrap' gap={1} mt={2}>
+              {suggestedQuestions.map((question, index) => (
+                <Chip
+                  key={index}
+                  label={question.placeholder}
+                  onClick={() => setMessageInput(question.question)}
+                  variant='outlined'
+                  color='primary'
+                />
+              ))}
+            </Box>
+          )}
+        </Box>
+        <Box display='flex' gap={1}>
+          <TextField
+            variant='standard'
+            fullWidth
+            label='Message'
+            multiline
+            maxRows={3}
+            value={messageInput}
+            onChange={(e) => setMessageInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (
+                e.key === 'Enter' &&
+                !e.shiftKey &&
+                !isGettingResponse &&
+                messageInput.trim()
+              ) {
+                e.preventDefault(); // Prevent newline from being added
+                handleSend();
+              }
+            }}
+          />
+          <Button
+            onClick={handleSend}
+            variant='contained'
+            color='primary'
+            disabled={isGettingResponse || !messageInput.trim()}
+            endIcon={<SendIcon />}>
+            Send
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 };
 

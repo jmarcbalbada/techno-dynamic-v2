@@ -11,6 +11,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'hooks/useAuth.jsx';
 import { LessonsService } from '../../apis/LessonsService';
+import { encryptValue, decryptValue } from '../../helpers/EncryptDecryptor';
 
 const NotificationItem = ({
   notif,
@@ -28,11 +29,16 @@ const NotificationItem = ({
     const id = localStorage.getItem('notification_id');
 
     try {
+      const encryptedIsNotif = encodeURIComponent(encryptValue('true'));
+      // console.log('Encrypted: ', encryptedIsNotif);
       const response = await LessonsService.getById(notif.lesson);
       const lessonNum = response.data;
       await navigate(
-        `/lessons/${lessonNum.lessonNumber}/1/true/${lessonNum.id}`
+        `/lessons/${lessonNum.lessonNumber}/1/${encryptedIsNotif}/${lessonNum.id}`
       );
+      // await navigate(
+      //   `/lessons/${lessonNum.lessonNumber}/1/true/${lessonNum.id}`
+      // );
 
       // Close the notification panel
       onClose();

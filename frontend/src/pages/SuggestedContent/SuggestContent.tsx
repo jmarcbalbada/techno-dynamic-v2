@@ -29,6 +29,7 @@ const SuggestContent = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [allContents, setAllContents] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [cleanedVersion, setCleanedVersion] = useState('');
   const [suggestedContents, setSuggestedContents] = useState('');
   const [loadingMessage, setLoadingMessage] = useState(
     'Please wait and refrain from refreshing while we load your content...'
@@ -70,20 +71,29 @@ const SuggestContent = () => {
 
   const handleAccept = async () => {
     // Save the suggested content
-    await handleSave();
+    const updatedContent = handleSave();
+    // console.log('Updated Content', updatedContent);
     await handleClearNotif();
     await handleAddVersionControl();
     // Wait for the response from handleNewContent
-    // await handleNewContent(allContents);
-    await handleNewContent(suggestedContents);
+    await handleNewContent(updatedContent);
+
+    // window.location.replace(
+    //   `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
+    // );
+    setTimeout(() => {
+      window.location.replace(
+        `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
+      );
+    }, 500);
 
     // Add a delay of 1 second before navigating
-    setTimeout(() => {
-      navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`, {
-        replace: true
-      });
-      window.history.pushState(null, null, window.location.href);
-    }, 500);
+    // setTimeout(() => {
+    //   navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`, {
+    //     replace: true
+    //   });
+    //   window.history.pushState(null, null, window.location.href);
+    // }, 500);
   };
 
   const handleAddVersionControl = async () => {
@@ -134,15 +144,22 @@ const SuggestContent = () => {
     // if edit and save right away
     if (isEditing) {
       finalChanges = editorRef.current.getHTMLContent();
+      // console.log('from editing');
     } else {
       finalChanges = suggestedContents;
+      // console.log('from not editing');
     }
+    // console.log('old finalChanges', finalChanges);
+
+    setSuggestedContents(finalChanges);
 
     // Clean the content in the handleSave function
     finalChanges = CleanMarkAiContent(finalChanges);
+    // setSuggestedContents(finalChanges);
 
-    // set suggested contents
-    setSuggestedContents(finalChanges);
+    // console.log('finalChanges', finalChanges);
+
+    return finalChanges;
 
     // return finalChanges if needed
   };
@@ -165,6 +182,8 @@ const SuggestContent = () => {
 
   const handleEditedChanges = () => {
     setIsEditing(false);
+    var refCleaned = CleanMarkAiContent(editorRef.current.getHTMLContent());
+    setCleanedVersion(refCleaned);
     setSuggestedContents(editorRef.current.getHTMLContent());
   };
 
@@ -183,7 +202,8 @@ const SuggestContent = () => {
 
   const handleIgnore = () => {
     handleClearCallbackSuggestionAndNotification();
-    navigate(`/`);
+    // navigate(`/`);
+    window.location.replace('/'); // Replaces the current URL and reloads the page
   };
 
   const handleClearCallbackSuggestionAndNotification = async () => {
@@ -231,7 +251,7 @@ const SuggestContent = () => {
           notif_id
         );
 
-        console.log('ai_response', response.data.ai_response);
+        // console.log('ai_response', response.data.ai_response);
 
         // Convert to string and replace '```html' with an empty string
         let removeTagContents = response.data.ai_response.replace(
@@ -535,10 +555,7 @@ const SuggestContent = () => {
           {/* Conditional rendering based on isLoading and suggestedContents */}
           {isError ? (
             <div>
-              <p>
-                Something went wrong with your internet connection. Please try
-                again later.
-              </p>
+              <p>Oops something went wrong. Please try again later!</p>
             </div>
           ) : isLoading ? (
             getSkeletonLoading()

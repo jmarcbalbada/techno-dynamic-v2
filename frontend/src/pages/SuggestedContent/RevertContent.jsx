@@ -123,8 +123,8 @@ const RevertContent = () => {
           currID,
           historyId
         );
+        // console.log('response', response.data);
       }
-      console.log('response', response.data);
     } catch (error) {
       console.error(error);
     }

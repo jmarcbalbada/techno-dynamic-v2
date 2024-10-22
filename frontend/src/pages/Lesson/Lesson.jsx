@@ -20,13 +20,17 @@ import InsightLayout from '../Insight/InsightLayout';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useTheme } from '@mui/material/styles';
+import { encryptValue, decryptValue } from '../../helpers/EncryptDecryptor';
 
 const Lesson = () => {
   const { lessonNumber, pageNumber, isNotif, isInsight, lessonID } =
     useParams();
   const convertInsight = isInsight === 'true';
+  const decodedIsNotif = decodeURIComponent(isNotif);
+  const decryptedNotif = decryptValue(decodedIsNotif);
+  console.log('Decrypted: ', decryptedNotif);
   const [insight, setInsight] = useState(convertInsight);
-  const notif = isNotif === 'true';
+  const notif = decryptedNotif === 'true';
   const navigate = useNavigate();
   const [lesson, setLesson] = useState({});
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber));
@@ -43,9 +47,6 @@ const Lesson = () => {
   const [suggestionLoading, setSuggestionLoading] = useState(true);
 
   useEffect(() => {
-    if (notif) {
-      handleNotificationAuth();
-    }
     getLessonLessonNumber(lessonNumber);
   }, []);
 
@@ -78,20 +79,6 @@ const Lesson = () => {
       setIsError(true);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleNotificationAuth = async () => {
-    try {
-      const notifAuth = localStorage.getItem('notification_id');
-      if (!notifAuth) {
-        alert('Invalid access, accessing without notification!');
-        setNotifIdAuth(false);
-      } else {
-        setNotifIdAuth(true);
-      }
-    } catch (error) {
-      setIsError(true);
     }
   };
 
@@ -241,8 +228,6 @@ const Lesson = () => {
               <div>Loading...</div>
             ) : isError ? (
               <div>Error, something went wrong!</div>
-            ) : notifIdAuth === false && notif ? (
-              <div>Error, invalid access or try again later!</div>
             ) : (
               <>
                 {notif && !insight && user.role === 'teacher' && (
