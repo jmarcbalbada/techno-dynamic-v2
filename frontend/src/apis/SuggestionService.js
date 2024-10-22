@@ -6,7 +6,11 @@ const BASE_URL = `${config.API_URL}api/suggestions`;
 
 export const SuggestionService = {
   // create insights
-  create_insights: (lesson_id, notification_id) =>
+
+    retrieveSuggestedContent: (lesson_id, notification_id) =>
+        axios.post(`${BASE_URL}s/retrieveSuggestedContent/`, { lesson_id, notification_id }),
+
+    create_insights: (lesson_id, notification_id) =>
     axios.post(`${BASE_URL}/insights/`, { lesson_id, notification_id }),
 
   get_old_content: (lesson_id) =>

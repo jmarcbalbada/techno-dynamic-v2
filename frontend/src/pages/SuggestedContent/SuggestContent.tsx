@@ -240,36 +240,55 @@ const SuggestContent = () => {
     }
   };
 
-  const getSuggestionContent = async () => {
-    try {
-      const notif_id = localStorage.getItem('notification_id');
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-      // Add 3-minute timeout if request is rejected
-      if (notif_id) {
-        const response = await SuggestionService.create_content(
-          currID,
-          notif_id
-        );
+    const getSuggestionContent = async () => {
+        try {
+            const notif_id = localStorage.getItem('notification_id');
 
-        // console.log('ai_response', response.data.ai_response);
+            if (notif_id) {
+                // Initial request to create content
+                const response = await SuggestionService.create_content(currID, notif_id);
+                setSuggestedContents(response.data.ai_response);
 
-        // Convert to string and replace '```html' with an empty string
-        let removeTagContents = response.data.ai_response.replace(
-          /```html/g,
-          ''
-        );
+                // Check if the response is still processing
+                if (response.status === 202) {
+                    setSuggestedContents('Content is being generated, please wait...');
+                    setIsLoading(true);
 
-        setSuggestedContents(removeTagContents);
+                    // Polling with a delay to check if processing is complete
+                    let isProcessing = true;
+                    let resultNew;
 
-        // console.log('response.data.ai_response', aiResponse);
-      }
-    } catch (error) {
-      console.log('error', error);
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+                    while (isProcessing) {
+                        // Wait for 10 seconds before each retry
+                        await delay(2000);
+
+                        // Fetch the latest suggestion status
+                        resultNew = await SuggestionService.retrieveSuggestedContent(currID, notif_id);
+
+                        if (resultNew.data.message !== 'Content is still processing.') {
+                            // If content is ready, break the loop
+                            isProcessing = false;
+                        }
+                    }
+
+                    console.log('is processing', isProcessing)
+                    // Update the suggested content once it's ready
+                    setSuggestedContents(resultNew.data.ai_response);
+                } else {
+                    // If response is not 202, assume content is ready
+                    setSuggestedContents(response.data.ai_response);
+                }
+            }
+        } catch (error) {
+            console.log('Error:', error.stack);
+            setIsError(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
   const handleRegenerate = async () => {
     setIsLoading(true);
