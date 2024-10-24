@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import React, { useEffect, useState, useRef } from 'react';
 import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
@@ -29,6 +29,7 @@ const SuggestContent = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [allContents, setAllContents] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const [cleanedVersion, setCleanedVersion] = useState('');
   const [suggestedContents, setSuggestedContents] = useState('');
   const [loadingMessage, setLoadingMessage] = useState(
@@ -60,8 +61,8 @@ const SuggestContent = () => {
     };
 
     // Change messages with delays
-    updateMessage('Hang in there, it may take some time...', 7000); // 7 seconds before this message shows
-    updateMessage('Almost there, we are beautifying your content...', 14000); // 7 more seconds before this message
+    updateMessage('Hang in there, it may take some time...', 2000); // 7 seconds before this message shows
+    // updateMessage('Almost there, we are beautifying your content...', 14000); // 7 more seconds before this message
 
     return () => {
       // Clear all timeouts when component unmounts or loading is complete
@@ -240,61 +241,78 @@ const SuggestContent = () => {
     }
   };
 
-    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  const getSuggestionContent = async () => {
+    try {
+      const notif_id = localStorage.getItem('notification_id');
 
-    const getSuggestionContent = async () => {
-        try {
-            const notif_id = localStorage.getItem('notification_id');
+      if (notif_id) {
+        const response = await SuggestionService.create_content(
+          currID,
+          notif_id
+        );
 
-            if (notif_id) {
-                // Initial request to create content
-                const response = await SuggestionService.create_content(currID, notif_id);
-                setSuggestedContents(response.data.ai_response);
+        // Safely access response data
+        const suggestion = response.data?.suggestion || [];
+        const pending = response.data?.isPending ?? false;
 
-                // Check if the response is still processing
-                if (response.status === 202) {
-                    setSuggestedContents('Content is being generated, please wait...');
-                    setIsLoading(true);
+        setIsPending(pending); // Set isPending in state
 
-                    // Polling with a delay to check if processing is complete
-                    let isProcessing = true;
-                    let resultNew;
+        if (pending) {
+          setSuggestedContents(
+            'Content is still processing, please come back within 1-2 minutes...'
+          );
 
-                    while (isProcessing) {
-                        // Wait for 10 seconds before each retry
-                        await delay(2000);
+          // Shorter delay for pending content
+          setTimeout(() => {
+            setFade(false); // Start fading out the loading message
+            setTimeout(() => {
+              setIsLoading(false); // Mark loading as complete after fade-out
+              setFade(true); // Reset fade effect for future use
+            }, 1000); // Allow fade-out to complete
+          }, 2000); // Ensure skeleton is visible for at least 2 seconds
+        } else if (suggestion.length > 0 && suggestion[0].content) {
+          let removeTagContents = suggestion[0].content.replace(/```html/g, '');
+          setSuggestedContents(removeTagContents);
 
-                        // Fetch the latest suggestion status
-                        resultNew = await SuggestionService.retrieveSuggestedContent(currID, notif_id);
-
-                        if (resultNew.data.message !== 'Content is still processing.') {
-                            // If content is ready, break the loop
-                            isProcessing = false;
-                        }
-                    }
-
-                    console.log('is processing', isProcessing)
-                    // Update the suggested content once it's ready
-                    setSuggestedContents(resultNew.data.ai_response);
-                } else {
-                    // If response is not 202, assume content is ready
-                    setSuggestedContents(response.data.ai_response);
-                }
-            }
-        } catch (error) {
-            console.log('Error:', error.stack);
-            setIsError(true);
-        } finally {
-            setIsLoading(false);
+          // Slightly longer delay for loading completed content
+          setTimeout(() => {
+            setFade(false); // Start fading out the loading message
+            setTimeout(() => {
+              setIsLoading(false); // Mark loading as complete after fade-out
+              setFade(true); // Reset fade effect for future use
+            }, 1000); // Allow fade-out to complete
+          }, 4000); // Ensure skeleton is visible for at least 3 seconds
+        } else {
+          setSuggestedContents('No content available.');
+          setIsLoading(false); // Stop loading immediately if no content
         }
-    };
-
+      }
+    } catch (error) {
+      console.log('error', error);
+      setIsError(true);
+      setIsLoading(false);
+    }
+  };
 
   const handleRegenerate = async () => {
+    // Start loading and fade effect
     setIsLoading(true);
+    setFade(true);
+
+    // Call to get suggestion content
     await getSuggestionContent();
-    setIsLoading(false);
+
+    // Introduce a 3-4 second delay for the loading skeleton
+    setTimeout(() => {
+      setFade(false); // Start fading out the loading message
+
+      setTimeout(() => {
+        setIsLoading(false); // Mark loading as complete after fade-out
+        setFade(true); // Reset fade effect for future use
+      }, 1000); // Allow fade-out to complete
+    }, 3000); // Ensure skeleton is visible for at least 3 seconds
   };
+
   const getSkeletonLoading = () => {
     return (
       <>
@@ -415,9 +433,7 @@ const SuggestContent = () => {
             color='primary'
             sx={{
               backgroundColor: theme.palette.background.danger,
-              '&:hover': {
-                backgroundColor: '#761e1e'
-              },
+              '&:hover': { backgroundColor: '#761e1e' },
               textTransform: 'none',
               paddingRight: '10px',
               borderRadius: '20px'
@@ -525,9 +541,7 @@ const SuggestContent = () => {
                       fontSize: '24px',
                       color: theme.palette.primary.main,
                       fontWeight: 'bold',
-                      '&:hover': {
-                        cursor: 'pointer'
-                      }
+                      '&:hover': { cursor: 'pointer' }
                     }}
                     onClick={() => {
                       setIsEditing(true);
@@ -540,10 +554,8 @@ const SuggestContent = () => {
                       fontSize: '24px',
                       color: theme.palette.primary.main,
                       fontWeight: 'bold',
-                      ml: 2, // Adjust this value to control spacing between the icons
-                      '&:hover': {
-                        cursor: 'pointer'
-                      }
+                      ml: 2,
+                      '&:hover': { cursor: 'pointer' }
                     }}
                     className={clsx(isLoading && 'hidden')}
                     onClick={handleRegenerate}
@@ -559,12 +571,9 @@ const SuggestContent = () => {
                     fontSize: '24px',
                     color: theme.palette.primary.main,
                     fontWeight: 'bold',
-                    '&:hover': {
-                      cursor: 'pointer'
-                    }
+                    '&:hover': { cursor: 'pointer' }
                   }}
                   onClick={() => {
-                    // setIsEditing(false);
                     handleEditedChanges();
                   }}
                 />
@@ -574,10 +583,14 @@ const SuggestContent = () => {
           {/* Conditional rendering based on isLoading and suggestedContents */}
           {isError ? (
             <div>
-              <p>Oops something went wrong. Please try again later!</p>
+              <p>Oops, something went wrong. Please try again later!</p>
             </div>
           ) : isLoading ? (
-            getSkeletonLoading()
+            getSkeletonLoading() // Display loading skeleton while isLoading is true
+          ) : isPending ? (
+            <Typography variant='body2' color='text.secondary'>
+              Content is still processing, please come back later.
+            </Typography>
           ) : !isEditing && suggestedContents ? (
             <LessonPage pageContent={suggestedContents} />
           ) : (
