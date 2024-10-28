@@ -78,7 +78,7 @@ const QueriesTable = () => {
   const getQueries = async () => {
     try {
       const queryResponse = await QueriesService.list();
-      console.log('response', queryResponse.data);
+      // console.log('response', queryResponse.data);
 
       if (queryResponse) {
         const formattedQueries = queryResponse.data.map((query) => {

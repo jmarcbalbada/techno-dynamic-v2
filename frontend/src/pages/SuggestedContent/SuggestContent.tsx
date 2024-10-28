@@ -4,7 +4,7 @@ import { LessonsService } from 'apis/LessonsService';
 import { SuggestionService } from 'apis/SuggestionService';
 import { ContentHistoryService } from 'apis/ContentHistoryService';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Typography, Box, Button, Tooltip } from '@mui/material';
+import { Typography, Box, Button, Tooltip, Snackbar } from '@mui/material';
 import Container from '@mui/material/Container';
 import LessonPage from 'components/lessonpage/LessonPage';
 import VerifiedIcon from '@mui/icons-material/Verified';
@@ -17,6 +17,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { clsx } from 'clsx';
 import CreateIcon from '@mui/icons-material/Create';
 import Editor from 'components/editor/Editor';
+import MuiAlert from '@mui/material/Alert';
 import { NotificationService } from 'apis/NotificationService';
 import { CleanMarkAiContent } from '../../helpers/CleanMarkAiContent';
 
@@ -39,6 +40,7 @@ const SuggestContent = () => {
   const currID = parseInt(lessonID);
   const editorRef = useRef(null);
   const [fade, setFade] = useState(true); // Control the fade effect
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar state
 
   useEffect(() => {
     // Store the timeout IDs so we can clear them later
@@ -71,13 +73,16 @@ const SuggestContent = () => {
   }, []);
 
   const handleAccept = async () => {
+    setOpenSnackbar(true);
     // Save the suggested content
     const updatedContent = handleSave();
     // console.log('Updated Content', updatedContent);
+    await handleNewContent(updatedContent);
     await handleClearNotif();
     await handleAddVersionControl();
+
+    setOpenSnackbar(false);
     // Wait for the response from handleNewContent
-    await handleNewContent(updatedContent);
 
     // window.location.replace(
     //   `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
@@ -220,7 +225,19 @@ const SuggestContent = () => {
       getSuggestionContent();
       hasFetched.current = true;
     }
+
+    // check old content on local
+    getOldContentIfExist();
   }, []);
+
+  const getOldContentIfExist = async () => {
+    if (!localStorage.getItem('ol1cnt2')) {
+      const responseOldContent =
+        await SuggestionService.get_old_content(currID);
+      // set to local storage
+      localStorage.setItem('ol1cnt2', responseOldContent.data.old_content);
+    }
+  };
 
   const getLessonLessonNumber = async (lessonNumber) => {
     try {
@@ -272,6 +289,7 @@ const SuggestContent = () => {
           }, 2000); // Ensure skeleton is visible for at least 2 seconds
         } else if (suggestion.length > 0 && suggestion[0].content) {
           let removeTagContents = suggestion[0].content.replace(/```html/g, '');
+          removeTagContents = removeTagContents.replace(/```/g, '');
           setSuggestedContents(removeTagContents);
 
           // Slightly longer delay for loading completed content
@@ -516,13 +534,15 @@ const SuggestContent = () => {
               marginBottom: '2%'
             }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <VerifiedIcon
-                sx={{
-                  color: theme.palette.primary.main,
-                  marginRight: '10px',
-                  display: 'inline'
-                }}
-              />
+              <Tooltip title='AI can make mistakes, consider to recheck the contents!'>
+                <VerifiedIcon
+                  sx={{
+                    color: theme.palette.primary.main,
+                    marginRight: '10px',
+                    display: 'inline'
+                  }}
+                />
+              </Tooltip>
               <Typography
                 variant='h6'
                 sx={{
@@ -548,7 +568,7 @@ const SuggestContent = () => {
                     }}
                   />
                 </Tooltip>
-                <Tooltip title='Generate again'>
+                {/* <Tooltip title='Generate again'>
                   <RestartAltIcon
                     sx={{
                       fontSize: '24px',
@@ -560,7 +580,7 @@ const SuggestContent = () => {
                     className={clsx(isLoading && 'hidden')}
                     onClick={handleRegenerate}
                   />
-                </Tooltip>
+                </Tooltip> */}
               </Box>
             )}
 
@@ -598,6 +618,15 @@ const SuggestContent = () => {
           )}
         </Box>
       </Box>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <MuiAlert onClose={() => setOpenSnackbar(false)} severity='success'>
+          Saving changes, please wait.
+        </MuiAlert>
+      </Snackbar>
     </Container>
   );
 };

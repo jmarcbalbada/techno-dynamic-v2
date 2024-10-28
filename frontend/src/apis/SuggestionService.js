@@ -7,10 +7,13 @@ const BASE_URL = `${config.API_URL}api/suggestions`;
 export const SuggestionService = {
   // create insights
 
-    retrieveSuggestedContent: (lesson_id, notification_id) =>
-        axios.post(`${BASE_URL}s/retrieveSuggestedContent/`, { lesson_id, notification_id }),
+  retrieveSuggestedContent: (lesson_id, notification_id) =>
+    axios.post(`${BASE_URL}s/retrieveSuggestedContent/`, {
+      lesson_id,
+      notification_id
+    }),
 
-    create_insights: (lesson_id, notification_id) =>
+  create_insights: (lesson_id, notification_id) =>
     axios.post(`${BASE_URL}/insights/`, { lesson_id, notification_id }),
 
   get_old_content: (lesson_id) =>
@@ -30,10 +33,10 @@ export const SuggestionService = {
       }
     ),
   // Method to revert content
-  revert_content: (lesson_id) =>
+  revert_content: (lesson_id, old_content) =>
     axios.put(
       `${BASE_URL}/revert/`,
-      { lesson_id },
+      { lesson_id, old_content },
       {
         headers: {
           'Content-Type': 'application/json'

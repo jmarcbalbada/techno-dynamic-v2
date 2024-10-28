@@ -28,7 +28,7 @@ const Lesson = () => {
   const convertInsight = isInsight === 'true';
   const decodedIsNotif = decodeURIComponent(isNotif);
   const decryptedNotif = decryptValue(decodedIsNotif);
-  console.log('Decrypted: ', decryptedNotif);
+  // console.log('Decrypted: ', decryptedNotif);
   const [insight, setInsight] = useState(convertInsight);
   const notif = decryptedNotif === 'true';
   const navigate = useNavigate();
@@ -97,6 +97,12 @@ const Lesson = () => {
             '</i><hr>' +
             response.data.suggestion.insights
         );
+
+        // another call to get old content
+        const responseOldContent =
+          await SuggestionService.get_old_content(currID);
+        // set to local storage
+        localStorage.setItem('ol1cnt2', responseOldContent.data.old_content);
       }
     } catch (error) {
       console.log('error', error);

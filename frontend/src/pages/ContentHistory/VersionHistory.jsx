@@ -21,6 +21,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { SnackBarAlert } from 'components/common/SnackbarAlert/SnackbarAlert';
 import VersionHistoryLayout from './VersionHistoryLayout';
 import { CleanMarkAiContent } from '../../helpers/CleanMarkAiContent';
+import { encryptValue, decryptValue } from '../../helpers/EncryptDecryptor';
 
 const VersionHistory = () => {
   const lessonAndTitleIds = JSON.parse(localStorage.getItem('ltids'));
@@ -36,6 +37,7 @@ const VersionHistory = () => {
   const navigate = useNavigate();
   const timer = 1500;
   const theme = useTheme();
+  const encryptedIsNotif = encodeURIComponent(encryptValue('false'));
 
   useEffect(() => {
     getHistoryLessonByLessonId();
@@ -426,7 +428,9 @@ const VersionHistory = () => {
             underline='hover'
             color='inherit'
             onClick={() =>
-              navigate(`/lessons/${lessonNumber}/1/false/${lessonId}`)
+              navigate(
+                `/lessons/${lessonNumber}/1/${encryptedIsNotif}/${lessonId}`
+              )
             }
             sx={{ cursor: 'pointer' }}>
             {lessonTitle}

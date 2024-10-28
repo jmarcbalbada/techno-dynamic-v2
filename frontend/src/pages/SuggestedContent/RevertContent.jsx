@@ -47,7 +47,8 @@ const RevertContent = () => {
   }, []);
 
   const handleFinished = async () => {
-    await handleClearSuggestion();
+    // await handleClearSuggestion();
+    localStorage.removeItem('ol1cnt2');
     await navigate(`/`, { replace: true });
     window.history.pushState(null, null, window.location.href);
     // history.replace('/');
@@ -67,9 +68,11 @@ const RevertContent = () => {
 
   const getOldContent = async () => {
     try {
-      const response = await SuggestionService.get_old_content(currID);
+      // const response = await SuggestionService.get_old_content(currID);
       // console.log('response.data', response.data);
-      setOldContent(response.data.old_content);
+      // setOldContent(response.data.old_content);
+      setOldContent(localStorage.getItem('ol1cnt2'));
+      // console.log(localStorage.getItem('ol1cnt2'));
       // console.log('old content ', response.data.old_content);
       // await console.log('old content is = ', oldContent);
     } catch (error) {
@@ -108,7 +111,10 @@ const RevertContent = () => {
       setReverted(true);
       await revertContentService();
       await getLessonLessonNumber(lessonNumber);
-      await deleteVersionHistory();
+      if (localStorage.getItem('historyId')) {
+        await deleteVersionHistory();
+      }
+
       // await ContentHistoryService.deleteHistory
     } catch (error) {
       console.log('Error', error);
@@ -132,7 +138,10 @@ const RevertContent = () => {
 
   const revertContentService = async () => {
     try {
-      const response = await SuggestionService.revert_content(currID);
+      const response = await SuggestionService.revert_content(
+        currID,
+        oldContent
+      );
       // setLesson(response.data);
       // console.log('response.data', response.data);
     } catch (error) {
@@ -352,7 +361,7 @@ const RevertContent = () => {
               open={fileModalOpen}
               handleClose={handleCloseFiles}
             />
-            <Fab
+            {/* <Fab
               color='primary'
               onClick={handleOpenChat}
               sx={{
@@ -367,7 +376,7 @@ const RevertContent = () => {
               handleClose={handleCloseChat}
               lessonId={lesson.id}
               pageId={lesson?.pages[currentPage - 1]?.id}
-            />
+            /> */}
           </>
         )}
       </Container>

@@ -4,3 +4,31 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Chrome, Edge */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(207, 216, 220, 0.2); /* Light secondary color with subtle opacity */
+  border-radius: 20px; /* Smooth, rounded edges */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(27, 94, 32, 0.4); /* Primary color with lower opacity */
+  border-radius: 20px; /* Rounded thumb for smooth edges */
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(27, 94, 32, 0.6); /* Slightly darker on hover */
+}
+
+/* Firefox */
+* {
+  scrollbar-color: rgba(27, 94, 32, 0.4) rgba(207, 216, 220, 0.2);
+  scrollbar-width: thin;
+}
+
+
