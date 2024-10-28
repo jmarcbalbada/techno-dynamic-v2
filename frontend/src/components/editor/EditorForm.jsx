@@ -8,7 +8,7 @@ import BaseDetailsForm from './BaseDetailsForm';
 import PagesList from './PagesList';
 import DeleteLessonDialog from 'components/deleteDialog/DeleteLessonDialog';
 
-import { Box } from '@mui/material';
+import { Box, Snackbar } from '@mui/material';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
@@ -27,6 +27,8 @@ const EditorForm = ({ lesson, initialLessonNumber, isEdit = false }) => {
   const [filesToDelete, setFilesToDelete] = useState([]);
   const [lessonId, setLessonId] = useState(null);
   const [versionInfo, setVersionInfo] = useState(null); // Store version info
+  const [loading, setLoading] = useState(false); // Loading state for submission
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar state
 
   const navigate = useNavigate();
 
@@ -58,6 +60,8 @@ const EditorForm = ({ lesson, initialLessonNumber, isEdit = false }) => {
     },
     validationSchema: BaseDetailsValidationSchema,
     onSubmit: async (values) => {
+      setLoading(true); // Set loading to true
+      setSnackbarOpen(true); // Open snackbar
       try {
         const formData = new FormData();
         formData.append('title', values.title);
@@ -82,7 +86,6 @@ const EditorForm = ({ lesson, initialLessonNumber, isEdit = false }) => {
         }
 
         if (isEdit) {
-          // Handle content history creation based on version info
           const content = pages
             .map((page) => {
               let pageContent = page.contents.trim();
@@ -128,73 +131,16 @@ const EditorForm = ({ lesson, initialLessonNumber, isEdit = false }) => {
         navigate(-1, { replace: true });
       } catch (error) {
         console.log('Error:', error);
+      } finally {
+        setLoading(false); // Set loading to false after submission
+        setSnackbarOpen(false); // Close snackbar after completion
       }
     }
   });
 
-  const handleUploadFiles = (event) => {
-    const uploadedFiles = event.currentTarget.files;
-    const uploadedFilesArray = Array.from(uploadedFiles).map((file) => ({
-      lesson: lesson?.lessonNumber || initialLessonNumber,
-      file: file
-    }));
-
-    const newFiles = uploadedFilesArray.filter((fileObj) => !fileObj.id);
-    setFiles((existingFiles) => [...existingFiles, ...newFiles]);
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
-
-  const handleDeleteFile = (fileToDelete) => {
-    setFiles((files) => files.filter((file) => file !== fileToDelete));
-
-    if (fileToDelete.id) {
-      setFilesToDelete((prevFilesToDelete) => [
-        ...prevFilesToDelete,
-        fileToDelete.id
-      ]);
-    }
-  };
-
-  const handleClose = useCallback(() => {
-    const confirmed = window.confirm(
-      'Are you sure you want to go back to the dashboard? Any unsaved changes will be lost.'
-    );
-    if (confirmed) {
-      navigate('/', { replace: true });
-    }
-  }, []);
-
-  const handleDialogOpen = useCallback(() => {
-    setOpenDialog(true);
-  }, []);
-
-  const handleDialogClose = useCallback(() => {
-    setOpenDialog(false);
-  }, []);
-
-  const handleDialogDelete = useCallback(async () => {
-    try {
-      await LessonsService.delete(lesson.id);
-      navigate('/', { replace: true });
-    } catch (error) {
-      console.log('Error:', error);
-    }
-  }, []);
-
-  const [openDialog, setOpenDialog] = useState(false);
-
-  useEffect(() => {
-    const confirmNavigation = (e) => {
-      e.preventDefault();
-      e.returnValue = '';
-      return 'You have unsaved changes. Are you sure you want to leave this page?';
-    };
-
-    window.addEventListener('beforeunload', confirmNavigation);
-
-    return () => {
-      window.removeEventListener('beforeunload', confirmNavigation);
-    };
-  }, []);
 
   return (
     <Container component='main'>
@@ -222,45 +168,22 @@ const EditorForm = ({ lesson, initialLessonNumber, isEdit = false }) => {
             <PagesList pages={pages} setPages={setPages} />
           </Box>
           <Box>
-            <Button type='submit' fullWidth size='large' variant='contained'>
+            <Button
+              type='submit'
+              fullWidth
+              size='large'
+              variant='contained'
+              disabled={loading} // Disable button during loading
+            >
               {lesson ? 'Save Changes' : 'Create Lesson'}
             </Button>
           </Box>
-          {lesson && (
-            <Paper
-              variant='outlined'
-              sx={{
-                mt: 3,
-                display: 'flex',
-                flexDirection: 'column',
-                bgcolor: 'rgba(235, 0, 20, 0.1)',
-                borderColor: 'error.main'
-              }}>
-              <Box sx={{ m: 3 }}>
-                <Box>
-                  <Typography variant='h6' display='flex' alignItems='center'>
-                    <WarningIcon color='error' sx={{ mr: 0.5 }} />
-                    Delete this lesson?
-                  </Typography>
-                </Box>
-                <Box sx={{ mt: 3 }}>
-                  <Button
-                    onClick={handleDialogOpen}
-                    color='error'
-                    variant='outlined'>
-                    Yes, delete it!
-                  </Button>
-                  {openDialog && (
-                    <DeleteLessonDialog
-                      open={openDialog}
-                      handleClose={handleDialogClose}
-                      handleDelete={() => handleDialogDelete()}
-                    />
-                  )}
-                </Box>
-              </Box>
-            </Paper>
-          )}
+          <Snackbar
+            open={snackbarOpen}
+            message='Saving changes, please wait...'
+            onClose={handleSnackbarClose}
+            autoHideDuration={3000}
+          />
         </Stack>
       </Box>
     </Container>
