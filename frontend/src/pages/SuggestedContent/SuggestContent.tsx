@@ -30,8 +30,9 @@ const SuggestContent = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [allContents, setAllContents] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [wasEdited, setWasEdited] = useState(false);
   const [isPending, setIsPending] = useState(false);
-  const [cleanedVersion, setCleanedVersion] = useState('');
+  const [editedContent, setEditedContent] = useState('');
   const [suggestedContents, setSuggestedContents] = useState('');
   const [loadingMessage, setLoadingMessage] = useState(
     'Please wait and refrain from refreshing while we load your content...'
@@ -76,10 +77,10 @@ const SuggestContent = () => {
     setOpenSnackbar(true);
     // Save the suggested content
     const updatedContent = handleSave();
-    // console.log('Updated Content', updatedContent);
-    await handleNewContent(updatedContent);
-    await handleClearNotif();
-    await handleAddVersionControl();
+    console.log('Updated Content', updatedContent);
+    // await handleNewContent(updatedContent);
+    // await handleClearNotif();
+    // await handleAddVersionControl();
 
     setOpenSnackbar(false);
     // Wait for the response from handleNewContent
@@ -87,11 +88,12 @@ const SuggestContent = () => {
     // window.location.replace(
     //   `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
     // );
-    setTimeout(() => {
-      window.location.replace(
-        `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
-      );
-    }, 500);
+
+    // setTimeout(() => {
+    //   window.location.replace(
+    //     `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
+    //   );
+    // }, 500);
 
     // Add a delay of 1 second before navigating
     // setTimeout(() => {
@@ -144,31 +146,164 @@ const SuggestContent = () => {
     }
   };
 
+  // Utility to find positions of the `<!-- delimiter -->` in content
+  const getDelimiterPositions = (content) => {
+    const positions = [];
+    let index = content.indexOf('<!-- delimiter -->');
+
+    while (index !== -1) {
+      positions.push(index);
+      index = content.indexOf('<!-- delimiter -->', index + 1);
+    }
+
+    return positions;
+  };
+
+  // Utility to insert `<!-- delimiter -->` at specified positions
+  const insertDelimitersAtPositions = (content, positions) => {
+    let offset = 0;
+
+    positions.forEach((position) => {
+      content =
+        content.slice(0, position + offset) +
+        '<!-- delimiter -->' +
+        content.slice(position + offset);
+      offset += '<!-- delimiter -->'.length;
+    });
+
+    return content;
+  };
+
+  // const handleSave = () => {
+  //   // Start with the current content based on the editing state
+  //   let finalChanges = '';
+
+  //   if (isEditing || wasEdited) {
+  //     finalChanges = editorRef.current.getHTMLContent() || editedContent;
+  //   } else {
+  //     finalChanges = suggestedContents;
+  //   }
+
+  //   // if (isEditing) {
+  //   //   finalChanges = editorRef.current.getHTMLContent();
+  //   // } else if (wasEdited) {
+  //   //   finalChanges = editedContent;
+  //   // } else if (!isEditing && !wasEdited) {
+  //   //   finalChanges = suggestedContents;
+  //   // }
+
+  //   // Clean up content and remove any leftover delimiters
+  //   finalChanges = CleanMarkAiContent(finalChanges);
+
+  //   // Prepare to reinsert delimiters if necessary
+  //   if (isEditing || wasEdited) {
+  //     console.log('isEditing: ', isEditing, 'wasEdited: ', wasEdited);
+
+  //     let originalDelimiterPositions = [];
+  //     originalDelimiterPositions = getDelimiterPositions(suggestedContents);
+
+  //     // Reinsert `<!-- delimiter -->` at the initial positions
+  //     finalChanges = insertDelimitersAtPositions(
+  //       finalChanges,
+  //       originalDelimiterPositions
+  //     );
+  //   }
+
+  //   // Update suggestedContents state with the cleaned and adjusted content
+  //   // setSuggestedContents(finalChanges);
+
+  //   return finalChanges;
+  // };
   const handleSave = () => {
     let finalChanges = '';
 
-    // if edit and save right away
     if (isEditing) {
-      finalChanges = editorRef.current.getHTMLContent();
-      // console.log('from editing');
+      console.log('called isEditing');
+      if (editorRef.current) {
+        console.log('called editorRef.current');
+        finalChanges = editorRef.current.getHTMLContent();
+      } else {
+        console.error('Editor reference is not set during editing!');
+        return ''; // Prevent further processing
+      }
     } else {
+      console.log('else here ');
       finalChanges = suggestedContents;
-      // console.log('from not editing');
     }
-    // console.log('old finalChanges', finalChanges);
 
-    setSuggestedContents(finalChanges);
-
-    // Clean the content in the handleSave function
+    // Clean up content
     finalChanges = CleanMarkAiContent(finalChanges);
-    // setSuggestedContents(finalChanges);
 
-    // console.log('finalChanges', finalChanges);
+    // Reinsert delimiters if necessary
+    if (isEditing) {
+      console.log('isEditing: ', isEditing);
+      let originalDelimiterPositions = getDelimiterPositions(suggestedContents);
+      finalChanges = insertDelimitersAtPositions(
+        finalChanges,
+        originalDelimiterPositions
+      );
+    }
+
+    console.log('final changes in save: ', finalChanges);
 
     return finalChanges;
-
-    // return finalChanges if needed
   };
+
+  //       console.log('isEditing: ', isEditing, 'wasEdited: ', wasEdited);
+
+  // const handleSave = () => {
+  //   let finalChanges = isEditing
+  //     ? editorRef.current.getHTMLContent()
+  //     : suggestedContents;
+
+  //   // Clean up content and remove any leftover delimiters
+  //   finalChanges = CleanMarkAiContent(finalChanges);
+
+  //   // If we're editing or the content was edited, reinserting delimiters
+  //   if (isEditing || wasEdited) {
+  //     // Get initial positions of the delimiter in `suggestedContents`
+  //     console.log('isEditing: ', isEditing, 'wasEdited: ', wasEdited);
+  //     const originalDelimiterPositions =
+  //       getDelimiterPositions(suggestedContents);
+
+  //     // Reinsert `<!-- delimiter -->` at the initial positions
+  //     finalChanges = insertDelimitersAtPositions(
+  //       finalChanges,
+  //       originalDelimiterPositions
+  //     );
+  //   }
+
+  //   // Update suggestedContents state if needed
+  //   // setSuggestedContents(finalChanges);
+
+  //   return finalChanges;
+  // };
+
+  // const handleSave = () => {
+  //   let finalChanges = '';
+
+  //   // if edit and save right away
+  //   if (isEditing) {
+  //     finalChanges = editorRef.current.getHTMLContent();
+  //     console.log('editorRef Output:', finalChanges);
+  //   } else {
+  //     finalChanges = suggestedContents;
+  //     // console.log('from not editing');
+  //   }
+  //   // console.log('old finalChanges', finalChanges);
+
+  //   setSuggestedContents(finalChanges);
+
+  //   // Clean the content in the handleSave function
+  //   finalChanges = CleanMarkAiContent(finalChanges);
+  //   // setSuggestedContents(finalChanges);
+
+  //   // console.log('finalChanges', finalChanges);
+
+  //   return finalChanges;
+
+  //   // return finalChanges if needed
+  // };
 
   // const handleSave = () => {
   //   let finalChanges = '';
@@ -186,11 +321,49 @@ const SuggestContent = () => {
   //   // return finalChanges
   // };
 
+  // const handleEditedChanges = () => {
+  //   setIsEditing(false);
+  //   setWasEdited(true);
+
+  //   // Get the current content with delimiters
+  //   const currentContent = editorRef.current.getHTMLContent();
+  //   // console.log('Current Content before setting state:', currentContent);
+
+  //   setEditedContent(currentContent);
+  //   // setSuggestedContents(currentContent); // This is for UI updating
+
+  //   // setEditedContent(editorRef.current.getHTMLContent());
+  //   // // for UI updating
+  //   // setSuggestedContents(editorRef.current.getHTMLContent());
+  // };
+
+  // Handle changes when editing is finished
   const handleEditedChanges = () => {
-    setIsEditing(false);
-    var refCleaned = CleanMarkAiContent(editorRef.current.getHTMLContent());
-    setCleanedVersion(refCleaned);
-    setSuggestedContents(editorRef.current.getHTMLContent());
+    if (editorRef.current) {
+      console.log('editor not empty', editorRef.current.getHTMLContent());
+      setIsEditing(false);
+      setWasEdited(true);
+
+      const currentContent = editorRef.current.getHTMLContent();
+      setEditedContent(currentContent);
+      // Get original delimiter positions from suggested contents
+      let originalDelimiterPositions = getDelimiterPositions(suggestedContents);
+
+      // Clean up current content
+      const cleanedContent = CleanMarkAiContent(currentContent);
+
+      // Reinsert delimiters
+      const updatedContent = insertDelimitersAtPositions(
+        cleanedContent,
+        originalDelimiterPositions
+      );
+      console.log('updatedContent 2:', updatedContent);
+
+      // Update suggested contents with the updated content
+      setSuggestedContents(updatedContent);
+    } else {
+      console.error('Editor reference is not set!');
+    }
   };
 
   const handleNewContent = async (newData) => {
@@ -291,6 +464,7 @@ const SuggestContent = () => {
           let removeTagContents = suggestion[0].content.replace(/```html/g, '');
           removeTagContents = removeTagContents.replace(/```/g, '');
           setSuggestedContents(removeTagContents);
+          // console.log('removeTagContents:', removeTagContents);
 
           // Slightly longer delay for loading completed content
           setTimeout(() => {

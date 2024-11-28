@@ -1,11 +1,3 @@
-// // @ts-nocheck
-// import React from 'react';
-
-// export interface EditorRef {
-//   getHTMLContent: () => string;
-//   // Add other methods or properties if needed
-// }
-
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 
 // Define the EditorRef interface
@@ -16,23 +8,37 @@ export interface EditorRef {
 // Create the Editor component with forwardRef and expose getHTMLContent method
 const Editor = forwardRef<EditorRef, { contents: string }>(
   ({ contents }, ref) => {
-    const [htmlContent, setHtmlContent] = useState(contents);
+    console.log('Received contents:', contents); // Log the received contents
 
-    // Use useImperativeHandle to expose getHTMLContent to the parent component
+    const [htmlContent, setHtmlContent] = useState(() =>
+      contents.replace(/<!-- delimiter -->/g, '&lt;!-- delimiter --&gt;')
+    );
+
     useImperativeHandle(ref, () => ({
       getHTMLContent() {
-        return htmlContent; // Return the current HTML content
+        // Unescape comment when getting HTML content
+        return htmlContent.replace(
+          /&lt;!-- delimiter --&gt;/g,
+          '<!-- delimiter -->'
+        );
       }
     }));
 
     // Example function to handle content change
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setHtmlContent(e.target.value);
+      const updatedContent = e.target.value.replace(
+        /<!-- delimiter -->/g,
+        '&lt;!-- delimiter --&gt;'
+      );
+      setHtmlContent(updatedContent);
     };
 
     return (
       <textarea
-        value={htmlContent}
+        value={htmlContent.replace(
+          /&lt;!-- delimiter --&gt;/g,
+          '<!-- delimiter -->'
+        )}
         onChange={handleContentChange}
         rows={10}
         cols={50}

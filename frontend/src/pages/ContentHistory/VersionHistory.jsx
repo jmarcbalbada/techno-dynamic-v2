@@ -174,7 +174,7 @@ const VersionHistory = () => {
           variant='h6'>
           Current Lesson
         </Typography>
-        <Tooltip title='This lesson is not in any of your versions.'>
+        <Tooltip title=''>
           <HelpOutlineIcon
             sx={{ color: 'green', fontSize: '1.0rem', marginTop: '0.3rem' }}
           />
