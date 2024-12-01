@@ -1,25 +1,23 @@
 //@ts-nocheck
-import React, { useEffect, useState, useRef } from 'react';
-import { LessonsService } from 'apis/LessonsService';
-import { SuggestionService } from 'apis/SuggestionService';
-import { ContentHistoryService } from 'apis/ContentHistoryService';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Typography, Box, Button, Tooltip, Snackbar } from '@mui/material';
+import React, {useEffect, useRef, useState} from 'react';
+import {LessonsService} from 'apis/LessonsService';
+import {SuggestionService} from 'apis/SuggestionService';
+import {ContentHistoryService} from 'apis/ContentHistoryService';
+import {useNavigate, useParams} from 'react-router-dom';
+import {Box, Button, Snackbar, Tooltip, Typography, useTheme} from '@mui/material';
 import Container from '@mui/material/Container';
 import LessonPage from 'components/lessonpage/LessonPage';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { useTheme } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Skeleton from '@mui/material/Skeleton';
-import { clsx } from 'clsx';
 import CreateIcon from '@mui/icons-material/Create';
 import Editor from 'components/editor/Editor';
 import MuiAlert from '@mui/material/Alert';
-import { NotificationService } from 'apis/NotificationService';
-import { CleanMarkAiContent } from '../../helpers/CleanMarkAiContent';
+import {NotificationService} from 'apis/NotificationService';
+import cleanMarkAiContent, {CleanMarkAiContent} from '../../helpers/CleanMarkAiContent';
+import {insertDelimitersAtPositions} from '../../utils/insertDelimitersAtPositions'
 
 const SuggestContent = () => {
   const { lessonNumber, pageNumber, lessonID } = useParams();
@@ -33,13 +31,16 @@ const SuggestContent = () => {
   const [isPending, setIsPending] = useState(false);
   const [cleanedVersion, setCleanedVersion] = useState('');
   const [suggestedContents, setSuggestedContents] = useState('');
+  const original_suggestion_content = useRef<string>('');
   const [loadingMessage, setLoadingMessage] = useState(
     'Please wait and refrain from refreshing while we load your content...'
   );
   const theme = useTheme();
   const currID = parseInt(lessonID);
   const editorRef = useRef(null);
-  const [fade, setFade] = useState(true); // Control the fade effect
+let isEditCounter = useRef(0);
+
+    const [fade, setFade] = useState(true); // Control the fade effect
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar state
 
   useEffect(() => {
@@ -71,27 +72,46 @@ const SuggestContent = () => {
       timeouts.forEach((timeoutId) => clearTimeout(timeoutId));
     };
   }, []);
+  const finalChanges = () => {
 
+      let changes = editorRef.current.getHTMLContent();
+      changes = CleanMarkAiContent(changes);
+
+      // Reinsert delimiters if necessary
+      if (isEditing) {
+          let originalDelimiterPositions = getDelimiterPositions(suggestedContents);
+          changes = insertDelimitersAtPositions(
+              finalChanges,
+              originalDelimiterPositions
+          );
+      }
+      return
+  }
   const handleAccept = async () => {
     setOpenSnackbar(true);
     // Save the suggested content
-    const updatedContent = handleSave();
-    // console.log('Updated Content', updatedContent);
+      setIsLoading(true)
+    const updatedContent = await handleSave()
+      console.log('updatedContent suggestion papges handleSvae return:',updatedContent)
     await handleNewContent(updatedContent);
     await handleClearNotif();
-    await handleAddVersionControl();
+    await handleAddVersionControl()
 
-    setOpenSnackbar(false);
+
     // Wait for the response from handleNewContent
+    //   setIsLoading(false)
 
-    // window.location.replace(
+      setTimeout(() => {
+          window.location.replace(
+              `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
+          );
+          setOpenSnackbar(false);
+
+      }, 500);
+
+      // window.location.replace(
     //   `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
     // );
-    setTimeout(() => {
-      window.location.replace(
-        `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
-      );
-    }, 500);
 
     // Add a delay of 1 second before navigating
     // setTimeout(() => {
@@ -144,30 +164,104 @@ const SuggestContent = () => {
     }
   };
 
-  const handleSave = () => {
-    let finalChanges = '';
 
-    // if edit and save right away
-    if (isEditing) {
-      finalChanges = editorRef.current.getHTMLContent();
-      // console.log('from editing');
-    } else {
-      finalChanges = suggestedContents;
-      // console.log('from not editing');
+  // Utility to find positions of the `<!-- delimiter -->` in content
+  const getDelimiterPositions = (content) => {
+    const positions = [];
+    let index = content.indexOf('<!-- delimiter -->');
+
+    while (index !== -1) {
+      positions.push(index);
+      index = content.indexOf('<!-- delimiter -->', index + 1);
     }
-    // console.log('old finalChanges', finalChanges);
 
-    setSuggestedContents(finalChanges);
+    return positions;
+  };
 
-    // Clean the content in the handleSave function
-    finalChanges = CleanMarkAiContent(finalChanges);
-    // setSuggestedContents(finalChanges);
+  // Utility to insert `<!-- delimiter -->` at specified positions
 
-    // console.log('finalChanges', finalChanges);
 
-    return finalChanges;
+  // const handleSave = () => {
+  //   // Start with the current content based on the editing state
+  //   let finalChanges = '';
 
-    // return finalChanges if needed
+  //   if (isEditing || wasEdited) {
+  //     finalChanges = editorRef.current.getHTMLContent() || editedContent;
+  //   } else {
+  //     finalChanges = suggestedContents;
+  //   }
+
+  //   // if (isEditing) {
+  //   //   finalChanges = editorRef.current.getHTMLContent();
+  //   // } else if (wasEdited) {
+  //   //   finalChanges = editedContent;
+  //   // } else if (!isEditing && !wasEdited) {
+  //   //   finalChanges = suggestedContents;
+  //   // }
+
+  //   // Clean up content and remove any leftover delimiters
+  //   finalChanges = CleanMarkAiContent(finalChanges);
+
+  //   // Prepare to reinsert delimiters if necessary
+  //   if (isEditing || wasEdited) {
+  //     console.log('isEditing: ', isEditing, 'wasEdited: ', wasEdited);
+
+  //     let originalDelimiterPositions = [];
+  //     originalDelimiterPositions = getDelimiterPositions(suggestedContents);
+
+  //     // Reinsert `<!-- delimiter -->` at the initial positions
+  //     finalChanges = insertDelimitersAtPositions(
+  //       finalChanges,
+  //       originalDelimiterPositions
+  //     );
+  //   }
+
+  //   // Update suggestedContents state with the cleaned and adjusted content
+  //   // setSuggestedContents(finalChanges);
+
+  //   return finalChanges;
+  // };
+
+
+  const handleSave = async () => {
+      // wala sya na click
+      // not edited at all
+      if(isEditCounter.current == 0){
+          console.log('suggestion content response:',suggestedContents)
+          return suggestedContents;
+      }
+    if (isEditing) {
+        try{
+        const editedContent = editorRef.current.getHTMLContent();
+            const insert_delimiter_ai = await SuggestionService.insert_delimiter_ai(editedContent,original_suggestion_content.current);
+            console.log('suggestion content response:',insert_delimiter_ai.data)
+            if(insert_delimiter_ai.data.success) {
+                return cleanMarkAiContent(insert_delimiter_ai.data.data);
+            }else{
+                throw new Error('Suggest content delimeter ai error')
+            }
+        }catch (e){
+            throw new Error('Suggest content delimeter ai error')
+        }
+    }
+    if(!isEditing){
+        try{
+            const insert_delimiter_ai = await SuggestionService.insert_delimiter_ai(cleanedVersion,original_suggestion_content.current);
+            console.log('cleanedVersion suggestion contnet',cleanedVersion);
+            console.log('suggestion content response:',insert_delimiter_ai.data)
+            if(insert_delimiter_ai.data.success) {
+                return cleanMarkAiContent(insert_delimiter_ai.data.data)
+            }else{
+                throw new Error('Suggest content delimeter ai error')
+
+            }
+        }catch (e){
+            throw new Error('Suggest content delimeter ai error')
+
+        }
+    }
+
+
   };
 
   // const handleSave = () => {
@@ -195,12 +289,15 @@ const SuggestContent = () => {
 
   const handleNewContent = async (newData) => {
     // console.log('newContent');
-
+      console.log('handleNewContent suggestion content new data', newData);
+      console.log('handleNewContent suggestion content handle new content currid',currID );
     try {
       const response = await SuggestionService.accept_content(currID, newData);
       // console.log('response', response.data);
+        console.log('handleNewContent suggestion content response', response);
     } catch (error) {
-      setIsError(true);
+        console.log('handleNewContent suggestion content error');
+        setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -291,7 +388,7 @@ const SuggestContent = () => {
           let removeTagContents = suggestion[0].content.replace(/```html/g, '');
           removeTagContents = removeTagContents.replace(/```/g, '');
           setSuggestedContents(removeTagContents);
-
+            original_suggestion_content.current = removeTagContents
           // Slightly longer delay for loading completed content
           setTimeout(() => {
             setFade(false); // Start fading out the loading message
@@ -405,6 +502,7 @@ const SuggestContent = () => {
 
   return (
     <Container component='main' sx={{ mt: 2, mb: 12 }}>
+        aslkdjfalksdjfas {isEditCounter.current}
       <Box
         sx={{
           display: 'flex',
@@ -473,6 +571,7 @@ const SuggestContent = () => {
           }}
           onClick={handleAccept}
           disabled={isLoading}>
+
           <CheckIcon sx={{ marginRight: '10px' }} />
           Accept
         </Button>
@@ -564,6 +663,7 @@ const SuggestContent = () => {
                       '&:hover': { cursor: 'pointer' }
                     }}
                     onClick={() => {
+                    isEditCounter = isEditCounter.current += 1
                       setIsEditing(true);
                     }}
                   />

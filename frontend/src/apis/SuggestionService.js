@@ -13,8 +13,8 @@ export const SuggestionService = {
       notification_id
     }),
 
-  create_insights: (lesson_id, notification_id) =>
-    axios.post(`${BASE_URL}/insights/`, { lesson_id, notification_id }),
+    create_insights: (lesson_id, notification_id) =>
+        axios.post(`${BASE_URL}/insights/`, { lesson_id, notification_id }),
 
   get_old_content: (lesson_id) =>
     axios.get(`${BASE_URL}/getoldcontent/${lesson_id}`),
@@ -50,5 +50,8 @@ export const SuggestionService = {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
+    }),
+    insert_delimiter_ai: (edited_content, original_content) =>
+        axios.post(`${BASE_URL}/insert_delimiter_ai/`, { edited_content, original_content }),
+
 };
