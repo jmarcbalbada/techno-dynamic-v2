@@ -228,7 +228,7 @@ let isEditCounter = useRef(0);
       // not edited at all
       if(isEditCounter.current == 0){
           console.log('suggestion content response:',suggestedContents)
-          return suggestedContents;
+          return cleanMarkAiContent(suggestedContents)  ;
       }
     if (isEditing) {
         try{

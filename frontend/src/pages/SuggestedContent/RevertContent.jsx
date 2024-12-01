@@ -11,7 +11,7 @@ import LessonPage from 'components/lessonpage/LessonPage';
 import FooterControls from 'components/lessonpage/FooterControls';
 import FilesModal from 'components/lessonpage/FilesModal';
 import ChatbotDialog from 'components/lessonpage/ChatbotDialog';
-import { Typography, Box, Button } from '@mui/material';
+import {Typography, Box, Button, Tooltip} from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useTheme } from '@mui/material';
 import Container from '@mui/material/Container';
@@ -255,8 +255,9 @@ const RevertContent = () => {
                       whiteSpace: 'nowrap',
                       textOverflow: 'ellipsis'
                     }}>
-                    Suggested content has been added!
-                  </Typography>
+                    <Tooltip title={'Content added. Note: AI-generated pagination may have errors or inconsistencies.'}>
+                      Content added. AI might make a mistake.
+                    </Tooltip>                  </Typography>
                   <Box sx={{ display: 'flex' }}>
                     <Button
                       variant='contained'
