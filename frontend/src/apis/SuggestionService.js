@@ -51,7 +51,9 @@ export const SuggestionService = {
         'Content-Type': 'application/json'
       }
     }),
-    insert_delimiter_ai: (edited_content, original_content) =>
-        axios.post(`${BASE_URL}/insert_delimiter_ai/`, { edited_content, original_content }),
+    insert_delimiter_ai: (edited_content, original_content,lesson_id,notification_id) =>
+        axios.post(`${BASE_URL}/insert_delimiter_ai/`, { edited_content, original_content ,lesson_id,notification_id}),
+    get_insert_delimiter_ai:(lesson_id, notification_id)=>
+        axios.post(`${BASE_URL}/get_insert_delimiter_ai/`, {lesson_id, notification_id}),
 
 };
