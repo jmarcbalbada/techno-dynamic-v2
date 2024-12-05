@@ -1,10 +1,17 @@
 //@ts-nocheck
-import React, {useEffect, useRef, useState} from 'react';
-import {LessonsService} from 'apis/LessonsService';
-import {SuggestionService} from 'apis/SuggestionService';
-import {ContentHistoryService} from 'apis/ContentHistoryService';
-import {useNavigate, useParams} from 'react-router-dom';
-import {Box, Button, Snackbar, Tooltip, Typography, useTheme} from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import { LessonsService } from 'apis/LessonsService';
+import { SuggestionService } from 'apis/SuggestionService';
+import { ContentHistoryService } from 'apis/ContentHistoryService';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Snackbar,
+  Tooltip,
+  Typography,
+  useTheme
+} from '@mui/material';
 import Container from '@mui/material/Container';
 import LessonPage from 'components/lessonpage/LessonPage';
 import VerifiedIcon from '@mui/icons-material/Verified';
@@ -15,9 +22,11 @@ import Skeleton from '@mui/material/Skeleton';
 import CreateIcon from '@mui/icons-material/Create';
 import Editor from 'components/editor/Editor';
 import MuiAlert from '@mui/material/Alert';
-import {NotificationService} from 'apis/NotificationService';
-import cleanMarkAiContent, {CleanMarkAiContent} from '../../helpers/CleanMarkAiContent';
-import {insertDelimitersAtPositions} from '../../utils/insertDelimitersAtPositions'
+import { NotificationService } from 'apis/NotificationService';
+import cleanMarkAiContent, {
+  CleanMarkAiContent
+} from '../../helpers/CleanMarkAiContent';
+import { insertDelimitersAtPositions } from '../../utils/insertDelimitersAtPositions';
 
 const SuggestContent = () => {
   const { lessonNumber, pageNumber, lessonID } = useParams();
@@ -38,9 +47,9 @@ const SuggestContent = () => {
   const theme = useTheme();
   const currID = parseInt(lessonID);
   const editorRef = useRef(null);
-let isEditCounter = useRef(0);
+  let isEditCounter = useRef(0);
 
-    const [fade, setFade] = useState(true); // Control the fade effect
+  const [fade, setFade] = useState(true); // Control the fade effect
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar state
 
   useEffect(() => {
@@ -73,53 +82,43 @@ let isEditCounter = useRef(0);
     };
   }, []);
   const finalChanges = () => {
+    let changes = editorRef.current.getHTMLContent();
+    changes = CleanMarkAiContent(changes);
 
-      let changes = editorRef.current.getHTMLContent();
-      changes = CleanMarkAiContent(changes);
-
-      // Reinsert delimiters if necessary
-      if (isEditing) {
-          let originalDelimiterPositions = getDelimiterPositions(suggestedContents);
-          changes = insertDelimitersAtPositions(
-              finalChanges,
-              originalDelimiterPositions
-          );
-      }
-      return
-  }
+    // Reinsert delimiters if necessary
+    if (isEditing) {
+      let originalDelimiterPositions = getDelimiterPositions(suggestedContents);
+      changes = insertDelimitersAtPositions(
+        finalChanges,
+        originalDelimiterPositions
+      );
+    }
+    return;
+  };
   const handleAccept = async () => {
     setOpenSnackbar(true);
     // Save the suggested content
-      setIsLoading(true)
-    const updatedContent = await handleSave()
-      console.log('updatedContent suggestion papges handleSvae return:',updatedContent)
-    await handleNewContent(updatedContent);
-    await handleClearNotif();
-    await handleAddVersionControl()
+    setIsLoading(true);
+    const updatedContent = await handleSave();
+    if (updatedContent != 'error') {
+      console.log(
+        'updatedContent suggestion papges handleSvae return:',
+        updatedContent
+      );
+      await handleNewContent(updatedContent);
+      await handleClearNotif();
+      await handleAddVersionControl();
 
-
-    // Wait for the response from handleNewContent
-    //   setIsLoading(false)
+      // Wait for the response from handleNewContent
+      setIsLoading(false);
 
       setTimeout(() => {
-          window.location.replace(
-              `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
-          );
-          setOpenSnackbar(false);
-
+        window.location.replace(
+          `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
+        );
+        setOpenSnackbar(false);
       }, 500);
-
-      // window.location.replace(
-    //   `/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`
-    // );
-
-    // Add a delay of 1 second before navigating
-    // setTimeout(() => {
-    //   navigate(`/lessons/${lessonNumber}/${pageNumber}/${currID}/rvContent`, {
-    //     replace: true
-    //   });
-    //   window.history.pushState(null, null, window.location.href);
-    // }, 500);
+    }
   };
 
   const handleAddVersionControl = async () => {
@@ -164,7 +163,6 @@ let isEditCounter = useRef(0);
     }
   };
 
-
   // Utility to find positions of the `<!-- delimiter -->` in content
   const getDelimiterPositions = (content) => {
     const positions = [];
@@ -179,7 +177,6 @@ let isEditCounter = useRef(0);
   };
 
   // Utility to insert `<!-- delimiter -->` at specified positions
-
 
   // const handleSave = () => {
   //   // Start with the current content based on the editing state
@@ -222,46 +219,105 @@ let isEditCounter = useRef(0);
   //   return finalChanges;
   // };
 
-
   const handleSave = async () => {
-      // wala sya na click
-      // not edited at all
-      if(isEditCounter.current == 0){
-          console.log('suggestion content response:',suggestedContents)
-          return cleanMarkAiContent(suggestedContents)  ;
-      }
+    // wala sya na click
+    // not edited at all
+    // let notifId = localStorage.getItem('notifId');
+    let notifId = parseInt(localStorage.getItem('notification_id'), 10);
+
+    if (isEditCounter.current == 0) {
+      console.log('suggestion content response:', suggestedContents);
+      return cleanMarkAiContent(suggestedContents);
+    }
     if (isEditing) {
-        try{
+      try {
         const editedContent = editorRef.current.getHTMLContent();
-            const insert_delimiter_ai = await SuggestionService.insert_delimiter_ai(editedContent,original_suggestion_content.current);
-            console.log('suggestion content response:',insert_delimiter_ai.data)
-            if(insert_delimiter_ai.data.success) {
-                return cleanMarkAiContent(insert_delimiter_ai.data.data);
-            }else{
-                throw new Error('Suggest content delimeter ai error')
-            }
-        }catch (e){
-            throw new Error('Suggest content delimeter ai error')
+        console.log('edited', editedContent);
+        console.log('original_suggestion_content', original_suggestion_content);
+        let get_insert_delimiter_ai =
+          await SuggestionService.get_insert_delimiter_ai(currID, notifId);
+        console.log(
+          'get_insert_delimiter_ai map ni sya ',
+          get_insert_delimiter_ai
+        );
+        if (get_insert_delimiter_ai.data.success) {
+          return CleanMarkAiContent(get_insert_delimiter_ai.data.data);
         }
-    }
-    if(!isEditing){
-        try{
-            const insert_delimiter_ai = await SuggestionService.insert_delimiter_ai(cleanedVersion,original_suggestion_content.current);
-            console.log('cleanedVersion suggestion contnet',cleanedVersion);
-            console.log('suggestion content response:',insert_delimiter_ai.data)
-            if(insert_delimiter_ai.data.success) {
-                return cleanMarkAiContent(insert_delimiter_ai.data.data)
-            }else{
-                throw new Error('Suggest content delimeter ai error')
+        const query = await SuggestionService.insert_delimiter_ai(
+          editedContent,
+          original_suggestion_content.current,
+          currID,
+          notifId
+        );
+        console.log('edited content', editedContent);
+        console.log('original content', original_suggestion_content);
+        console.log('get ai delimiter query ', query);
 
-            }
-        }catch (e){
-            throw new Error('Suggest content delimeter ai error')
-
+        if (!query.data.success) {
+          return 'error';
         }
+
+        let flag = true;
+        while (flag) {
+          get_insert_delimiter_ai =
+            await SuggestionService.get_insert_delimiter_ai(currID, notifId);
+          console.log('get_insert_delimiter_ai', get_insert_delimiter_ai);
+          if (get_insert_delimiter_ai.data.success == true) {
+            console.log('im sorry i stoped 6969');
+            flag = false;
+            break;
+          }
+          // Delay for 5 seconds
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+        console.log('get ai delimiter result: ', get_insert_delimiter_ai);
+        return cleanMarkAiContent(get_insert_delimiter_ai.data.data);
+        console.log('end');
+        // return 'error';
+      } catch (e) {
+        console.log('Error 12123', e);
+        throw new Error('Suggest content delimeter ai error');
+      }
     }
+    if (!isEditing) {
+      try {
+        const notifId = parseInt(localStorage.getItem('notification_id'), 10);
+        let get_insert_delimiter_ai =
+          await SuggestionService.get_insert_delimiter_ai(currID, notifId);
+        if (get_insert_delimiter_ai.data.success) {
+          return CleanMarkAiContent(get_insert_delimiter_ai.data.data);
+        }
 
+        // Start background process
+        const query = await SuggestionService.insert_delimiter_ai(
+          cleanedVersion,
+          original_suggestion_content.current,
+          currID,
+          notifId
+        );
+        console.log('get ai delimiter query ', query);
 
+        if (!query.data.success) {
+          return 'error';
+        }
+
+        let flag = true;
+        while (flag) {
+          get_insert_delimiter_ai =
+            await SuggestionService.get_insert_delimiter_ai(currID, notifId);
+          if (get_insert_delimiter_ai.data.success) {
+            flag = false;
+            break;
+          }
+          // Delay for 5 seconds
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+        console.log('get ai delimiter result: ', get_insert_delimiter_ai);
+        return cleanMarkAiContent(get_insert_delimiter_ai.data.data);
+      } catch (e) {
+        throw new Error('Suggest content delimiter AI error');
+      }
+    }
   };
 
   // const handleSave = () => {
@@ -289,15 +345,18 @@ let isEditCounter = useRef(0);
 
   const handleNewContent = async (newData) => {
     // console.log('newContent');
-      console.log('handleNewContent suggestion content new data', newData);
-      console.log('handleNewContent suggestion content handle new content currid',currID );
+    console.log('handleNewContent suggestion content new data', newData);
+    console.log(
+      'handleNewContent suggestion content handle new content currid',
+      currID
+    );
     try {
       const response = await SuggestionService.accept_content(currID, newData);
       // console.log('response', response.data);
-        console.log('handleNewContent suggestion content response', response);
+      console.log('handleNewContent suggestion content response', response);
     } catch (error) {
-        console.log('handleNewContent suggestion content error');
-        setIsError(true);
+      console.log('handleNewContent suggestion content error');
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -388,7 +447,7 @@ let isEditCounter = useRef(0);
           let removeTagContents = suggestion[0].content.replace(/```html/g, '');
           removeTagContents = removeTagContents.replace(/```/g, '');
           setSuggestedContents(removeTagContents);
-            original_suggestion_content.current = removeTagContents
+          original_suggestion_content.current = removeTagContents;
           // Slightly longer delay for loading completed content
           setTimeout(() => {
             setFade(false); // Start fading out the loading message
@@ -570,7 +629,6 @@ let isEditCounter = useRef(0);
           }}
           onClick={handleAccept}
           disabled={isLoading}>
-
           <CheckIcon sx={{ marginRight: '10px' }} />
           Accept
         </Button>
@@ -662,7 +720,7 @@ let isEditCounter = useRef(0);
                       '&:hover': { cursor: 'pointer' }
                     }}
                     onClick={() => {
-                    isEditCounter = isEditCounter.current += 1
+                      isEditCounter = isEditCounter.current += 1;
                       setIsEditing(true);
                     }}
                   />
@@ -683,7 +741,7 @@ let isEditCounter = useRef(0);
               </Box>
             )}
 
-            {isEditing && (
+            {isEditing && !isLoading && (
               <Tooltip title='Save and preview'>
                 <CheckIcon
                   sx={{
